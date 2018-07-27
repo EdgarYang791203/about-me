@@ -42,7 +42,7 @@
            (RWD)
         </a>
         </br>
-        "⌞ Bootstrap 切版、JQuery 原生JS製作動畫效果、搭配 Firebase 應用。"
+          ⌞ Bootstrap 切版、JQuery 原生JS製作動畫效果、搭配 Firebase 應用。
     </p>
   </li>
   <li>
@@ -51,7 +51,7 @@
           <b>Todo-List</b>
         </a>
         </br>
-        "⌞ Bootstrap 切版，搭配 Firebase 應用。"
+          ⌞ Bootstrap 切版，搭配 Firebase 應用。
     </p>
   </li>
   <li>
@@ -60,11 +60,11 @@
           <b>高雄旅遊資訊Filter</b>
         </a>
         </br>
-        "⌞ Bootstrap 搭配 filter() 篩選資料。"
+          ⌞ Bootstrap 搭配 filter() 篩選資料。
         </br>
-        "⌞ 使用政府開放平台抓取 JSON 資料，並透過 Javascript / Ajax 呈現在網頁上"
+          ⌞ 使用政府開放平台抓取 JSON 資料，並透過 Javascript / Ajax 呈現在網頁上
         </br>
-        "⌞ 結合 Google Map Api 將資料標記在地圖上。"
+          ⌞ 結合 Google Map Api 將資料標記在地圖上。
     </p>
   </li>
   <li>
@@ -73,7 +73,7 @@
           <b>Training99 小遊戲Demo練習</b>
         </a>
         </br>
-        "⌞ Html5 canvas 畫出物件和動畫"
+          ⌞ Html5 canvas 畫出物件和動畫
     </p>
   </li>
   <li>
@@ -82,7 +82,7 @@
           <b>聊天室</b>
         </a>
         </br>
-        "Firebase Google Login + 存取對話資料 + 拖曳上傳 /輸入圖片"
+        ⌞Firebase Google Login + 存取對話資料 + 拖曳上傳 /輸入圖片
     </p>
   </li>
   <li>
@@ -91,9 +91,9 @@
           <b>Form 表單驗證</b>
         </a>
         </br>
-          "參考前端直播主 偷米騎巴哥 Demo"
+          ⌞參考前端直播主 偷米騎巴哥 Demo
         </br>
-        "表單正規式驗證 + node.js + express"
+        ⌞表單正規式驗證 + node.js + express
     </p>
   </li>
 </ul>
