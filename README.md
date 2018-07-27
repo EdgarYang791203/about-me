@@ -18,6 +18,7 @@
   <li>JQuery,原生javascript</li>
   <li>利用 AJAX 撈取遠端JSON資料並顯示在網頁上</li>
   <li>介接第三方 API 設計 SPA 頁面 (Google Map、Open Data 等等)</li>
+  <li>使用firebase資料庫做許多小專案應用</li>
   <li>github,git版本控制(略懂) 
       Vue.js(略懂) 
       HTML5-Canvas(略懂) 
@@ -27,11 +28,21 @@
 <hr></hr>
 <h3>經歷</h3>
 <ul>
-  <li></li>
+  <li>3月HTML,CSS,bootstrap基礎班-結業</li>
+  <li>4月javascript基礎班-結業</li>
+  <li>5月firebase,javascript實務班-結業</li>
 </ul>
 <hr></hr>
 <h3>作品集</h3>
 <ul>
-  <li></li>
+  <li>
+    <p>
+        <a href="" target="_blank" rel="nofollow">
+        <b>Todo-List</b>
+        </br>
+        "⌞ Bootstrap 搭配 Firebase 應用。"
+      </br>
+    </p>
+  </li>
 </ul>
 <hr></hr>
