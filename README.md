@@ -27,6 +27,9 @@
 </ul>
 <hr></hr>
 <h3>經歷</h3>
+<a href="https://train.csie.ntu.edu.tw/train/">
+    <b>台大資訊系統訓練班</b>
+  </a>
 <ul>
   <li>3月HTML,CSS,bootstrap基礎班-結業</li>
   <li>4月javascript基礎班-結業</li>
