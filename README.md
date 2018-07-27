@@ -3,7 +3,7 @@
   <li>Education:東吳大學 / 數學系
   <li>Location: New Taipei City</li>
   <li>E-mail:  
-    <a href="edgaryang791203@gmail.com" target="_blank">edgaryang791203@gmail.com</a>
+    <a href="mailto:edgaryang791203@gmail.com">edgaryang791203@gmail.com</a>
    </li>
   <li>Mobile: 0986-194-158</li></li>
   <li>My Web Address: 
