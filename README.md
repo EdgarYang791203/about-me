@@ -10,7 +10,7 @@
     <a href="https://edgaryang791203-website.firebaseapp.com/" target="_blank">https://edgaryang791203-website.firebaseapp.com/</a>
   </li>
 </ul>
-<hr></hr>
+<hr>
 <h3>專業技能</h3>
 <ul>
   <li>熟悉 HTML5 + CSS 完成RWD頁面架構和布局；並能在不依賴 Framework 下進行 RWD 客製化，開發符合各裝置尺寸的網站建置。</li>
@@ -25,7 +25,7 @@
       webpack(略懂)
   </li>
 </ul>
-<hr></hr>
+<hr>
 <h3>經歷</h3>
 <a href="https://train.csie.ntu.edu.tw/train/">
     <b>台大資訊系統訓練班(2018)</b>
@@ -35,7 +35,7 @@
   <li>4月javascript基礎班-結業</li>
   <li>5月firebase,javascript實務班-結業</li>
 </ul>
-<hr></hr>
+<hr>
 <h3>作品集</h3>
 <ul>
   <li>
@@ -100,4 +100,4 @@
     </p>
   </li>
 </ul>
-<hr></hr>
+<hr>
