@@ -19,7 +19,7 @@
   <li>利用 AJAX 撈取遠端 JSON 資料並顯示在網頁上</li>
   <li>介接第三方 API 設計 SPA 頁面 (Google Map、Open Data 等等)</li>
   <li>使用 Firebase 資料庫做許多小專案應用</li>
-  <li>github、git版本控制(切 branch 版本合併) 
+  <li>github、git 版本控制(切 branch 版本合併) 
       Vue.js(Vue-router) 
       HTML5-Canvas(建制畫布，畫出 particles，update 流程) 
       webpack(把多個自己的 JS檔利用 lodash required 整合成一個 bundle.js檔案)
@@ -31,9 +31,9 @@
     <b>台大資訊系統訓練班(2018)</b>
   </a>
 <ul>
-  <li>3月HTML,CSS,bootstrap基礎班-結業</li>
-  <li>4月javascript基礎班-結業</li>
-  <li>5月firebase,javascript實務班-結業</li>
+  <li>3月 HTML、CSS、bootstrap 基礎班-結業</li>
+  <li>4月 JavaScript 基礎班-結業</li>
+  <li>5月 Firebase、JavaScript 實務班-結業</li>
 </ul>
 <hr>
 <h3>作品集</h3>
@@ -45,7 +45,7 @@
            (RWD)
         </a>
         </br>
-          ⌞ Bootstrap 切版、JQuery 原生JS製作動畫效果、搭配 Firebase 應用。
+          ⌞ Bootstrap 切版、JQuery 原生 JS 製作動畫效果、搭配 Firebase 應用。
     </p>
   </li>
   <li>
@@ -60,7 +60,7 @@
   <li>
     <p>
         <a href="https://edgaryang791203.github.io/filter-practice/" target="_blank" rel="nofollow">
-          <b>高雄旅遊資訊Filter</b>
+          <b>高雄旅遊資訊 Filter</b>
         </a>
         </br>
           ⌞ Bootstrap 搭配 filter() 篩選資料。
@@ -73,10 +73,10 @@
   <li>
     <p>
         <a href="https://edgaryang791203.github.io/small-game-demo/" target="_blank" rel="nofollow">
-          <b>Training99 小遊戲Demo練習</b>
+          <b>Training99 小遊戲 Demo 練習</b>
         </a>
         </br>
-          ⌞ Html5 canvas 畫出物件和動畫
+          ⌞ Html5-Canvas 畫出物件和動畫
     </p>
   </li>
   <li>
@@ -96,7 +96,7 @@
         </br>
           ⌞參考前端直播主 偷米騎巴哥 Demo
         </br>
-        ⌞表單正規式驗證 + node.js + express
+        ⌞表單正規式驗證 + Node.js + Express
     </p>
   </li>
 </ul>
