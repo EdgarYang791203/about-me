@@ -15,7 +15,7 @@
 <ul>
   <li>熟悉 HTML5 + CSS 完成 RWD 頁面架構和布局；並能在不依賴 Framework 下進行 RWD 客製化，開發符合各裝置尺寸的網站建置。</li>
   <li>使用 Bootstrap 快速開發響應式網頁。</li>
-  <li>JQuery、原生 JavaScript</li>
+  <li>原生 JavaScript、JQuery</li>
   <li>利用 AJAX 撈取遠端 JSON 資料並顯示在網頁上</li>
   <li>介接第三方 API 設計 SPA 頁面 (Google Map、Open Data 等等)</li>
   <li>使用 Firebase 資料庫做許多小專案應用</li>
