@@ -13,16 +13,16 @@
 <hr>
 <h3>專業技能</h3>
 <ul>
-  <li>熟悉 HTML5 + CSS 完成RWD頁面架構和布局；並能在不依賴 Framework 下進行 RWD 客製化，開發符合各裝置尺寸的網站建置。</li>
+  <li>熟悉 HTML5 + CSS 完成 RWD 頁面架構和布局；並能在不依賴 Framework 下進行 RWD 客製化，開發符合各裝置尺寸的網站建置。</li>
   <li>使用 Bootstrap 快速開發響應式網頁。</li>
-  <li>JQuery,原生javascript</li>
-  <li>利用 AJAX 撈取遠端JSON資料並顯示在網頁上</li>
+  <li>JQuery、原生 JavaScript</li>
+  <li>利用 AJAX 撈取遠端 JSON 資料並顯示在網頁上</li>
   <li>介接第三方 API 設計 SPA 頁面 (Google Map、Open Data 等等)</li>
-  <li>使用firebase資料庫做許多小專案應用</li>
-  <li>github,git版本控制(略懂) 
-      Vue.js(略懂) 
-      HTML5-Canvas(略懂) 
-      webpack(略懂)
+  <li>使用 Firebase 資料庫做許多小專案應用</li>
+  <li>github、git版本控制(切 branch 版本合併) 
+      Vue.js(Vue-router) 
+      HTML5-Canvas(建制畫布，畫出 particles，update 流程) 
+      webpack(把多個自己的 JS檔利用 lodash required 整合成一個 bundle.js檔案)
   </li>
 </ul>
 <hr>
