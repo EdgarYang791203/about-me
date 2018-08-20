@@ -20,8 +20,11 @@
   <li>介接第三方 API 設計 SPA 頁面 (Google Map、Open Data 等等)</li>
   <li>使用 Firebase 資料庫做許多小專案應用</li>
   <li>github、git 版本控制(切 branch 版本合併) 
-      Vue.js(Vue-router) 
-      HTML5-Canvas(建制畫布，畫出 particles，update 流程) 
+      <br>
+      Vue.js(Vue-router)
+      <br>
+      HTML5-Canvas(建制畫布，畫出 particles，update 流程)
+      <br>
       webpack(把多個自己的 JS檔利用 lodash required 整合成一個 bundle.js檔案)
   </li>
 </ul>
