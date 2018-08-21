@@ -34,7 +34,7 @@
     <b>台大資訊系統訓練班(2018)</b>
   </a>
 <ul>
-  <li>3月 HTML、CSS、bootstrap 基礎班-結業</li>
+  <li>3月 HTML、CSS、Bootstrap 基礎班-結業</li>
   <li>4月 JavaScript 基礎班-結業</li>
   <li>5月 Firebase、JavaScript 實務班-結業</li>
 </ul>
