@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "CabinSketch";
-  src: url("./assets/fonts/CabinSketch-Bold.ttf");
+  font-family: "Cabin Sketch";
+  src: url("./assets/fonts/CabinSketch-Regular.ttf");
 }
 
 :root {

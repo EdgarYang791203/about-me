@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
 
 const scrollOver = ref(false);
 
@@ -29,7 +28,7 @@ onMounted(() => {
       scrollOver
         ? 'left-0 right-0 top-0 border-black text-black'
         : 'border-white text-white'
-    } ${scrollOver ? 'animate-[slide-in_1s_ease]' : ''}`"
+    } ${scrollOver ? 'animate-[slide-in-top_1s_ease]' : ''}`"
     :style="{
       borderRadius: '25px 25px 55px 5px/5px 55px 25px 25px',
       backgroundColor: scrollOver ? 'rgba(253, 253, 253, 0.9)' : 'transparent',
@@ -37,17 +36,17 @@ onMounted(() => {
     }"
   >
     <nav
-      class="flex justify-between items-center h-full w-full max-[1200px] mx-auto py-[5px]"
+      class="flex justify-between items-center h-full w-full max-w-[1200px] mx-auto py-[5px]"
     >
-      <span class="font-cabin">Navbar</span>
+      <span class="font-cabin" style="font-size: 1.25rem">Navbar</span>
       <div class="flex-1 flex justify-end">
         <ul class="flex menu">
           <li v-for="link in navLinks" :key="link.name" class="px-8 py-2">
             <a
               :href="`#${link.name}`"
-              :class="`flex flex-col items-center hover:text-white `"
+              :class="`flex flex-col items-center transition-all hover:text-white hover:animate-[menu-hover_1s_infinite]`"
             >
-              <span :class="`${scrollOver ? 'text-black' : 'text-white'}`">{{
+              <span :class="`${scrollOver ? 'text-[tomato]' : 'text-white'}`">{{
                 link.label
               }}</span>
               <span
@@ -64,30 +63,25 @@ onMounted(() => {
     </nav>
   </header>
   <div class="relative overflow-hidden w-full">
-    <canvas
-      id="canvas"
-      class="w-full h-full absolute left-0 top-0 z-10"
-      style="background-color: rgba(25, 25, 25, 0.5)"
-    ></canvas>
     <div
-      class="bg-[url('./assets/laptop.jpg')] w-full h-screen bg-cover bg-center"
-    ></div>
+      class="bg-[url('./assets/laptop.jpg')] bg-blend-multiply w-full h-screen bg-cover bg-center bg-fixed flex items-center pr-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#222831] after:bottom-[-14px] after:left-0 after:rotate-1"
+      style="background-color: rgba(25, 25, 25, 0.6)"
+    >
+      <div
+        class="w-full border-2 border-white h-[400px] relative"
+        style="border-radius: 55px 225px 15px 25px/25px 25px 35px 355px"
+      >
+        <span
+          class="font-cabin text-white animate-[slide-in-left_1s_ease-in-out] absolute top-16 left-8"
+          style="font-size: 4.5rem"
+          >Welcome to my website!</span
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 .menu li:not(:first-child)::before {
   content: "";
   display: block;
