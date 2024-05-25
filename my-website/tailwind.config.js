@@ -10,8 +10,13 @@ export default {
         "slide-in-top": "1s ease 0s 1 normal none running slide-in",
         "slide-in-left": "",
         "menu-hover": "1s infinite",
+        "arrow-stretch": "1s ease-in-out",
       },
       keyframes: {
+        "arrow-stretch": {
+          "0%": { height: "0px" },
+          "100%": { height: "708px" },
+        },
         "slide-in-top": {
           "0%": { top: "-100%" },
           "100%": { top: "0px" },
