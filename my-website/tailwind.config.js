@@ -13,6 +13,14 @@ export default {
         "arrow-stretch": "1s ease-in-out",
       },
       keyframes: {
+        "marquee-move": {
+          "0%": {
+            transform: "translateX(0%)",
+          },
+          "100%": {
+            transform: "translateX(-50%)",
+          },
+        },
         "arrow-stretch": {
           "0%": { height: "0px" },
           "100%": { height: "708px" },
