@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, reactive, nextTick } from "vue";
+import getTimeNumbers from "./util/getTimestamp";
 
 const introTop = ref(0);
 
@@ -98,12 +99,77 @@ const scrollOver = computed(() => {
   return windowScrollY.value > 160;
 });
 
+// TODO: 時間動畫
+const clockReset = [0, 0, 0, 0, 0, 0, 0, 0].map((v, i) => ({
+  index: i,
+  uperNum: 0,
+  belowNum: 0,
+}));
+
+let accumulateLottery = reactive(clockReset);
+
+const determineDecimal = () => {
+  const timeArr = getTimeNumbers();
+  const newArr = timeArr.map((v, i) =>
+    !v
+      ? {
+          index: i,
+          uperNum: 0,
+          belowNum: 0,
+        }
+      : {
+          index: i,
+          uperNum: v,
+          belowNum: v,
+        }
+  );
+  Object.assign(accumulateLottery, newArr);
+};
+const removeFlipped = async (index: number) => {
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  await sleep(250);
+  document.querySelectorAll(".rotor-leaf")[index].classList.remove("flipped");
+};
+const runFlipped = (index: number) => {
+  document.querySelectorAll(".rotor-leaf")[index].classList.add("flipped");
+  removeFlipped(index);
+};
+const numberAnimation = () => {
+  const timeArr = getTimeNumbers();
+  for (let index = 0; index < timeArr.length; index++) {
+    const upNum = accumulateLottery[index].uperNum;
+    const newValue = timeArr[index];
+    if (index !== 2 && index !== 5 && newValue !== upNum) {
+      runFlipped(index);
+    }
+  }
+  const newArr = timeArr.map((v, i) =>
+    !v
+      ? {
+          index: i,
+          uperNum: 0,
+          belowNum: 0,
+        }
+      : {
+          index: i,
+          uperNum: v,
+          belowNum: v,
+        }
+  );
+  Object.assign(accumulateLottery, newArr);
+};
+// TODO: 時間動畫
+
 onMounted(() => {
   window.addEventListener("scroll", () => {
     windowScrollY.value = Math.floor(window.scrollY);
   });
   introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
-  setMarquee();
+  // setMarquee();
+  determineDecimal();
+  const timer = setInterval(() => {
+    numberAnimation();
+  }, 1000);
 });
 </script>
 
@@ -128,7 +194,25 @@ onMounted(() => {
         borderRadius: '25px 25px 55px 5px/5px 55px 25px 25px',
       }"
     >
-      <span class="font-cabin" style="font-size: 1.25rem">Navbar</span>
+      <!-- TODO: 數字動畫 -->
+      <div class="font-cabin accumulate-lottery" style="font-size: 1.25rem">
+        <div v-for="item in accumulateLottery" :key="item.index">
+          <template v-if="item.index !== 2 && item.index !== 5">
+            <div class="rotor-leaf">
+              <span class="below leaf-rear">{{ item.uperNum }}</span>
+              <span class="uper leaf-front">{{ item.belowNum }}</span>
+            </div>
+            <span class="uper">{{ item.uperNum }}</span>
+            <span class="below">{{ item.belowNum }}</span>
+          </template>
+          <template v-else>
+            <div class="rotor-leaf">
+              <span class="uper">:</span>
+              <span class="below">:</span>
+            </div>
+          </template>
+        </div>
+      </div>
       <div class="flex-1 flex justify-end">
         <ul class="flex menu">
           <li v-for="link in navLinks" :key="link.name" class="px-8 py-2">
@@ -160,7 +244,7 @@ onMounted(() => {
   <div class="relative overflow-hidden w-full">
     <!-- TODO: BANNER -->
     <div
-      class="bg-[url('/image/laptop.jpg')] ocer bg-blend-multiply w-full h-screen bg-cover bg-center bg-fixed flex items-center pr-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#fff] after:bottom-[-14px] after:left-0 after:rotate-1 after:border-2 after:border-[#FF6347]"
+      class="bg-[url('/image/laptop.jpg')] bg-blend-multiply w-full h-screen bg-cover bg-center bg-fixed flex items-center pr-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#fff] after:bottom-[-14px] after:left-0 after:rotate-1 after:border-2 after:border-[#FF6347]"
       style="background-color: rgba(216, 216, 216, 1)"
     >
       <div
@@ -266,7 +350,7 @@ onMounted(() => {
   <!-- TODO: PRODUCT -->
   <div
     ref="PRODUCTS"
-    id="INTRO"
+    id="PRODUCTS"
     class="py-12 w-full bg-[#ebebeb] h-[70vh] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#ebebeb] after:top-[-14px] after:left-0 after:rotate-[-1deg] after:border-0 after:border-t-2 after:border-[#FF6347]"
   ></div>
   <div></div>
@@ -297,6 +381,82 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.accumulate-lottery {
+  font-size: 0;
+}
+.accumulate-lottery > div {
+  display: inline-block;
+  vertical-align: top;
+  width: 24px;
+  height: 36px;
+  overflow-x: hidden;
+  border-radius: 5px;
+  font-size: 30px;
+  color: #ffffff;
+  position: relative;
+  z-index: 1;
+}
+.accumulate-lottery > div:not(:last-of-type) {
+  margin-right: 5px;
+}
+.accumulate-lottery > div::after,
+.accumulate-lottery > div::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  display: block;
+  z-index: 5;
+  width: 100%;
+  height: 1px;
+  background-color: #000;
+}
+.accumulate-lottery > div::after {
+  top: 19px;
+  background-color: #4a4a4a;
+}
+.accumulate-lottery > div .rotor-leaf {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  top: 0;
+  left: 0px;
+  transform-style: preserve-3d;
+  transition: transform 0s;
+}
+.accumulate-lottery > div .rotor-leaf.flipped {
+  transition-property: all;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  transform: rotateX(-180deg);
+}
+.accumulate-lottery > div .rotor-leaf span.leaf-rear,
+.accumulate-lottery > div .rotor-leaf span.leaf-front {
+  position: absolute;
+  transform: rotateX(0deg);
+}
+.accumulate-lottery > div .rotor-leaf span.leaf-rear {
+  transform: rotateX(-180deg);
+}
+.accumulate-lottery > div span {
+  display: block;
+  height: 18px;
+  overflow-y: hidden;
+  font-weight: 900;
+  width: 100%;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.accumulate-lottery > div span.uper {
+  line-height: 34px;
+  background-color: #151515;
+}
+.accumulate-lottery > div span.below {
+  line-height: 0;
+  background-color: #202020;
+}
+
 .marqueeArea {
   position: relative;
   overflow: hidden;
