@@ -5,81 +5,71 @@
   <li>E-mail:  
     <a href="mailto:edgaryang791203@gmail.com">edgaryang791203@gmail.com</a>
    </li>
-  <li>Mobile: 0986-194-158</li>
   <li>My Web Address: 
-    <a href="https://edgaryang791203-website.firebaseapp.com/" target="_blank">https://edgaryang791203-website.firebaseapp.com/</a>
+    <a href="https://my-website-e9b07.web.app" target="_blank">https://my-website-e9b07.web.app</a>
   </li>
 </ul>
 <hr>
-<h3>專業技能</h3>
+<h2>專業技能</h2>
 <ul>
-  <li>熟悉 HTML5 + CSS 完成 RWD 頁面架構和布局；並能在不依賴 Framework 下進行 RWD 客製化，開發符合各裝置尺寸的網站建置。</li>
-  <li>使用 Bootstrap 快速開發響應式網頁。</li>
-  <li>原生 JavaScript、JQuery</li>
-  <li>利用 AJAX 撈取遠端 JSON 資料並顯示在網頁上</li>
-  <li>介接第三方 API 設計 SPA 頁面 (Google Map、Open Data 等等)</li>
+  <li>熟練使用 HTML5、 CSS、SCSS 完成 RWD 頁面架構和布局；並能在不依賴 Framework 下進行 RWD 客製化，開發符合各裝置尺寸的網站建置。</li>
+  <li>使用 ElementUI 或 Bootstrap 快速開發響應式網頁。</li>
+  <li>Vanilla JS、Vue2、Vue3</li>
+  <li>RESTful API</li>
+  <li>介接第三方 API 建置 SPA 頁面 (Google Map、Open Data 等等)</li>
   <li>使用 Firebase 資料庫做許多小專案應用</li>
-  <li>github、git 版本控制(切 branch 版本合併) 
-      <br>
-      Vue.js(Vue-router)
-      <br>
-      HTML5-Canvas(建制畫布，畫出 particles，update 流程)
-      <br>
-      webpack(把多個自己的 JS檔利用 lodash required 整合成一個 bundle.js檔案)
+  <li>使用 Nuxt3、Tailwindcss 建置 side projects 應用</li>
+</ul>
+<h2>git 版本控制</h2>
+<div>
+  <p>依照 Git Flow 的建議切分 master、features 為長期分支，並使用 hotfix 及 feature 修復已發布版本和本地開發需求。</p>
+  <h3>main 分支：</h3>
+  <p>用於存放穩定發佈的版本，每個提交到 main 分支的版本都應該是可部署和可發佈的。每次發佈正式版後，都應該從 main 分支合併到 feature 分支。</p>
+  <h3>features 分支：</h3>
+  <p>
+  用於整合各個功能分支的最新開發版本，開發團隊的主要工作分支。
+  功能開發完成後，通常將功能分支合併到 feature 分支進行測試和整合。
+  </p>
+  <h3>f-xxx 分支：</h3>
+  <p>
+  用於開發新功能或進行大型改動，每個功能開發任務都應該在一個獨立的 f-xxx 分支中進行。
+  功能開發完成後，將 f-xxx 分支合併回 features 分支進行測試和整合，分支命名以 `f-` 為前綴，後面接功能或是卡片名稱。
+  </p>
+  <h3>hf-xxx 分支：</h3>
+  <p>
+  用於快速修復正式環境中的緊急 bug 或問題，從 **main** 分支創建 hf- 分支進行修復。
+  修復完成後，將 hf-xxx 分支合併回 **main** 分支和 feature  分支，分支命名以 `hf-` 為前綴，後面接功能或是卡片名稱。
+  </p>
+</div>
+<h2>經歷</h2>
+<ul>
+  <li>
+    <a href="https://www.104.com.tw/company/1a2x6bmhup">
+      <span>萬通國際資訊有限公司-前端工程師</span>
+      <span>(2023/3~仍在職)</span>
+    </a>
+  </li>
+  <li>
+    <p>
+      <span>鑫城有限公司-前端工程師</span>
+      <span>(2018/9~2023/3)</span>
+    </p>
+  </li>
+  <li>
+    <a href="https://train.csie.ntu.edu.tw/train/">
+      <span>台大資訊系統訓練班-學員</span>
+      <span>(2018/3)</span>
+    </a>
   </li>
 </ul>
 <hr>
-<h3>經歷</h3>
-<a href="https://train.csie.ntu.edu.tw/train/">
-    <b>台大資訊系統訓練班(2018)</b>
-  </a>
-<ul>
-  <li>3月 HTML、CSS、Bootstrap 基礎班-結業</li>
-  <li>4月 JavaScript 基礎班-結業</li>
-  <li>5月 Firebase、JavaScript 實務班-結業</li>
-</ul>
-<hr>
-<h3>作品集</h3>
+<h2>作品集</h2>
 <ul>
   <li>
     <p>
-        <a href="https://edgaryang791203-website.firebaseapp.com/" target="_blank" rel="nofollow">
+        <a href="https://my-website-e9b07.web.app/" target="_blank" rel="nofollow">
           <b>我的網站首頁請參閱</b>
-           (RWD)
         </a>
-        </br>
-          ⌞ Bootstrap 切版、JQuery 原生 JS 製作動畫效果、搭配 Firebase 應用。
-    </p>
-  </li>
-  <li>
-    <p>
-        <a href="https://edgaryang791203.github.io/todo-list/" target="_blank" rel="nofollow">
-          <b>Todo-List</b>
-        </a>
-        </br>
-          ⌞ Bootstrap 切版，搭配 Firebase 應用。
-    </p>
-  </li>
-  <li>
-    <p>
-        <a href="https://edgaryang791203.github.io/filter-practice/" target="_blank" rel="nofollow">
-          <b>高雄旅遊資訊 Filter</b>
-        </a>
-        </br>
-          ⌞ Bootstrap 搭配 filter() 篩選資料。
-        </br>
-          ⌞ 使用政府開放平台抓取 JSON 資料，並透過 Javascript / Ajax 呈現在網頁上
-        </br>
-          ⌞ 結合 Google Map Api 將資料標記在地圖上。
-    </p>
-  </li>
-  <li>
-    <p>
-        <a href="https://edgaryang791203.github.io/small-game-demo/" target="_blank" rel="nofollow">
-          <b>Training99 小遊戲 Demo 練習</b>
-        </a>
-        </br>
-          ⌞ Html5-Canvas 畫出物件和動畫
     </p>
   </li>
   <li>
@@ -89,17 +79,6 @@
         </a>
         </br>
         ⌞Firebase Google Login + 存取對話資料 + 拖曳上傳 /輸入圖片
-    </p>
-  </li>
-  <li>
-    <p>
-        <a href="https://edgaryang791203.github.io/form-Validation/dist/" target="_blank" rel="nofollow">
-          <b>Form 表單驗證</b>
-        </a>
-        </br>
-          ⌞參考前端直播主 偷米騎巴哥 Demo
-        </br>
-        ⌞表單正規式驗證 + Node.js + Express
     </p>
   </li>
 </ul>
