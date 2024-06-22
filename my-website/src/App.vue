@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch, reactive, nextTick } from "vue";
+import { ref, onMounted, computed, watch, reactive } from "vue";
 import getTimeNumbers from "./util/getTimestamp";
 
 const introTop = ref(0);
@@ -17,24 +17,25 @@ const states = reactive({
   movingDistance: 0,
   time: marqueeTime,
 });
-const setMarquee = () => {
-  states.copyTimes = 1;
-  nextTick(() => {
-    let areaWidth = 0;
-    let boxWidth = 0;
-    try {
-      areaWidth = Math.floor(marqueeArea.value.offsetWidth);
-      boxWidth = Math.floor(marqueeBox.value.offsetWidth);
-    } catch (error) {}
+/** 調整跑馬燈速度(待修正) */
+// const setMarquee = () => {
+//   states.copyTimes = 1;
+//   nextTick(() => {
+//     let areaWidth = 0;
+//     let boxWidth = 0;
+//     try {
+//       areaWidth = Math.floor(marqueeArea.value.offsetWidth);
+//       boxWidth = Math.floor(marqueeBox.value.offsetWidth);
+//     } catch (error) {}
 
-    states.copyTimes = Math.max(2, Math.ceil((areaWidth * 2) / boxWidth)) || 2;
-    states.movingDistance = boxWidth * Math.floor(states.copyTimes / 2);
+//     states.copyTimes = Math.max(2, Math.ceil((areaWidth * 2) / boxWidth)) || 2;
+//     states.movingDistance = boxWidth * Math.floor(states.copyTimes / 2);
 
-    states.time = parseFloat(
-      ((marqueeTime * states.movingDistance) / 375).toFixed(2)
-    );
-  });
-};
+//     states.time = parseFloat(
+//       ((marqueeTime * states.movingDistance) / 375).toFixed(2)
+//     );
+//   });
+// };
 // TODO: 跑馬燈
 
 const navLinks = ref([
@@ -102,8 +103,8 @@ const scrollOver = computed(() => {
 // TODO: 時間動畫
 const clockReset = [0, 0, 0, 0, 0, 0, 0, 0].map((v, i) => ({
   index: i,
-  uperNum: 0,
-  belowNum: 0,
+  uperNum: v,
+  belowNum: v,
 }));
 
 let accumulateLottery = reactive(clockReset);
@@ -160,6 +161,8 @@ const numberAnimation = () => {
 };
 // TODO: 時間動畫
 
+let timer: any = ref(null);
+
 onMounted(() => {
   window.addEventListener("scroll", () => {
     windowScrollY.value = Math.floor(window.scrollY);
@@ -167,7 +170,7 @@ onMounted(() => {
   introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
   // setMarquee();
   determineDecimal();
-  const timer = setInterval(() => {
+  timer.value = setInterval(() => {
     numberAnimation();
   }, 1000);
 });
