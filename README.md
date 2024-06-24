@@ -1,4 +1,4 @@
-<h1>楊正宏(Edgar Yang)</h1>
+<h1>楊正宏(Hank Yang)</h1>
 <ul>
   <li>Education:東吳大學 / 數學系</li>
   <li>Location: New Taipei City</li>
@@ -46,13 +46,13 @@
   <li>
     <a href="https://www.104.com.tw/company/1a2x6bmhup">
       <span>萬通國際資訊有限公司-前端工程師</span>
-      <span>(2023/3~仍在職)</span>
+      <span>(2023/7~仍在職)</span>
     </a>
   </li>
   <li>
     <p>
       <span>鑫城有限公司-前端工程師</span>
-      <span>(2018/9~2023/3)</span>
+      <span>(2018/9~2023/7)</span>
     </p>
   </li>
   <li>
@@ -67,9 +67,29 @@
 <ul>
   <li>
     <p>
-        <a href="https://my-website-e9b07.web.app/" target="_blank" rel="nofollow">
+        <a href="https://my-website-e9b07.web.app" target="_blank" rel="nofollow">
           <b>我的網站首頁請參閱</b>
         </a>
+        </br>
+        ⌞個人網站，記錄自己作品及經歷。
+    </p>
+  </li>
+  <li>
+    <p>
+        <a href="https://memetalk.jystudio.co.uk" target="_blank" rel="nofollow">
+          <b>memetalk 迷因社群</b>
+        </a>
+        </br>
+        ⌞提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。
+    </p>
+  </li>
+  <li>
+    <p>
+        <a href="https://poe-rosy.vercel.app" target="_blank" rel="nofollow">
+          <b>poe 拓荒攻略站</b>
+        </a>
+        </br>
+        ⌞因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。
     </p>
   </li>
   <li>

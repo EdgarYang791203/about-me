@@ -46,9 +46,21 @@ const navLinks = ref([
 ]);
 
 const experienceList = [
-  { year: 2018, dataNum: 1, bg: "#ff9500", show: 0 },
-  { year: 2020, dataNum: 2, bg: "#ffcb00", show: 50 },
-  { year: 2022, dataNum: 3, bg: "#00539f", show: 75 },
+  { year: 2018, dataNum: 1, bg: "#ff9500", show: 0, during: "2018(3)-2018(5)" },
+  {
+    year: 2020,
+    dataNum: 2,
+    bg: "#ffcb00",
+    show: 50,
+    during: "2018(9)-2023(7)",
+  },
+  {
+    year: 2022,
+    dataNum: 3,
+    bg: "#00539f",
+    show: 75,
+    during: "2023(7)~2024(7)",
+  },
 ];
 
 type social = { name: string; href: string; img: string };
@@ -126,8 +138,10 @@ const determineDecimal = () => {
   );
   Object.assign(accumulateLottery, newArr);
 };
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 const removeFlipped = async (index: number) => {
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
   await sleep(250);
   document.querySelectorAll(".rotor-leaf")[index].classList.remove("flipped");
 };
@@ -135,7 +149,7 @@ const runFlipped = (index: number) => {
   document.querySelectorAll(".rotor-leaf")[index].classList.add("flipped");
   removeFlipped(index);
 };
-const numberAnimation = () => {
+const numberAnimation = async () => {
   const timeArr = getTimeNumbers();
   for (let index = 0; index < timeArr.length; index++) {
     const upNum = accumulateLottery[index].uperNum;
@@ -198,7 +212,7 @@ onMounted(() => {
       }"
     >
       <!-- TODO: 數字動畫 -->
-      <div class="font-cabin accumulate-lottery" style="font-size: 1.25rem">
+      <div class="accumulate-lottery" style="font-size: 1.25rem">
         <div v-for="item in accumulateLottery" :key="item.index">
           <template v-if="item.index !== 2 && item.index !== 5">
             <div class="rotor-leaf">
@@ -247,31 +261,33 @@ onMounted(() => {
   <div class="relative overflow-hidden w-full">
     <!-- TODO: BANNER -->
     <div
-      class="bg-[url('/image/laptop.jpg')] bg-blend-multiply w-full h-screen bg-cover bg-center bg-fixed flex items-center pr-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#fff] after:bottom-[-14px] after:left-0 after:rotate-1 after:border-2 after:border-[#FF6347]"
+      class="bg-[url('/image/laptop.jpg')] bg-blend-multiply w-full h-screen bg-cover bg-center bg-fixed flex flex-col justify-center pr-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#fff] after:bottom-[-14px] after:left-0 after:rotate-1 after:border-2 after:border-[#FF6347]"
       style="background-color: rgba(216, 216, 216, 1)"
     >
       <div
-        class="w-full max-w-[1200px] border-2 border-white h-[400px] relative mx-auto overflow-hidden"
+        class="w-full max-w-[1200px] mx-auto border-2 border-[#222] h-[400px] relative overflow-hidden bg-[url('/image/banner.jpg')] bg-[length:100%_auto] hover:bg-[length:125%_auto] bg-center bg-no-repeat transition-all"
         style="border-radius: 55px 225px 15px 25px/25px 25px 35px 355px"
+      ></div>
+      <div
+        ref="marqueeArea"
+        class="marqueeArea w-full max-w-[1200px] mx-auto mt-2 rounded-md after:animate-[marquee-bg-move_20s_linear_infinite]"
       >
-        <div ref="marqueeArea" class="marqueeArea">
-          <div
-            ref="marqueeBox"
-            class="marqueeBox animate-[marquee-move_10s_linear_infinite]"
+        <div
+          ref="marqueeBox"
+          class="marqueeBox animate-[marquee-move_30s_linear_infinite]"
+        >
+          <template
+            v-for="index in states.copyTimes"
+            :key="`marqueeItemCopy-${index}`"
           >
-            <template
-              v-for="index in states.copyTimes"
-              :key="`marqueeItemCopy-${index}`"
+            <div
+              v-for="(item, listIndex) in marqueeTexts"
+              :key="`marqueeItem-${index}-${listIndex}`"
+              class="marqueeItem font-cabin"
             >
-              <div
-                v-for="(item, listIndex) in marqueeTexts"
-                :key="`marqueeItem-${index}-${listIndex}`"
-                class="marqueeItem"
-              >
-                {{ item }}
-              </div>
-            </template>
-          </div>
+              {{ item }}
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -293,7 +309,7 @@ onMounted(() => {
       }"
     >
       <h2 class="w-full font-bold text-4xl py-2 border-bottom text-center pb-6">
-        <span class="inline-block relative title-border-bottom"
+        <span class="inline-block relative title-border-bottom font-cabin"
           >Experience</span
         >
       </h2>
@@ -342,7 +358,12 @@ onMounted(() => {
                   left: !(item.dataNum % 2),
                   visibility: blockScrollProgress > item.show,
                 }"
-              ></div>
+              >
+                <h3>
+                  <img src="./assets/laptop-icon.svg" alt="icon" />
+                  <span>{{ item.during }}</span>
+                </h3>
+              </div>
             </div>
           </div>
         </div>
@@ -464,22 +485,23 @@ onMounted(() => {
   position: relative;
   overflow: hidden;
   width: 100%;
-  background-color: #222;
 }
 .marqueeArea::after {
   position: absolute;
   content: "";
-  width: 100%;
+  width: 1000%;
   height: 100%;
   top: 0;
   left: 0;
   pointer-events: none;
   background-image: linear-gradient(
-    to right,
-    #626262,
-    transparent 5%,
-    transparent 95%,
-    #626262
+    135deg,
+    rgb(248, 198, 70) 0%,
+    rgb(248, 198, 70) 20%,
+    rgb(253, 140, 41) 40%,
+    rgb(253, 140, 41) 60%,
+    rgb(248, 198, 70) 80%,
+    rgb(248, 198, 70) 100%
   );
 }
 .marqueeArea::before {
@@ -495,10 +517,14 @@ onMounted(() => {
   background-size: 100% 100%;
   background-position: center;
   background-image: url("./assets/marquee-decorate.png");
+  filter: invert(100);
+  opacity: 0.5;
 }
 .marqueeBox {
   display: inline-block;
   white-space: nowrap;
+  position: relative;
+  z-index: 5;
 }
 .marqueeBox:hover {
   animation-play-state: paused;
@@ -506,9 +532,10 @@ onMounted(() => {
 .marqueeItem {
   display: inline-block;
   margin-right: 2rem;
-  color: #fff;
+  color: tomato;
   font-weight: 700;
   font-size: 3rem;
+  opacity: 0.7;
 }
 
 .menu li:not(:first-child)::before {
@@ -545,6 +572,27 @@ onMounted(() => {
   border: 5px solid rgba(25, 25, 25, 0.9);
   transform: rotateX(90deg);
   transition: all cubic-bezier(0.68, 0.55, 0.265, 1.55) 0.5s;
+  overflow: hidden;
+  text-align: left;
+}
+.information h3 {
+  text-align: left;
+  display: inline-block;
+  background-color: rgba(25, 25, 25, 0.9);
+  padding: 0.5rem 3px;
+}
+.information h3 img {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  filter: invert(200);
+}
+.information h3 span {
+  display: inline-block;
+  vertical-align: middle;
+  color: #eae1d3;
+  padding-left: 5px;
 }
 .information::after {
   content: "";
