@@ -21,6 +21,14 @@ export default {
             transform: "translateX(-50%)",
           },
         },
+        "marquee-bg-move": {
+          "0%": {
+            transform: "translate3d(-70%, 0px, 0px)",
+          },
+          "100%": {
+            transform: "translate3d(0%, 0px, 0px)",
+          },
+        },
         "arrow-stretch": {
           "0%": { height: "0px" },
           "100%": { height: "708px" },

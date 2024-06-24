@@ -50,15 +50,15 @@
     </a>
   </li>
   <li>
-    <p>
-      <span>鑫城有限公司-前端工程師</span>
+    <a href="https://www.twincn.com/item.aspx?no=85131432">
+      <span>鑫城軟件開發有限公司-前端工程師</span>
       <span>(2018/9~2023/7)</span>
-    </p>
+    </a>
   </li>
   <li>
     <a href="https://train.csie.ntu.edu.tw/train/">
       <span>台大資訊系統訓練班-學員</span>
-      <span>(2018/3)</span>
+      <span>(2018/3~2018/5)</span>
     </a>
   </li>
 </ul>
