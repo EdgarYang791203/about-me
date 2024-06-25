@@ -39,20 +39,38 @@ const states = reactive({
 // TODO: 跑馬燈
 
 const navLinks = ref([
+  { name: "TOP", label: "最上方" },
   { name: "INTRO", label: "個人檔案" },
   { name: "PRODUCTS", label: "作品集" },
-  { name: "COMMENTS", label: "留言板" },
+  // { name: "COMMENTS", label: "留言板" },
   { name: "MESSAGE", label: "私訊我" },
 ]);
 
 const experienceList = [
-  { year: 2018, dataNum: 1, bg: "#ff9500", show: 0, during: "2018(3)-2018(5)" },
+  {
+    year: 2018,
+    dataNum: 1,
+    bg: "#ff9500",
+    show: 0,
+    during: "2018(3)-2018(5)",
+    job: "學員",
+    content: [
+      "HTML、CSS、Bootstrap 基礎班-結業(3月)",
+      "JavaScript 基礎班-結業(4月)",
+      "Firebase、JavaScript 實務班-結業(5月)",
+    ],
+  },
   {
     year: 2020,
     dataNum: 2,
     bg: "#ffcb00",
     show: 50,
     during: "2018(9)-2023(7)",
+    job: "前端工程師",
+    content: [
+      "2020 年開始協助客戶產品【MGP】系統開發及維護",
+      "公司接案：夢想菜單-約會飯局交友網站",
+    ],
   },
   {
     year: 2022,
@@ -60,6 +78,10 @@ const experienceList = [
     bg: "#00539f",
     show: 75,
     during: "2023(7)~2024(7)",
+    job: "前端工程師",
+    content: [
+      "開發系統前端客戶需求(新增主題、主題改版、對接遊戲商遊戲、建立客製化表單並協助後端對接國外金流、後台各式報表、後台系統前端功能新增.....等等)",
+    ],
   },
 ];
 
@@ -75,6 +97,11 @@ const socialLinks: social[] = [
     name: "codepen",
     img: "/image/codepen-icon.png",
     href: "https://codepen.io/hank73307/pens/public",
+  },
+  {
+    name: "mail",
+    img: "/image/share-icon.png",
+    href: "mailto:edgaryang791203@gmail.com",
   },
 ];
 
@@ -102,6 +129,10 @@ const blockScrollHandler = ($event: any) => {
 
 const showScrollInto = ($event: any) => {
   const toLocation = $event.target.getAttribute("href").replace("#", "");
+  if (toLocation === "TOP") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
   const element = document.getElementById(toLocation);
   if (element) {
     element.scrollIntoView({ behavior: "smooth" });
@@ -211,7 +242,7 @@ onMounted(() => {
         borderRadius: '25px 25px 55px 5px/5px 55px 25px 25px',
       }"
     >
-      <!-- TODO: 數字動畫 -->
+      <!-- TODO: 時間動畫 -->
       <div class="accumulate-lottery" style="font-size: 1.25rem">
         <div v-for="item in accumulateLottery" :key="item.index">
           <template v-if="item.index !== 2 && item.index !== 5">
@@ -261,11 +292,11 @@ onMounted(() => {
   <div class="relative overflow-hidden w-full">
     <!-- TODO: BANNER -->
     <div
-      class="bg-[url('/image/laptop.jpg')] bg-blend-multiply w-full h-screen bg-cover bg-center bg-fixed flex flex-col justify-center pr-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#fff] after:bottom-[-14px] after:left-0 after:rotate-1 after:border-2 after:border-[#FF6347]"
+      class="w-full h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:bottom-[-14px] after:left-0 after:rotate-1 after:border-2 after:border-[#FF6347]"
       style="background-color: rgba(216, 216, 216, 1)"
     >
       <div
-        class="w-full max-w-[1200px] mx-auto border-2 border-[#222] h-[400px] relative overflow-hidden bg-[url('/image/banner.jpg')] bg-[length:100%_auto] hover:bg-[length:125%_auto] bg-center bg-no-repeat transition-all"
+        class="w-full max-w-[1200px] max-h-[876px] h-[30vw] mx-auto border-2 border-[#222] relative overflow-hidden bg-[url('/image/banner.jpg')] bg-[length:100%_auto] hover:bg-[length:125%_auto] bg-center bg-no-repeat transition-all"
         style="border-radius: 55px 225px 15px 25px/25px 25px 35px 355px"
       ></div>
       <div
@@ -296,10 +327,10 @@ onMounted(() => {
   <div
     ref="INTRO"
     id="INTRO"
-    class="py-12 w-full bg-[#fff] border-2 border-[#FF6347] border-t-0 relative"
+    class="py-12 w-full bg-[#f9efe1] border-2 border-[#FF6347] border-t-0 relative"
   >
     <div
-      class="text-center w-full mx-auto container md:max-w-[75vw] bg-white border-2 border-[rgba(0, 0, 0, 0.125)] rounded-[10px] transition-all duration-700"
+      class="text-center w-full mx-auto container xl:max-w-[1200px] max-w-[96%] bg-[#f9efe1] border-2 border-[#4d6085] rounded-[10px] transition-all duration-700"
       :class="`${showSection > 0 ? 'opacity-100' : 'opacity-0'}`"
       :style="{
         transform:
@@ -315,11 +346,11 @@ onMounted(() => {
       </h2>
       <div
         id="timeLine"
-        class="h-[354px] overflow-y-scroll pb-[10px]"
+        class="h-[354px] overflow-y-scroll overflow-x-hidden pb-[10px]"
         @scroll="blockScrollHandler"
       >
         <div
-          class="relative w-[0.5rem] mx-auto h-[708px] bg-[#000]"
+          class="relative w-[0.5rem] mx-auto h-[708px] bg-[#4d6085]"
           :class="
             showSection > 0
               ? 'animate-[arrow-stretch_1.5s_ease-in-out]'
@@ -344,7 +375,7 @@ onMounted(() => {
               <span>{{ item.year }}</span>
             </div>
             <div
-              class="w-[31vw] h-[30vh] border-5 border-[rgba(25, 25, 25, 0.9)] absolute"
+              class="xl:w-[31vw] w-[40vw] h-[30vh] border-5 border-[#4d6085] absolute"
               :style="{
                 top: 'calc(-15vh + 25px)',
                 left: item.dataNum % 2 ? '60px' : 'unset',
@@ -352,17 +383,31 @@ onMounted(() => {
               }"
             >
               <div
-                class="relative information"
-                :class="{
-                  right: item.dataNum % 2,
-                  left: !(item.dataNum % 2),
-                  visibility: blockScrollProgress > item.show,
-                }"
+                class="relative information before:transition-all before:duration-700"
+                :class="[
+                  {
+                    right: item.dataNum % 2,
+                    left: !(item.dataNum % 2),
+                    visibility: blockScrollProgress > item.show,
+                  },
+                ]"
+                :data-attr="item.job"
               >
                 <h3>
-                  <img src="./assets/laptop-icon.svg" alt="icon" />
-                  <span>{{ item.during }}</span>
+                  <img
+                    class="invert"
+                    src="./assets/laptop-icon.svg"
+                    alt="icon"
+                  />
+                  <span class="font-cabin">{{ item.during }}</span>
                 </h3>
+                <p
+                  v-for="(content, index) in item.content"
+                  :key="`text${index}`"
+                  class="py-1 pl-2 pr-[36px] tracking-tighter"
+                >
+                  {{ content.length > 1 ? `${index + 1}.` : "" }}{{ content }}
+                </p>
               </div>
             </div>
           </div>
@@ -375,12 +420,19 @@ onMounted(() => {
   <div
     ref="PRODUCTS"
     id="PRODUCTS"
-    class="py-12 w-full bg-[#ebebeb] h-[70vh] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#ebebeb] after:top-[-14px] after:left-0 after:rotate-[-1deg] after:border-0 after:border-t-2 after:border-[#FF6347]"
+    class="py-12 w-full h-[70vh] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#eae1d3] after:top-[-14px] after:left-0 after:rotate-[-1deg] after:border-0 after:border-t-2 after:border-[#FF6347]"
+  ></div>
+  <!-- TODO: MESSAGE -->
+  <div
+    ref="MESSAGE"
+    id="MESSAGE"
+    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#eae1d3] after:top-[-14px] after:left-0 after:rotate-[1deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
   ></div>
   <div></div>
+  <!-- TODO: FOOTER -->
   <footer
-    class="w-full px-2 py-[6px] bg-[#222831]"
-    style="border-top: 2px solid #d90000"
+    class="w-full px-2 py-[6px] bg-[#4d6085]"
+    style="border-top: 2px solid tomato"
   >
     <div
       class="mx-auto container md:max-w-[1000px] flex items-center justify-between"
@@ -397,7 +449,7 @@ onMounted(() => {
           <img :src="link.img" alt="github" />
         </a>
       </div>
-      <p class="text-white inline-block tracking-wide">
+      <p class="text-[#eae1d3] inline-block tracking-wide">
         © Copy right Feb 14,2024
       </p>
     </div>
@@ -407,6 +459,17 @@ onMounted(() => {
 <style scoped>
 .accumulate-lottery {
   font-size: 0;
+  position: relative;
+}
+.accumulate-lottery::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  background-color: tomato;
+  border-radius: 5px;
 }
 .accumulate-lottery > div {
   display: inline-block;
@@ -416,7 +479,7 @@ onMounted(() => {
   overflow-x: hidden;
   border-radius: 5px;
   font-size: 30px;
-  color: #ffffff;
+  color: #eae1d3;
   position: relative;
   z-index: 1;
 }
@@ -433,7 +496,7 @@ onMounted(() => {
   z-index: 5;
   width: 100%;
   height: 1px;
-  background-color: #000;
+  background-color: #4d6085;
 }
 .accumulate-lottery > div::after {
   top: 19px;
@@ -474,11 +537,11 @@ onMounted(() => {
 }
 .accumulate-lottery > div span.uper {
   line-height: 34px;
-  background-color: #151515;
+  background-color: #3f4e6c;
 }
 .accumulate-lottery > div span.below {
   line-height: 0;
-  background-color: #202020;
+  background-color: #4d6085;
 }
 
 .marqueeArea {
@@ -560,25 +623,25 @@ onMounted(() => {
   border-width: 0.25rem 0 0 0;
 }
 .arrow-black {
-  border-top: 20px solid #222;
+  border-top: 20px solid #4d6085;
   border-right: 13px solid transparent;
   border-left: 13px solid transparent;
 }
 
 .information {
+  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  border: 5px solid rgba(25, 25, 25, 0.9);
+  border: 5px solid #4d6085;
   transform: rotateX(90deg);
   transition: all cubic-bezier(0.68, 0.55, 0.265, 1.55) 0.5s;
-  overflow: hidden;
   text-align: left;
 }
 .information h3 {
   text-align: left;
   display: inline-block;
-  background-color: rgba(25, 25, 25, 0.9);
+  background-color: #4d6085;
   padding: 0.5rem 3px;
 }
 .information h3 img {
@@ -586,7 +649,29 @@ onMounted(() => {
   height: 20px;
   display: inline-block;
   vertical-align: middle;
-  filter: invert(200);
+}
+.information::after {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  border: solid 10px;
+  border-color: transparent #4d6085 transparent transparent;
+  top: 45%;
+  left: -24px;
+}
+.information::before {
+  content: attr(data-attr);
+  position: absolute;
+  display: inline-block;
+  right: -20%;
+  top: 50px;
+  opacity: 0;
+  writing-mode: vertical-lr;
+  font-weight: 700;
+  font-size: 24px;
+  color: #4d6085;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  text-shadow: 0px -1px 0px #3e4d6b, 3px -6px #eae1d3, 6px -12px #efededd8;
 }
 .information h3 span {
   display: inline-block;
@@ -594,21 +679,16 @@ onMounted(() => {
   color: #eae1d3;
   padding-left: 5px;
 }
-.information::after {
-  content: "";
-  position: absolute;
-  display: inline-block;
-  border: solid 10px;
-  border-color: transparent #303030 transparent transparent;
-  top: 45%;
-  left: -24px;
-}
 .information.left::after {
-  border-color: transparent transparent transparent #303030;
+  border-color: transparent transparent transparent #4d6085;
   left: unset;
   right: -24px;
 }
 .information.visibility {
   transform: rotateX(0deg) perspective(360px);
+}
+.information.visibility::before {
+  right: 0;
+  opacity: 1;
 }
 </style>
