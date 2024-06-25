@@ -206,6 +206,109 @@ const numberAnimation = async () => {
 };
 // TODO: 時間動畫
 
+// TODO: 輪播
+const sideProjects = [
+  { name: "本站", id: 0 },
+  { name: "memetalk 迷因社群", id: 1 },
+  { name: "poe 拓荒攻略站", id: 2 },
+];
+
+const projectActive = ref(1);
+
+let styleList: any[] = reactive([]);
+
+const setStyle = (values: any) => {
+  if (values) {
+    const { xtrans, scale, opacity, zIndex, pIndex } = values;
+    const transform = `translate(${xtrans - 50}%, ${0 - 50}%) scale(${scale})`;
+    const newStyleList = [...styleList];
+    newStyleList[pIndex] = {
+      zIndex,
+      transform,
+      display: opacity === 0 ? "none" : "inline-block",
+      transition: "transform 0.5s",
+    };
+    Object.assign(styleList, newStyleList);
+  }
+};
+
+const mod = (n: number, m: number) => ((n % m) + m) % m;
+
+const carousel = ref(null);
+
+const arrange = (centerIndex: number) => {
+  const catesReference: any = carousel.value;
+  if (catesReference.children) {
+    styleList = [];
+    const half = (sideProjects.length - 1) / 2;
+    const before = [];
+    for (let i = centerIndex - 1; before.length < half; i--) {
+      const pIndex = mod(i, sideProjects.length);
+      before.push({
+        pIndex,
+        zIndex: 0,
+        xtrans: 0,
+        scale: 1,
+        opacity: 1,
+      });
+    }
+    const after = [];
+    for (
+      let i = centerIndex + 1;
+      after.length < sideProjects.length - before.length - 1;
+      i++
+    ) {
+      const pIndex = mod(i, sideProjects.length);
+      after.push({
+        pIndex,
+        zIndex: 0,
+        xtrans: 0,
+        scale: 1,
+        opacity: 1,
+      });
+    }
+    // console.log(before, after);
+    const centerZIndex = Math.max(before.length, after.length) + 1;
+    setStyle({
+      pIndex: centerIndex,
+      xtrans: 0,
+      scale: 1,
+      opacity: 1,
+      zIndex: centerZIndex,
+    });
+    [before, after].forEach((list: any, listIndex: number) => {
+      let parentTrans = 0;
+
+      if (list) {
+        list.forEach((item: any, i: number) => {
+          const scale = 0.8 ** (i + 1);
+          const absolute = 105 * scale * 1.125 + parentTrans;
+          parentTrans = absolute;
+          const xtrans = (listIndex === 0 ? -1 : 1) * absolute;
+          const opacity = Math.max(1 - 0.25 * (i / 2 + 1) ** 2, 0);
+          const zIndex = Math.max(before.length, after.length) - i;
+          setStyle({
+            pIndex: item.pIndex,
+            xtrans,
+            scale,
+            opacity,
+            zIndex,
+          });
+        });
+      }
+    });
+  }
+};
+
+const arrangeHandler = (id: number) => {
+  const index = sideProjects.findIndex((item) => item.id === id);
+  if (index >= 0) {
+    projectActive.value = id;
+    arrange(index);
+  }
+};
+// TODO: 輪播
+
 let timer: any = ref(null);
 
 onMounted(() => {
@@ -214,6 +317,7 @@ onMounted(() => {
   });
   introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
   // setMarquee();
+  arrange(1);
   determineDecimal();
   timer.value = setInterval(() => {
     numberAnimation();
@@ -292,7 +396,7 @@ onMounted(() => {
   <div class="relative overflow-hidden w-full">
     <!-- TODO: BANNER -->
     <div
-      class="w-full h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:bottom-[-14px] after:left-0 after:rotate-1 after:border-2 after:border-[#FF6347]"
+      class="w-full min-h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:bottom-[-14px] after:left-0 after:rotate-[0.5deg] after:border-2 after:border-[#FF6347] after:border-b-0"
       style="background-color: rgba(216, 216, 216, 1)"
     >
       <div
@@ -327,7 +431,7 @@ onMounted(() => {
   <div
     ref="INTRO"
     id="INTRO"
-    class="py-12 w-full bg-[#f9efe1] border-2 border-[#FF6347] border-t-0 relative"
+    class="py-12 w-full bg-[#f9efe1] border-2 border-[#FF6347] border-t-0 border-b-0 relative"
   >
     <div
       class="text-center w-full mx-auto container xl:max-w-[1200px] max-w-[96%] bg-[#f9efe1] border-2 border-[#4d6085] rounded-[10px] transition-all duration-700"
@@ -375,7 +479,7 @@ onMounted(() => {
               <span>{{ item.year }}</span>
             </div>
             <div
-              class="xl:w-[31vw] w-[40vw] h-[30vh] border-5 border-[#4d6085] absolute"
+              class="xl:w-[31vw] w-[40vw] h-[30vh] max-h-[230px] max-w-[540px] border-5 border-[#4d6085] absolute"
               :style="{
                 top: 'calc(-15vh + 25px)',
                 left: item.dataNum % 2 ? '60px' : 'unset',
@@ -420,13 +524,27 @@ onMounted(() => {
   <div
     ref="PRODUCTS"
     id="PRODUCTS"
-    class="py-12 w-full h-[70vh] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#eae1d3] after:top-[-14px] after:left-0 after:rotate-[-1deg] after:border-0 after:border-t-2 after:border-[#FF6347]"
-  ></div>
+    class="py-12 w-full h-[100vh] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:top-[-14px] after:left-0 after:rotate-[-0.5deg] after:border-2 after:border-t-0 after:border-[#FF6347]"
+  >
+    <!-- TODO: 輪播 -->
+    <div class="flex carousel" ref="carousel">
+      <button
+        v-for="(item, index) in sideProjects"
+        :key="item.name"
+        class="project"
+        :class="{ center: projectActive === item.id }"
+        :style="styleList[index]"
+        @click="arrangeHandler(item.id)"
+      >
+        <span>{{ item.id }}</span>
+      </button>
+    </div>
+  </div>
   <!-- TODO: MESSAGE -->
   <div
     ref="MESSAGE"
     id="MESSAGE"
-    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#eae1d3] after:top-[-14px] after:left-0 after:rotate-[1deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
+    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#eae1d3] after:top-[-14px] after:left-0 after:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
   ></div>
   <div></div>
   <!-- TODO: FOOTER -->
@@ -662,8 +780,9 @@ onMounted(() => {
 .information::before {
   content: attr(data-attr);
   position: absolute;
+  z-index: 5;
   display: inline-block;
-  right: -20%;
+  right: -40px;
   top: 50px;
   opacity: 0;
   writing-mode: vertical-lr;
@@ -671,7 +790,7 @@ onMounted(() => {
   font-size: 24px;
   color: #4d6085;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  text-shadow: 0px -1px 0px #3e4d6b, 3px -6px #eae1d3, 6px -12px #efededd8;
+  text-shadow: 0px -1px 0px #3e4d6b, 2px -4px #d9d1c5, 4px -6px #eae1d3;
 }
 .information h3 span {
   display: inline-block;
@@ -688,7 +807,33 @@ onMounted(() => {
   transform: rotateX(0deg) perspective(360px);
 }
 .information.visibility::before {
-  right: 0;
+  right: 4px;
   opacity: 1;
+}
+.carousel {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 10;
+  justify-content: space-around;
+  margin-right: 0;
+  margin-left: 0;
+  flex-wrap: nowrap;
+  overflow-x: visible;
+  padding: 130px 0;
+}
+.carousel .project {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  width: 266px;
+  height: 304px;
+  padding: 0;
+  transition: all 0.2s ease-in-out;
+  border-radius: 76px 76px 15.2px 15.2px;
+  overflow: hidden;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
 }
 </style>
