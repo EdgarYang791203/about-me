@@ -4,6 +4,8 @@ import getTimeNumbers from "./util/getTimestamp";
 
 const introTop = ref(0);
 
+const productsTop = ref(0);
+
 const windowScrollY = ref(0);
 
 // TODO: 跑馬燈
@@ -54,7 +56,7 @@ const experienceList = [
     show: 0,
     during: "2018(3)-2018(5)",
     job: "學員",
-    content: [
+    contents: [
       "HTML、CSS、Bootstrap 基礎班-結業(3月)",
       "JavaScript 基礎班-結業(4月)",
       "Firebase、JavaScript 實務班-結業(5月)",
@@ -67,7 +69,7 @@ const experienceList = [
     show: 50,
     during: "2018(9)-2023(7)",
     job: "前端工程師",
-    content: [
+    contents: [
       "2020 年開始協助客戶產品【MGP】系統開發及維護",
       "公司接案：夢想菜單-約會飯局交友網站",
     ],
@@ -79,7 +81,7 @@ const experienceList = [
     show: 75,
     during: "2023(7)~2024(7)",
     job: "前端工程師",
-    content: [
+    contents: [
       "開發系統前端客戶需求(新增主題、主題改版、對接遊戲商遊戲、建立客製化表單並協助後端對接國外金流、後台各式報表、後台系統前端功能新增.....等等)",
     ],
   },
@@ -108,6 +110,8 @@ const socialLinks: social[] = [
 const showSection = computed(() => {
   const currentTop = windowScrollY.value;
   switch (true) {
+    case currentTop > productsTop.value - 160:
+      return 2;
     case currentTop > introTop.value - 160:
       return 1;
 
@@ -208,25 +212,51 @@ const numberAnimation = async () => {
 
 // TODO: 輪播
 const sideProjects = [
-  { name: "本站", id: 0 },
-  { name: "memetalk 迷因社群", id: 1 },
-  { name: "poe 拓荒攻略站", id: 2 },
+  { name: "本站", id: 0, intro: "個人網站，記錄自己作品及經歷。" },
+  {
+    name: "memetalk 迷因社群",
+    id: 1,
+    intro: "提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。",
+  },
+  {
+    name: "poe 拓荒攻略站",
+    id: 2,
+    intro: "因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。",
+  },
 ];
 
 const projectActive = ref(1);
+
+const projectActiveData = computed(() => {
+  const target = sideProjects.find((item) => item.id === projectActive.value);
+  if (target) return target;
+  return null;
+});
 
 let styleList: any[] = reactive([]);
 
 const setStyle = (values: any) => {
   if (values) {
-    const { xtrans, scale, opacity, zIndex, pIndex } = values;
-    const transform = `translate(${xtrans - 50}%, ${0 - 50}%) scale(${scale})`;
+    const {
+      xtrans,
+      scale,
+      opacity,
+      zIndex,
+      pIndex,
+      rotateY,
+      rotateZ,
+      transformOrigin,
+    } = values;
+    const transform = `translate(${xtrans - 50}%, ${
+      0 - 50
+    }%) scale(${scale}) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
     const newStyleList = [...styleList];
     newStyleList[pIndex] = {
       zIndex,
       transform,
       display: opacity === 0 ? "none" : "inline-block",
       transition: "transform 0.5s",
+      transformOrigin,
     };
     Object.assign(styleList, newStyleList);
   }
@@ -250,6 +280,9 @@ const arrange = (centerIndex: number) => {
         xtrans: 0,
         scale: 1,
         opacity: 1,
+        rotateY: 0,
+        rotateZ: 0,
+        transformOrigin: "right center",
       });
     }
     const after = [];
@@ -265,6 +298,9 @@ const arrange = (centerIndex: number) => {
         xtrans: 0,
         scale: 1,
         opacity: 1,
+        rotateY: 45,
+        rotateZ: -150,
+        transformOrigin: "left center",
       });
     }
     // console.log(before, after);
@@ -275,6 +311,9 @@ const arrange = (centerIndex: number) => {
       scale: 1,
       opacity: 1,
       zIndex: centerZIndex,
+      rotateY: 0,
+      rotateZ: 0,
+      transformOrigin: "50% 50% 0",
     });
     [before, after].forEach((list: any, listIndex: number) => {
       let parentTrans = 0;
@@ -287,12 +326,18 @@ const arrange = (centerIndex: number) => {
           const xtrans = (listIndex === 0 ? -1 : 1) * absolute;
           const opacity = Math.max(1 - 0.25 * (i / 2 + 1) ** 2, 0);
           const zIndex = Math.max(before.length, after.length) - i;
+          const rotateY = item.rotateY;
+          const rotateZ = item.rotateZ;
+          const transformOrigin = item.transformOrigin;
           setStyle({
             pIndex: item.pIndex,
             xtrans,
             scale,
             opacity,
             zIndex,
+            rotateY,
+            rotateZ,
+            transformOrigin,
           });
         });
       }
@@ -316,6 +361,7 @@ onMounted(() => {
     windowScrollY.value = Math.floor(window.scrollY);
   });
   introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
+  productsTop.value = document.getElementById("PRODUCTS")?.offsetTop || 0;
   // setMarquee();
   arrange(1);
   determineDecimal();
@@ -396,7 +442,7 @@ onMounted(() => {
   <div class="relative overflow-hidden w-full">
     <!-- TODO: BANNER -->
     <div
-      class="w-full min-h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:bottom-[-14px] after:left-0 after:rotate-[0.5deg] after:border-2 after:border-[#FF6347] after:border-b-0"
+      class="w-full min-h-screen h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:bottom-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-2 after:border-[#FF6347] after:border-b-0"
       style="background-color: rgba(216, 216, 216, 1)"
     >
       <div
@@ -444,7 +490,8 @@ onMounted(() => {
       }"
     >
       <h2 class="w-full font-bold text-4xl py-2 border-bottom text-center pb-6">
-        <span class="inline-block relative title-border-bottom font-cabin"
+        <span
+          class="inline-block relative title-border-bottom font-cabin text-f9efe1"
           >Experience</span
         >
       </h2>
@@ -506,11 +553,12 @@ onMounted(() => {
                   <span class="font-cabin">{{ item.during }}</span>
                 </h3>
                 <p
-                  v-for="(content, index) in item.content"
+                  v-for="(content, index) in item.contents"
                   :key="`text${index}`"
                   class="py-1 pl-2 pr-[36px] tracking-tighter"
                 >
-                  {{ content.length > 1 ? `${index + 1}.` : "" }}{{ content }}
+                  {{ item.contents.length > 1 ? `${index + 1}.` : ""
+                  }}{{ content }}
                 </p>
               </div>
             </div>
@@ -524,27 +572,58 @@ onMounted(() => {
   <div
     ref="PRODUCTS"
     id="PRODUCTS"
-    class="py-12 w-full h-[100vh] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:top-[-14px] after:left-0 after:rotate-[-0.5deg] after:border-2 after:border-t-0 after:border-[#FF6347]"
+    class="overflow-hidden pt-12 w-full relative z-10 bg-[#4d6085] after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:top-[-14px] after:left-0 after:rotate-[-1deg] after:huge:rotate-[-0.5deg] after:border-2 after:border-t-0 after:border-[#FF6347]"
   >
-    <!-- TODO: 輪播 -->
-    <div class="flex carousel" ref="carousel">
-      <button
-        v-for="(item, index) in sideProjects"
-        :key="item.name"
-        class="project"
-        :class="{ center: projectActive === item.id }"
-        :style="styleList[index]"
-        @click="arrangeHandler(item.id)"
+    <h2
+      class="w-full font-bold text-4xl border-bottom text-center relative z-10"
+    >
+      <span
+        class="inline-block relative title-border-bottom font-cabin text-[#f9efe1]"
+        >Products</span
       >
-        <span>{{ item.id }}</span>
-      </button>
+    </h2>
+    <div
+      class="w-full flex duration-1000 delay-100"
+      :class="`${showSection > 1 ? 'opacity-100' : 'opacity-0'}`"
+      :style="{
+        height: 'calc(100vh - 6rem - 70px)',
+        transform:
+          showSection > 1
+            ? 'translateX(0) scale(1)'
+            : 'translateX(130%) scale(0.95)',
+      }"
+    >
+      <!-- TODO: 輪播 -->
+      <div class="carousel h-full" ref="carousel">
+        <button
+          v-for="(item, index) in sideProjects"
+          :key="item.name"
+          class="project hover:border-none focus:outline-none bg-[#222]"
+          :class="{ center: projectActive === item.id }"
+          :style="styleList[index]"
+          @click="arrangeHandler(item.id)"
+        >
+          <img
+            class="w-full h-full"
+            :src="`/image/production${item.id}.png`"
+            alt="demo"
+          />
+        </button>
+      </div>
+      <div
+        class="project-info flex flex-col justify-center"
+        v-if="projectActiveData"
+      >
+        <h2>{{ projectActiveData.name }}</h2>
+        <p>{{ projectActiveData.intro }}</p>
+      </div>
     </div>
   </div>
   <!-- TODO: MESSAGE -->
   <div
     ref="MESSAGE"
     id="MESSAGE"
-    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#eae1d3] after:top-[-14px] after:left-0 after:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
+    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#4d6085] after:top-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
   ></div>
   <div></div>
   <!-- TODO: FOOTER -->
@@ -810,28 +889,25 @@ onMounted(() => {
   right: 4px;
   opacity: 1;
 }
+.project-info {
+  flex: 1;
+}
 .carousel {
-  min-width: 100%;
-  height: 100%;
   position: relative;
   z-index: 10;
-  justify-content: space-around;
-  margin-right: 0;
-  margin-left: 0;
-  flex-wrap: nowrap;
+  flex: 1;
   overflow-x: visible;
-  padding: 130px 0;
 }
 .carousel .project {
   position: absolute;
   left: 50%;
   top: 50%;
   z-index: 5;
-  width: 266px;
-  height: 304px;
+  width: 474px;
+  height: 216px;
   padding: 0;
   transition: all 0.2s ease-in-out;
-  border-radius: 76px 76px 15.2px 15.2px;
+  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   transform: translate(-50%, -50%);

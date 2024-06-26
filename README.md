@@ -21,6 +21,7 @@
   <li>使用 Nuxt3、Tailwindcss 建置 side projects 應用</li>
 </ul>
 <h2>git 版本控制</h2>
+<img src="/public/image/gitflow.png" alt="git">
 <div>
   <p>依照 Git Flow 的建議切分 master、features 為長期分支，並使用 hotfix 及 feature 修復已發布版本和本地開發需求。</p>
   <h3>main 分支：</h3>
