@@ -1,3 +1,5 @@
+import { transform } from "typescript";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
@@ -16,6 +18,7 @@ export default {
       animation: {
         "slide-in-top": "1s ease 0s 1 normal none running slide-in",
         "slide-in-left": "",
+        "slide-in-bottom": "",
         "menu-hover": "1s infinite",
         "arrow-stretch": "1s ease-in-out",
       },
@@ -43,6 +46,10 @@ export default {
         "slide-in-top": {
           "0%": { top: "-100%" },
           "100%": { top: "0px" },
+        },
+        "slide-in-bottom": {
+          "0%": { opacity: 0, transform: "translateY(100%)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
         },
         "slide-in-left": {
           "0%": {

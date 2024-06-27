@@ -212,14 +212,14 @@ const numberAnimation = async () => {
 
 // TODO: 輪播
 const sideProjects = [
-  { name: "本站", id: 0, intro: "個人網站，記錄自己作品及經歷。" },
+  { name: "My Website", id: 0, intro: "個人網站，記錄自己作品及經歷。" },
   {
-    name: "memetalk 迷因社群",
+    name: "MeMetalk",
     id: 1,
     intro: "提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。",
   },
   {
-    name: "poe 拓荒攻略站",
+    name: "POE Guide",
     id: 2,
     intro: "因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。",
   },
@@ -265,6 +265,8 @@ const setStyle = (values: any) => {
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 
 const carousel = ref(null);
+
+const carouselSliding = ref(false);
 
 const arrange = (centerIndex: number) => {
   const catesReference: any = carousel.value;
@@ -343,9 +345,13 @@ const arrange = (centerIndex: number) => {
       }
     });
   }
+  setTimeout(() => {
+    carouselSliding.value = false;
+  }, 1000);
 };
 
 const arrangeHandler = (id: number) => {
+  carouselSliding.value = true;
   const index = sideProjects.findIndex((item) => item.id === id);
   if (index >= 0) {
     projectActive.value = id;
@@ -583,7 +589,7 @@ onMounted(() => {
       >
     </h2>
     <div
-      class="w-full flex duration-1000 delay-100"
+      class="w-full flex duration-1000 delay-100 select-none"
       :class="`${showSection > 1 ? 'opacity-100' : 'opacity-0'}`"
       :style="{
         height: 'calc(100vh - 6rem - 70px)',
@@ -614,8 +620,26 @@ onMounted(() => {
         class="project-info flex flex-col justify-center"
         v-if="projectActiveData"
       >
-        <h2>{{ projectActiveData.name }}</h2>
-        <p>{{ projectActiveData.intro }}</p>
+        <div class="overflow-hidden w-full h-[9vw]">
+          <h2
+            class="gradient-text font-cabin"
+            :class="{
+              'animate-[slide-in-bottom_1s_ease]': carouselSliding,
+            }"
+            :data-attr="projectActiveData.name"
+          >
+            {{ projectActiveData.name }}
+          </h2>
+        </div>
+        <div class="overflow-hidden w-full h-[9vw]">
+          <p
+            :class="{
+              'animate-[slide-in-bottom_1s_ease]': carouselSliding,
+            }"
+          >
+            {{ projectActiveData.intro }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -654,6 +678,20 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.gradient-text {
+  position: relative;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
+.gradient-text::after {
+  content: attr(data-attr);
+  position: absolute;
+  z-index: -1;
+  left: 0px;
+  top: 0px;
+}
 .accumulate-lottery {
   font-size: 0;
   position: relative;
@@ -890,7 +928,36 @@ onMounted(() => {
   opacity: 1;
 }
 .project-info {
-  flex: 1;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 50vw;
+  overflow: hidden;
+  padding-right: 10px;
+}
+.project-info h2 {
+  font-size: 6vw;
+  background-image: linear-gradient(
+    135deg,
+    rgb(248, 198, 70) 0%,
+    rgb(253, 140, 41) 20%,
+    rgb(248, 198, 70) 40%,
+    rgb(253, 140, 41) 60%,
+    rgb(248, 198, 70) 80%,
+    rgb(253, 140, 41) 100%
+  );
+}
+.project-info h2::after {
+  text-shadow: 1px 1px 1px rgb(253, 140, 41), 1px 2px 1px rgb(253, 140, 41),
+    1px 3px 1px rgb(253, 140, 41), 1px 4px 1px rgb(253, 140, 41),
+    1px 5px 1px rgb(253, 140, 41), 1px 6px 1px rgb(253, 140, 41),
+    1px 22px 10px rgba(248, 198, 70, 0.2);
+}
+.project-info p {
+  font-size: 3vw;
+  font-weight: bold;
+  color: #f5f5f5;
+  text-shadow: 1px 1px 1px #919191, 1px 2px 1px #919191, 1px 3px 1px #919191,
+    1px 25px 35px rgba(16, 16, 16, 0.2);
 }
 .carousel {
   position: relative;
