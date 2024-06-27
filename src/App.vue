@@ -212,16 +212,23 @@ const numberAnimation = async () => {
 
 // TODO: 輪播
 const sideProjects = [
-  { name: "My Website", id: 0, intro: "個人網站，記錄自己作品及經歷。" },
+  {
+    name: "My Website",
+    id: 0,
+    intro: "個人網站，記錄自己作品及經歷。",
+    href: null,
+  },
   {
     name: "MeMetalk",
     id: 1,
     intro: "提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。",
+    href: "https://memetalk.jystudio.co.uk",
   },
   {
     name: "POE Guide",
     id: 2,
     intro: "因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。",
+    href: "https://poe-rosy.vercel.app",
   },
 ];
 
@@ -347,10 +354,22 @@ const arrange = (centerIndex: number) => {
   }
   setTimeout(() => {
     carouselSliding.value = false;
-  }, 1000);
+  }, 700);
 };
-
+const redirectPage = () => {
+  const project = projectActiveData.value;
+  const windowReference = window.open();
+  if (project && project.href && windowReference) {
+    windowReference.location.href = project.href;
+  } else {
+    windowReference?.close();
+  }
+};
 const arrangeHandler = (id: number) => {
+  if (projectActive.value === id) {
+    redirectPage();
+    return;
+  }
   carouselSliding.value = true;
   const index = sideProjects.findIndex((item) => item.id === id);
   if (index >= 0) {
@@ -580,6 +599,20 @@ onMounted(() => {
     id="PRODUCTS"
     class="overflow-hidden pt-12 w-full relative z-10 bg-[#4d6085] after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:top-[-14px] after:left-0 after:rotate-[-1deg] after:huge:rotate-[-0.5deg] after:border-2 after:border-t-0 after:border-[#FF6347]"
   >
+    <div
+      class="opacity-0 transition-all fuzzy-before absolute w-[80vw] left-[10vw] top-[110px] overflow-hidden rounded-[5px]"
+      :class="{
+        hidden: showSection <= 1,
+        'opacity-100': showSection > 1,
+        'animate-[fade-in_700ms_ease]': carouselSliding,
+      }"
+    >
+      <img
+        class="w-full opacity-[0.9]"
+        :src="`/image/production${projectActive}.png`"
+        alt="fuzzy-bg"
+      />
+    </div>
     <h2
       class="w-full font-bold text-4xl border-bottom text-center relative z-10"
     >
@@ -589,14 +622,14 @@ onMounted(() => {
       >
     </h2>
     <div
-      class="w-full flex duration-1000 delay-100 select-none"
+      class="w-full flex duration-1000 select-none relative z-10"
       :class="`${showSection > 1 ? 'opacity-100' : 'opacity-0'}`"
       :style="{
         height: 'calc(100vh - 6rem - 70px)',
         transform:
           showSection > 1
             ? 'translateX(0) scale(1)'
-            : 'translateX(130%) scale(0.95)',
+            : 'translateX(30%) scale(0.95)',
       }"
     >
       <!-- TODO: 輪播 -->
@@ -926,6 +959,18 @@ onMounted(() => {
 .information.visibility::before {
   right: 4px;
   opacity: 1;
+}
+.fuzzy-before::before {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  backdrop-filter: blur(4px);
+  border-radius: 0.25rem;
+  background-image: linear-gradient(to top, #4d6085 0%, transparent 100%);
 }
 .project-info {
   flex-grow: 0;

@@ -21,6 +21,7 @@ export default {
         "slide-in-bottom": "",
         "menu-hover": "1s infinite",
         "arrow-stretch": "1s ease-in-out",
+        "fade-in": "",
       },
       keyframes: {
         "marquee-move": {
@@ -42,6 +43,10 @@ export default {
         "arrow-stretch": {
           "0%": { height: "0px" },
           "100%": { height: "708px" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0", display: "none" },
+          "100%": { opacity: "1", display: "block" },
         },
         "slide-in-top": {
           "0%": { top: "-100%" },
