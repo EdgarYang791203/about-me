@@ -6,6 +6,8 @@ const introTop = ref(0);
 
 const productsTop = ref(0);
 
+const messageTop = ref(0);
+
 const windowScrollY = ref(0);
 
 // TODO: 跑馬燈
@@ -110,11 +112,12 @@ const socialLinks: social[] = [
 const showSection = computed(() => {
   const currentTop = windowScrollY.value;
   switch (true) {
+    case currentTop > messageTop.value - 200:
+      return 3;
     case currentTop > productsTop.value - 160:
       return 2;
     case currentTop > introTop.value - 160:
       return 1;
-
     default:
       return 0;
   }
@@ -379,6 +382,10 @@ const arrangeHandler = (id: number) => {
 };
 // TODO: 輪播
 
+// TODO: 私迅我
+
+// TODO: 私迅我
+
 let timer: any = ref(null);
 
 onMounted(() => {
@@ -387,6 +394,7 @@ onMounted(() => {
   });
   introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
   productsTop.value = document.getElementById("PRODUCTS")?.offsetTop || 0;
+  messageTop.value = document.getElementById("MESSAGE")?.offsetTop || 0;
   // setMarquee();
   arrange(1);
   determineDecimal();
@@ -680,9 +688,30 @@ onMounted(() => {
   <div
     ref="MESSAGE"
     id="MESSAGE"
-    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#4d6085] after:top-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
-  ></div>
-  <div></div>
+    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex items-center justify-center relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#4d6085] after:top-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
+  >
+    <div
+      class="px-[30px] pt-[20px] pb-[50px] bg-[tomato] rounded-md w-[380px] relative contact-box opacity-0"
+      :class="{ 'animate-[wobble_700ms] opacity-100': showSection > 2 }"
+    >
+      <div class="flex">
+        <img
+          class="w-[96px] rounded-[50%]"
+          src="/image/head-shot.jpeg"
+          alt="head-shot"
+        />
+        <div class="pl-8 text-white flex flex-col justify-center">
+          <p class="text-[22px] mb-[10px]">Hank Yang</p>
+          <p class="text-sm">Hi, I'm Hank and I'm a web front-end developer.</p>
+        </div>
+        <div
+          class="contact-btn transition-all cursor-pointer absolute left-[90px] bottom-[-24px] w-[200px] h-[48px] bg-[#eae1d3] rounded-[30px] text-[#4d6085] flex justify-center items-center border-b-2 border-[#4d6085]"
+        >
+          <span>contact me</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- TODO: FOOTER -->
   <footer
     class="w-full px-2 py-[6px] bg-[#4d6085]"
@@ -1023,5 +1052,29 @@ onMounted(() => {
   overflow: hidden;
   cursor: pointer;
   transform: translate(-50%, -50%);
+}
+.contact-box {
+  transform-origin: bottom center;
+}
+.contact-btn {
+  box-shadow: 0 8px 13px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  transition-delay: 0.1s;
+}
+.contact-btn span {
+  opacity: 1;
+  transition: opacity 0.2s;
+  transition-delay: 0.4s;
+}
+.contact-btn span::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: 50%;
+  bottom: -28px;
+  z-index: 3;
+  border: solid 15px transparent;
+  border-top-color: #eae1d3;
 }
 </style>

@@ -22,8 +22,26 @@ export default {
         "menu-hover": "1s infinite",
         "arrow-stretch": "1s ease-in-out",
         "fade-in": "",
+        wobble: "700ms",
       },
       keyframes: {
+        wobble: {
+          "0%": {
+            transform: "scale(0) rotate(-54deg) translatey(40px)",
+          },
+          "45%": {
+            transform: "scale(1.1) rotate(20deg) translatey(0px)",
+          },
+          "60%": {
+            transform: "scale(1) rotate(-15deg) translatey(0px)",
+          },
+          "77%": {
+            transform: "scale(1) rotate(10deg) translatey(0px)",
+          },
+          "100% ": {
+            transform: "translatey(0)",
+          },
+        },
         "marquee-move": {
           "0%": {
             transform: "translateX(0%)",
