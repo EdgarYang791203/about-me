@@ -383,12 +383,12 @@ const arrangeHandler = (id: number) => {
 // TODO: 輪播
 
 // TODO: 私訊我
-const socialMedia = [
-  { name: "Email" },
-  { name: "104" },
-  { name: "FaceBook" },
-  { name: "Email" },
-];
+// const socialMedia = [
+//   { name: "Email" },
+//   { name: "104" },
+//   { name: "FaceBook" },
+//   { name: "Email" },
+// ];
 const openSocialList = ref(false);
 // TODO: 私訊我
 
