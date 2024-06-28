@@ -18,7 +18,7 @@
   <li>RESTful API</li>
   <li>介接第三方 API 建置 SPA 頁面 (Google Map、Open Data 等等)</li>
   <li>使用 Firebase 資料庫做許多小專案應用</li>
-  <li>使用 Nuxt3、Tailwindcss 建置 side projects 應用</li>
+  <li>使用 Vue3、Nuxt3、Tailwindcss 建置 side projects 應用</li>
 </ul>
 <h2>git 版本控制</h2>
 <img src="/public/image/gitflow.png" alt="git">
@@ -49,12 +49,20 @@
       <span>萬通國際資訊有限公司-前端工程師</span>
       <span>(2023/7~仍在職)</span>
     </a>
+    <br>
+    ⌞與後端工程師、UI設計師和 PM 協同合作，主要進行公司產品 【MGP】系統前後台的開發/改版/維護，產品技術使用 Vue2、Vuex 、Typescript、Scss、Bootstrap、ElementUI、axios。
+    </br>
+    ⌞開發系統前端客戶需求(新增主題、主題改版、對接遊戲商遊戲、建立客製化表單並協助後端對接國外金流、後台各式報表、後台系統前端功能新增.....等等)
   </li>
   <li>
     <a href="https://www.twincn.com/item.aspx?no=85131432">
       <span>鑫城軟件開發有限公司-前端工程師</span>
       <span>(2018/9~2023/7)</span>
     </a>
+    <br>
+    ⌞負責公司前端接案開發或維護之需求
+    <br>
+    ⌞產品技術使用 Vue.js(Vue2)、React.js
   </li>
   <li>
     <a href="https://train.csie.ntu.edu.tw/train/">

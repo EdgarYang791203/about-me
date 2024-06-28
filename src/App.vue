@@ -382,9 +382,15 @@ const arrangeHandler = (id: number) => {
 };
 // TODO: 輪播
 
-// TODO: 私迅我
-
-// TODO: 私迅我
+// TODO: 私訊我
+const socialMedia = [
+  { name: "Email" },
+  { name: "104" },
+  { name: "FaceBook" },
+  { name: "Email" },
+];
+const openSocialList = ref(false);
+// TODO: 私訊我
 
 let timer: any = ref(null);
 
@@ -691,10 +697,13 @@ onMounted(() => {
     class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex items-center justify-center relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#4d6085] after:top-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
   >
     <div
-      class="px-[30px] pt-[20px] pb-[50px] bg-[tomato] rounded-md w-[380px] relative contact-box opacity-0"
-      :class="{ 'animate-[wobble_700ms] opacity-100': showSection > 2 }"
+      class="bg-[tomato] rounded-md w-[380px] relative contact-box opacity-0"
+      :class="{
+        'animate-[wobble_700ms] opacity-100': showSection > 2,
+        'overflow-hidden': openSocialList,
+      }"
     >
-      <div class="flex">
+      <div class="flex px-[30px] pt-[20px] pb-[50px]">
         <img
           class="w-[96px] rounded-[50%]"
           src="/image/head-shot.jpeg"
@@ -705,10 +714,44 @@ onMounted(() => {
           <p class="text-sm">Hi, I'm Hank and I'm a web front-end developer.</p>
         </div>
         <div
-          class="contact-btn transition-all cursor-pointer absolute left-[90px] bottom-[-24px] w-[200px] h-[48px] bg-[#eae1d3] rounded-[30px] text-[#4d6085] flex justify-center items-center border-b-2 border-[#4d6085]"
+          class="contact-btn transition-all cursor-pointer bg-[#eae1d3] text-[#4d6085] flex justify-center items-center border-b-2 border-[#4d6085]"
+          :class="{ active: openSocialList }"
+          @click="openSocialList = !openSocialList"
         >
-          <span>contact me</span>
+          <p
+            class="transition-all"
+            :class="{
+              'opacity-0 absolute z-[-1]': openSocialList,
+              'opacity-100': !openSocialList,
+            }"
+          >
+            contact me
+          </p>
+          <svg
+            class="transition-all"
+            :class="{
+              'opacity-0 absolute z-[-1]': !openSocialList,
+              'opacity-100': openSocialList,
+            }"
+            style="transition-delay: 0.5s"
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 48 48"
+          >
+            <g class="nc-icon-wrapper" fill="#4d6085">
+              <path
+                d="M14.83 30.83L24 21.66l9.17 9.17L36 28 24 16 12 28z"
+              ></path>
+            </g>
+          </svg>
         </div>
+      </div>
+      <div
+        class="bg-[#4d6085] transition-all max-h-0 overflow-hidden"
+        :class="{ 'max-h-[100px]': openSocialList }"
+      >
+        <p class="py-4 px-8 text-[#eae1d3]">contact me</p>
       </div>
     </div>
   </div>
@@ -1059,13 +1102,20 @@ onMounted(() => {
 .contact-btn {
   box-shadow: 0 8px 13px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(0, 0, 0, 0.06);
   transition-delay: 0.1s;
+  border-radius: 30px;
+  position: absolute;
+  right: 90px;
+  bottom: -24px;
+  width: 200px;
+  height: 48px;
 }
-.contact-btn span {
-  opacity: 1;
+.contact-btn p {
   transition: opacity 0.2s;
   transition-delay: 0.4s;
+  width: 100%;
+  text-align: center;
 }
-.contact-btn span::after {
+.contact-btn p::after {
   content: "";
   display: block;
   width: 0;
@@ -1076,5 +1126,15 @@ onMounted(() => {
   z-index: 3;
   border: solid 15px transparent;
   border-top-color: #eae1d3;
+}
+.contact-btn.active {
+  right: 20px;
+  bottom: 22px;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+}
+.contact-btn.active p::after {
+  display: none;
 }
 </style>
