@@ -19,6 +19,7 @@ export default {
         "slide-in-top": "1s ease 0s 1 normal none running slide-in",
         "slide-in-left": "",
         "slide-in-bottom": "",
+        "slide-out": "",
         "menu-hover": "1s infinite",
         "arrow-stretch": "1s ease-in-out",
         "fade-in": "",
@@ -82,6 +83,16 @@ export default {
           "100%": {
             opacity: 1,
             transform: "translate3d(0, 0, 0)",
+          },
+        },
+        "slide-out-right": {
+          "0%": {
+            opacity: 1,
+            transform: "translateX(0)",
+          },
+          "100%": {
+            opacity: 0,
+            transform: "translateX(100%)",
           },
         },
         "menu-hover": {

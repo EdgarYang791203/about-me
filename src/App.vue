@@ -359,13 +359,14 @@ const arrange = (centerIndex: number) => {
     carouselSliding.value = false;
   }, 700);
 };
-const redirectPage = () => {
+const redirectPage = (href?: string) => {
   const project = projectActiveData.value;
   const windowReference = window.open();
-  if (project && project.href && windowReference) {
-    windowReference.location.href = project.href;
-  } else {
-    windowReference?.close();
+  let url = "";
+  if (href) url = href;
+  else if (project && project.href) url = project.href;
+  if (windowReference) {
+    windowReference.location.href = url;
   }
 };
 const arrangeHandler = (id: number) => {
@@ -383,13 +384,46 @@ const arrangeHandler = (id: number) => {
 // TODO: 輪播
 
 // TODO: 私訊我
-// const socialMedia = [
-//   { name: "Email" },
-//   { name: "104" },
-//   { name: "FaceBook" },
-//   { name: "Email" },
-// ];
+let socialMedia = [
+  {
+    name: "Email",
+    icon: "gmail.svg",
+    color: "#d14836",
+    content: "edgaryang791203@gmail.com",
+    href: "mailto:edgaryang791203@gmail.com",
+  },
+  {
+    name: "104",
+    icon: "104_logo.png",
+    color: "#ff9100",
+    content: "104 履歷",
+    href: "https://pda.104.com.tw/profile/share/a4fiwz5iM3cLR0kEliuWGXKU54Bk4dqL",
+  },
+  {
+    name: "GitHub",
+    icon: "github-icon.svg",
+    color: "#3e75c3",
+    content: "EdgarYang791203",
+    href: "https://github.com/EdgarYang791203",
+  },
+];
+
 const openSocialList = ref(false);
+
+let slideCardNames: string[] = reactive([]);
+
+const sortCard = (name: string) => {
+  if (!slideCardNames.includes(name)) slideCardNames.push(name);
+  const index = socialMedia.findIndex((item) => item.name === name);
+  const target = socialMedia.find((item) => item.name === name);
+  setTimeout(() => {
+    slideCardNames = slideCardNames.filter((item) => item !== name);
+  }, 400);
+  setTimeout(() => {
+    socialMedia.splice(index, 1);
+    if (target) socialMedia.push(target);
+  }, 300);
+};
 // TODO: 私訊我
 
 let timer: any = ref(null);
@@ -694,13 +728,12 @@ onMounted(() => {
   <div
     ref="MESSAGE"
     id="MESSAGE"
-    class="py-12 w-full h-[70vh] bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex items-center justify-center relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#4d6085] after:top-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
+    class="pt-12 w-full h-[70vh] overflow-hidden bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex flex-col items-center justify-center relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#4d6085] after:top-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
   >
     <div
       class="bg-[tomato] rounded-md w-[380px] relative contact-box opacity-0"
       :class="{
         'animate-[wobble_700ms] opacity-100': showSection > 2,
-        'overflow-hidden': openSocialList,
       }"
     >
       <div class="flex px-[30px] pt-[20px] pb-[50px]">
@@ -748,10 +781,64 @@ onMounted(() => {
         </div>
       </div>
       <div
-        class="bg-[#4d6085] transition-all max-h-0 overflow-hidden"
+        class="bg-[#4d6085] transition-all duration-700 max-h-0 overflow-hidden"
         :class="{ 'max-h-[100px]': openSocialList }"
+        style="border-radius: 0 0 0.375rem 0.375rem"
       >
         <p class="py-4 px-8 text-[#eae1d3]">contact me</p>
+      </div>
+    </div>
+    <div
+      class="sns-list transition-all duration-1000"
+      :class="{ 'fade-in': openSocialList && showSection > 2 }"
+    >
+      <div
+        v-for="(sns, index) in socialMedia"
+        :key="sns.name"
+        href=""
+        class="sns-card h-[86px] mt-[18px]"
+        :style="`transition-delay: ${0.5 + index * 0.2}s`"
+      >
+        <div
+          class="w-full h-full bg-white p-4 rounded flex justify-between items-center"
+          :class="{
+            'animate-[slide-out-right_400ms_ease]': slideCardNames.includes(
+              sns.name
+            ),
+          }"
+          style="transition-delay: 0ms"
+        >
+          <div class="cursor-pointer" @click="redirectPage(sns.href)">
+            <img
+              class="w-[50px] h-[50px]"
+              :src="`/image/${sns.icon}`"
+              alt="icon"
+            />
+          </div>
+          <div class="content flex-1 pl-2">
+            <p :style="{ color: sns.color }">{{ sns.name }}</p>
+            <p>{{ sns.content }}</p>
+          </div>
+          <button
+            class="w-[48px] h-[48px] border-0 focus:outline-0 bg-transparent p-0"
+            role="button"
+            @click="sortCard(sns.name)"
+          >
+            <svg
+              class="arrow pointer-events-none"
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+            >
+              <g class="nc-icon-wrapper" fill="#444444">
+                <path
+                  d="M17.17 32.92l9.17-9.17-9.17-9.17L20 11.75l12 12-12 12z"
+                ></path>
+              </g>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1098,6 +1185,8 @@ onMounted(() => {
 }
 .contact-box {
   transform-origin: bottom center;
+  position: relative;
+  z-index: 5;
 }
 .contact-btn {
   box-shadow: 0 8px 13px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(0, 0, 0, 0.06);
@@ -1136,5 +1225,38 @@ onMounted(() => {
 }
 .contact-btn.active p::after {
   display: none;
+}
+.sns-list.fade-in .sns-card {
+  transition: all 0.7s;
+}
+.sns-card {
+  opacity: 0;
+  text-decoration: none;
+  transform: translateY(-10px);
+  position: relative;
+  z-index: 1;
+}
+.sns-card .content p:first-of-type {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 160%;
+  letter-spacing: 0.4px;
+}
+.sns-card .content p:last-of-type {
+  font-size: 14px;
+  color: #b3b3b3;
+  letter-spacing: 0.4px;
+}
+.sns-list {
+  max-height: 0;
+  overflow: hidden;
+  width: 380px;
+}
+.sns-list.fade-in {
+  max-height: 600px;
+}
+.sns-list.fade-in .sns-card {
+  opacity: 1;
+  transform: translateY(0px);
 }
 </style>
