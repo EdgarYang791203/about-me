@@ -93,17 +93,17 @@ type social = { name: string; href: string; img: string };
 
 const socialLinks: social[] = [
   {
-    name: "github",
+    name: "f-github",
     img: "/image/github-icon.png",
     href: "https://github.com/EdgarYang791203",
   },
   {
-    name: "codepen",
+    name: "f-codepen",
     img: "/image/codepen-icon.png",
     href: "https://codepen.io/hank73307/pens/public",
   },
   {
-    name: "mail",
+    name: "f-share",
     img: "/image/share-icon.png",
     href: "mailto:edgaryang791203@gmail.com",
   },
@@ -359,13 +359,30 @@ const arrange = (centerIndex: number) => {
     carouselSliding.value = false;
   }, 700);
 };
-const redirectPage = (href?: string) => {
+
+const openSocialList = ref(false);
+
+const showMessage = ref(false);
+
+const redirectPage = (href?: string, name?: string) => {
+  if (name === "f-share") {
+    if (
+      typeof showSection.value === "number" &&
+      showSection.value < 3 &&
+      !showMessage.value
+    ) {
+      showMessage.value = true;
+    }
+    openSocialList.value = !openSocialList.value;
+    return;
+  }
   const project = projectActiveData.value;
   const windowReference = window.open();
   let url = "";
   if (href) url = href;
   else if (project && project.href) url = project.href;
   if (windowReference) {
+    if (name) windowReference.name = name;
     windowReference.location.href = url;
   }
 };
@@ -407,8 +424,6 @@ let socialMedia = [
     href: "https://github.com/EdgarYang791203",
   },
 ];
-
-const openSocialList = ref(false);
 
 let slideCardNames: string[] = reactive([]);
 
@@ -515,7 +530,8 @@ onMounted(() => {
   <div class="relative overflow-hidden w-full">
     <!-- TODO: BANNER -->
     <div
-      class="w-full min-h-screen h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative after:content-[''] after:z-10 after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:bottom-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-2 after:border-[#FF6347] after:border-b-0"
+      id="BANNER"
+      class="w-full min-h-screen h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative parallelogram after:huge:rotate-[0.5deg] after:border-[#FF6347] after:border-b-0"
       style="background-color: rgba(216, 216, 216, 1)"
     >
       <div
@@ -645,7 +661,7 @@ onMounted(() => {
   <div
     ref="PRODUCTS"
     id="PRODUCTS"
-    class="overflow-hidden pt-12 w-full relative z-10 bg-[#4d6085] after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#f9efe1] after:top-[-14px] after:left-0 after:rotate-[-1deg] after:huge:rotate-[-0.5deg] after:border-2 after:border-t-0 after:border-[#FF6347]"
+    class="overflow-hidden pt-12 w-full relative z-10 bg-[#4d6085] parallelogram after:bg-[#f9efe1] after:rotate-[-1deg] after:huge:rotate-[-0.5deg] after:top-[-14px] after:border-t-0"
   >
     <div
       class="opacity-0 transition-all fuzzy-before absolute w-[80vw] left-[10vw] top-[110px] overflow-hidden rounded-[5px]"
@@ -728,12 +744,12 @@ onMounted(() => {
   <div
     ref="MESSAGE"
     id="MESSAGE"
-    class="pt-12 w-full h-[70vh] overflow-hidden bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex flex-col items-center justify-center relative z-10 after:content-[''] after:absolute after:w-full after:h-[35px] after:bg-[#4d6085] after:top-[-14px] after:left-0 after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2 after:border-[#FF6347]"
+    class="pt-12 w-full h-[70vh] overflow-hidden bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex flex-col items-center justify-center relative parallelogram after:bg-[#4d6085] after:top-[-14px] after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2"
   >
     <div
       class="bg-[tomato] rounded-md w-[380px] relative contact-box opacity-0"
       :class="{
-        'animate-[wobble_700ms] opacity-100': showSection > 2,
+        'animate-[wobble_700ms] opacity-100': showMessage || showSection > 2,
       }"
     >
       <div class="flex px-[30px] pt-[20px] pb-[50px]">
@@ -790,7 +806,7 @@ onMounted(() => {
     </div>
     <div
       class="sns-list transition-all duration-1000"
-      :class="{ 'fade-in': openSocialList && showSection > 2 }"
+      :class="{ 'fade-in': openSocialList }"
     >
       <div
         v-for="(sns, index) in socialMedia"
@@ -858,6 +874,8 @@ onMounted(() => {
           target="_blank"
           class="top-0 relative hover:top-[5px] hover:invert mr-6"
           style="transition: all 0.5s cubic-bezier(0.36, 0.87, 0.63, -0.07)"
+          event=""
+          @click.prevent="redirectPage(link.href, link.name)"
         >
           <img :src="link.img" alt="github" />
         </a>
@@ -1226,9 +1244,6 @@ onMounted(() => {
 .contact-btn.active p::after {
   display: none;
 }
-.sns-list.fade-in .sns-card {
-  transition: all 0.7s;
-}
 .sns-card {
   opacity: 0;
   text-decoration: none;
@@ -1253,10 +1268,11 @@ onMounted(() => {
   width: 380px;
 }
 .sns-list.fade-in {
-  max-height: 600px;
+  max-height: none;
 }
 .sns-list.fade-in .sns-card {
   opacity: 1;
   transform: translateY(0px);
+  transition: all 0.7s;
 }
 </style>

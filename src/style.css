@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+}
+
+@layer components {
+  .parallelogram {
+    @apply after:content-[''] after:absolute after:z-10 after:left-0 after:w-full after:h-[35px] after:bg-[#f9efe1] after:border-2 after:bottom-[-14px] after:rotate-[1deg] after:border-[#FF6347];
+  }
+  @media screen(huge) {
+    .parallelogram {
+      @apply after:rotate-[0.5deg];
+    }
+  }
+}
+
 @font-face {
   font-family: "Cabin Sketch";
   src: url("./assets/fonts/CabinSketch-Regular.ttf");
