@@ -274,6 +274,11 @@ let screen = reactive({
   width: window.innerWidth || document.documentElement.clientWidth,
 });
 
+const isScreenSM = computed(() => {
+  if (screen && screen.width) return screen.width <= 768;
+  return false;
+});
+
 const getWidth = () => {
   screen.width = window.innerWidth || document.documentElement.clientWidth;
 };
@@ -295,20 +300,20 @@ onMounted(() => {
 
 <template>
   <header
-    :class="`w-full border-2 h-auto fixed z-50 ${
-      scrollOver
-        ? 'left-0 right-0 top-0 border-black text-black'
-        : 'border-none text-white'
-    } ${scrollOver ? 'animate-[slide-in-top_1s_ease]' : ''}`"
+    class="w-full border-2 h-auto fixed z-50"
+    :class="`${
+      scrollOver || isScreenSM ? 'header-scrolled' : 'header-default'
+    } ${scrollOver && !isScreenSM ? 'animate-[slide-in-top_1s_ease]' : ''}`"
     :style="{
       borderRadius: '25px 25px 55px 5px/5px 55px 25px 25px',
-      backgroundColor: scrollOver ? 'rgba(253, 253, 253, 0.9)' : 'transparent',
+      backgroundColor:
+        scrollOver || isScreenSM ? 'rgba(253, 253, 253, 0.9)' : 'transparent',
       transition: 'all 0.3s ease',
     }"
   >
     <nav
       :class="`flex justify-between items-center h-full w-full py-[5px] border-2 pl-3 ${
-        scrollOver ? 'border-none' : 'border-white'
+        scrollOver || isScreenSM ? 'border-none' : 'border-white'
       }`"
       :style="{
         borderRadius: '25px 25px 55px 5px/5px 55px 25px 25px',
@@ -339,7 +344,7 @@ onMounted(() => {
       </div>
       <!-- TODO: navbar -->
       <div class="flex-1 flex justify-end">
-        <Navbar :scrollOver="scrollOver" />
+        <Navbar :scrollOver="scrollOver" :isScreenSM="isScreenSM" />
       </div>
     </nav>
   </header>

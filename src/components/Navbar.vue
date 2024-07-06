@@ -8,11 +8,12 @@
       >
         <span
           :class="`${
-            scrollOver ? 'text-[tomato]' : 'text-white'
+            scrollOver || isScreenSM ? 'text-[tomato]' : 'text-white'
           } pointer-events-none`"
           >{{ link.label }}</span
         >
         <span
+          v-if="!isScreenSM"
           class="pointer-events-none"
           :style="{
             fontSize: '10px',
@@ -30,6 +31,7 @@ import { ref } from "vue";
 
 defineProps<{
   scrollOver: Boolean;
+  isScreenSM: Boolean;
 }>();
 
 const navLinks = ref([
