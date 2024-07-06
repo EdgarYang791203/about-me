@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, reactive } from "vue";
 import getTimeNumbers from "./util/getTimestamp";
+// import deviceName from "./util/mobileDetective";
+import Navbar from "./components/Navbar.vue";
+import Marquee from "./components/Marquee.vue";
+import Carousel from "./components/Carousel.vue";
+import ProjectInfo from "./components/ProjectInfo.vue";
+import Footer from "./components/Footer.vue";
+
+// const isMobile = deviceName !== "unknown";
 
 const introTop = ref(0);
 
@@ -9,46 +17,6 @@ const productsTop = ref(0);
 const messageTop = ref(0);
 
 const windowScrollY = ref(0);
-
-// TODO: 跑馬燈
-/** 依字串長度調整相應的速度 */
-const marqueeTexts: string[] = ["Welcome to my website!", "Test marquees ~~~"];
-const marqueeTime: string | number = 6;
-const marqueeArea: any = ref(null);
-const marqueeBox: any = ref(null);
-const states = reactive({
-  copyTimes: 2,
-  movingDistance: 0,
-  time: marqueeTime,
-});
-/** 調整跑馬燈速度(待修正) */
-// const setMarquee = () => {
-//   states.copyTimes = 1;
-//   nextTick(() => {
-//     let areaWidth = 0;
-//     let boxWidth = 0;
-//     try {
-//       areaWidth = Math.floor(marqueeArea.value.offsetWidth);
-//       boxWidth = Math.floor(marqueeBox.value.offsetWidth);
-//     } catch (error) {}
-
-//     states.copyTimes = Math.max(2, Math.ceil((areaWidth * 2) / boxWidth)) || 2;
-//     states.movingDistance = boxWidth * Math.floor(states.copyTimes / 2);
-
-//     states.time = parseFloat(
-//       ((marqueeTime * states.movingDistance) / 375).toFixed(2)
-//     );
-//   });
-// };
-// TODO: 跑馬燈
-
-const navLinks = ref([
-  { name: "TOP", label: "最上方" },
-  { name: "INTRO", label: "個人檔案" },
-  { name: "PRODUCTS", label: "作品集" },
-  // { name: "COMMENTS", label: "留言板" },
-  { name: "MESSAGE", label: "私訊我" },
-]);
 
 const experienceList = [
   {
@@ -89,26 +57,6 @@ const experienceList = [
   },
 ];
 
-type social = { name: string; href: string; img: string };
-
-const socialLinks: social[] = [
-  {
-    name: "f-github",
-    img: "/image/github-icon.png",
-    href: "https://github.com/EdgarYang791203",
-  },
-  {
-    name: "f-codepen",
-    img: "/image/codepen-icon.png",
-    href: "https://codepen.io/hank73307/pens/public",
-  },
-  {
-    name: "f-share",
-    img: "/image/share-icon.png",
-    href: "mailto:edgaryang791203@gmail.com",
-  },
-];
-
 const showSection = computed(() => {
   const currentTop = windowScrollY.value;
   switch (true) {
@@ -132,18 +80,6 @@ watch(showSection, async (newValue) => {
 const blockScrollHandler = ($event: any) => {
   const scrollTop = Math.floor($event.target.scrollTop);
   blockScrollProgress.value = Math.floor((scrollTop / 384) * 100);
-};
-
-const showScrollInto = ($event: any) => {
-  const toLocation = $event.target.getAttribute("href").replace("#", "");
-  if (toLocation === "TOP") {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    return;
-  }
-  const element = document.getElementById(toLocation);
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth" });
-  }
 };
 
 const scrollOver = computed(() => {
@@ -188,6 +124,10 @@ const runFlipped = (index: number) => {
   removeFlipped(index);
 };
 const numberAnimation = async () => {
+  if (screen.width < 768) {
+    window.clearInterval(timer.value);
+    return;
+  }
   const timeArr = getTimeNumbers();
   for (let index = 0; index < timeArr.length; index++) {
     const upNum = accumulateLottery[index].uperNum;
@@ -213,7 +153,6 @@ const numberAnimation = async () => {
 };
 // TODO: 時間動畫
 
-// TODO: 輪播
 const sideProjects = [
   {
     name: "My Website",
@@ -235,7 +174,22 @@ const sideProjects = [
   },
 ];
 
+const openSocialList = ref(false);
+
+const showMessage = ref(false);
+
+//TODO: 輪播
 const projectActive = ref(1);
+
+const carouselSliding = ref(false);
+
+const selectProject = (id: number) => {
+  projectActive.value = id;
+};
+
+const handleSliding = (value: boolean) => {
+  carouselSliding.value = value;
+};
 
 const projectActiveData = computed(() => {
   const target = sideProjects.find((item) => item.id === projectActive.value);
@@ -243,128 +197,13 @@ const projectActiveData = computed(() => {
   return null;
 });
 
-let styleList: any[] = reactive([]);
-
-const setStyle = (values: any) => {
-  if (values) {
-    const {
-      xtrans,
-      scale,
-      opacity,
-      zIndex,
-      pIndex,
-      rotateY,
-      rotateZ,
-      transformOrigin,
-    } = values;
-    const transform = `translate(${xtrans - 50}%, ${
-      0 - 50
-    }%) scale(${scale}) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
-    const newStyleList = [...styleList];
-    newStyleList[pIndex] = {
-      zIndex,
-      transform,
-      display: opacity === 0 ? "none" : "inline-block",
-      transition: "transform 0.5s",
-      transformOrigin,
-    };
-    Object.assign(styleList, newStyleList);
+const redirectPage = (linkInfo?: { href: string; name: string }) => {
+  let name = null;
+  let href = null;
+  if (linkInfo) {
+    name = linkInfo.name;
+    href = linkInfo.href;
   }
-};
-
-const mod = (n: number, m: number) => ((n % m) + m) % m;
-
-const carousel = ref(null);
-
-const carouselSliding = ref(false);
-
-const arrange = (centerIndex: number) => {
-  const catesReference: any = carousel.value;
-  if (catesReference.children) {
-    styleList = [];
-    const half = (sideProjects.length - 1) / 2;
-    const before = [];
-    for (let i = centerIndex - 1; before.length < half; i--) {
-      const pIndex = mod(i, sideProjects.length);
-      before.push({
-        pIndex,
-        zIndex: 0,
-        xtrans: 0,
-        scale: 1,
-        opacity: 1,
-        rotateY: 0,
-        rotateZ: 0,
-        transformOrigin: "right center",
-      });
-    }
-    const after = [];
-    for (
-      let i = centerIndex + 1;
-      after.length < sideProjects.length - before.length - 1;
-      i++
-    ) {
-      const pIndex = mod(i, sideProjects.length);
-      after.push({
-        pIndex,
-        zIndex: 0,
-        xtrans: 0,
-        scale: 1,
-        opacity: 1,
-        rotateY: 45,
-        rotateZ: -150,
-        transformOrigin: "left center",
-      });
-    }
-    // console.log(before, after);
-    const centerZIndex = Math.max(before.length, after.length) + 1;
-    setStyle({
-      pIndex: centerIndex,
-      xtrans: 0,
-      scale: 1,
-      opacity: 1,
-      zIndex: centerZIndex,
-      rotateY: 0,
-      rotateZ: 0,
-      transformOrigin: "50% 50% 0",
-    });
-    [before, after].forEach((list: any, listIndex: number) => {
-      let parentTrans = 0;
-
-      if (list) {
-        list.forEach((item: any, i: number) => {
-          const scale = 0.8 ** (i + 1);
-          const absolute = 105 * scale * 1.125 + parentTrans;
-          parentTrans = absolute;
-          const xtrans = (listIndex === 0 ? -1 : 1) * absolute;
-          const opacity = Math.max(1 - 0.25 * (i / 2 + 1) ** 2, 0);
-          const zIndex = Math.max(before.length, after.length) - i;
-          const rotateY = item.rotateY;
-          const rotateZ = item.rotateZ;
-          const transformOrigin = item.transformOrigin;
-          setStyle({
-            pIndex: item.pIndex,
-            xtrans,
-            scale,
-            opacity,
-            zIndex,
-            rotateY,
-            rotateZ,
-            transformOrigin,
-          });
-        });
-      }
-    });
-  }
-  setTimeout(() => {
-    carouselSliding.value = false;
-  }, 700);
-};
-
-const openSocialList = ref(false);
-
-const showMessage = ref(false);
-
-const redirectPage = (href?: string, name?: string) => {
   if (name === "f-share") {
     if (
       typeof showSection.value === "number" &&
@@ -386,19 +225,7 @@ const redirectPage = (href?: string, name?: string) => {
     windowReference.location.href = url;
   }
 };
-const arrangeHandler = (id: number) => {
-  if (projectActive.value === id) {
-    redirectPage();
-    return;
-  }
-  carouselSliding.value = true;
-  const index = sideProjects.findIndex((item) => item.id === id);
-  if (index >= 0) {
-    projectActive.value = id;
-    arrange(index);
-  }
-};
-// TODO: 輪播
+//TODO: 輪播
 
 // TODO: 私訊我
 let socialMedia = [
@@ -443,15 +270,22 @@ const sortCard = (name: string) => {
 
 let timer: any = ref(null);
 
+let screen = reactive({
+  width: window.innerWidth || document.documentElement.clientWidth,
+});
+
+const getWidth = () => {
+  screen.width = window.innerWidth || document.documentElement.clientWidth;
+};
+
 onMounted(() => {
   window.addEventListener("scroll", () => {
     windowScrollY.value = Math.floor(window.scrollY);
   });
+  window.addEventListener("resize", getWidth);
   introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
   productsTop.value = document.getElementById("PRODUCTS")?.offsetTop || 0;
   messageTop.value = document.getElementById("MESSAGE")?.offsetTop || 0;
-  // setMarquee();
-  arrange(1);
   determineDecimal();
   timer.value = setInterval(() => {
     numberAnimation();
@@ -481,7 +315,11 @@ onMounted(() => {
       }"
     >
       <!-- TODO: 時間動畫 -->
-      <div class="accumulate-lottery" style="font-size: 1.25rem">
+      <div
+        v-if="screen.width > 768"
+        class="accumulate-lottery"
+        style="font-size: 1.25rem"
+      >
         <div v-for="item in accumulateLottery" :key="item.index">
           <template v-if="item.index !== 2 && item.index !== 5">
             <div class="rotor-leaf">
@@ -499,31 +337,9 @@ onMounted(() => {
           </template>
         </div>
       </div>
+      <!-- TODO: navbar -->
       <div class="flex-1 flex justify-end">
-        <ul class="flex menu">
-          <li v-for="link in navLinks" :key="link.name" class="px-8 py-2">
-            <a
-              :href="`#${link.name}`"
-              :class="`flex flex-col items-center transition-all hover:text-white hover:animate-[menu-hover_1s_infinite]`"
-              @click.prevent="showScrollInto"
-            >
-              <span
-                :class="`${
-                  scrollOver ? 'text-[tomato]' : 'text-white'
-                } pointer-events-none`"
-                >{{ link.label }}</span
-              >
-              <span
-                class="pointer-events-none"
-                :style="{
-                  fontSize: '10px',
-                  color: scrollOver ? 'gray' : 'rgba(255, 255, 255, 0.6)',
-                }"
-                >{{ link.name }}</span
-              >
-            </a>
-          </li>
-        </ul>
+        <Navbar :scrollOver="scrollOver" />
       </div>
     </nav>
   </header>
@@ -538,28 +354,8 @@ onMounted(() => {
         class="w-full max-w-[1200px] max-h-[876px] h-[30vw] mx-auto border-2 border-[#222] relative overflow-hidden bg-[url('/image/banner.jpg')] bg-[length:100%_auto] hover:bg-[length:125%_auto] bg-center bg-no-repeat transition-all"
         style="border-radius: 55px 225px 15px 25px/25px 25px 35px 355px"
       ></div>
-      <div
-        ref="marqueeArea"
-        class="marqueeArea w-full max-w-[1200px] mx-auto mt-2 rounded-md after:animate-[marquee-bg-move_20s_linear_infinite]"
-      >
-        <div
-          ref="marqueeBox"
-          class="marqueeBox animate-[marquee-move_30s_linear_infinite]"
-        >
-          <template
-            v-for="index in states.copyTimes"
-            :key="`marqueeItemCopy-${index}`"
-          >
-            <div
-              v-for="(item, listIndex) in marqueeTexts"
-              :key="`marqueeItem-${index}-${listIndex}`"
-              class="marqueeItem font-cabin"
-            >
-              {{ item }}
-            </div>
-          </template>
-        </div>
-      </div>
+      <!-- TODO: 跑馬燈 -->
+      <Marquee />
     </div>
   </div>
   <!-- TODO: Experience -->
@@ -696,48 +492,18 @@ onMounted(() => {
             : 'translateX(30%) scale(0.95)',
       }"
     >
-      <!-- TODO: 輪播 -->
-      <div class="carousel h-full" ref="carousel">
-        <button
-          v-for="(item, index) in sideProjects"
-          :key="item.name"
-          class="project hover:border-none focus:outline-none bg-[#222]"
-          :class="{ center: projectActive === item.id }"
-          :style="styleList[index]"
-          @click="arrangeHandler(item.id)"
-        >
-          <img
-            class="w-full h-full"
-            :src="`/image/production${item.id}.png`"
-            alt="demo"
-          />
-        </button>
-      </div>
-      <div
-        class="project-info flex flex-col justify-center"
-        v-if="projectActiveData"
-      >
-        <div class="overflow-hidden w-full h-[9vw]">
-          <h2
-            class="gradient-text font-cabin"
-            :class="{
-              'animate-[slide-in-bottom_1s_ease]': carouselSliding,
-            }"
-            :data-attr="projectActiveData.name"
-          >
-            {{ projectActiveData.name }}
-          </h2>
-        </div>
-        <div class="overflow-hidden w-full h-[9vw]">
-          <p
-            :class="{
-              'animate-[slide-in-bottom_1s_ease]': carouselSliding,
-            }"
-          >
-            {{ projectActiveData.intro }}
-          </p>
-        </div>
-      </div>
+      <Carousel
+        :sideProjects="sideProjects"
+        :projectActive="projectActive"
+        :carouselSliding="carouselSliding"
+        @selectProject="selectProject"
+        @redirectPage="redirectPage"
+        @handleSliding="handleSliding"
+      />
+      <ProjectInfo
+        :carouselSliding="carouselSliding"
+        :projectActiveData="projectActiveData"
+      />
     </div>
   </div>
   <!-- TODO: MESSAGE -->
@@ -824,7 +590,10 @@ onMounted(() => {
           }"
           style="transition-delay: 0ms"
         >
-          <div class="cursor-pointer" @click="redirectPage(sns.href)">
+          <div
+            class="cursor-pointer"
+            @click="redirectPage({ name: sns.name, href: sns.href })"
+          >
             <img
               class="w-[50px] h-[50px]"
               :src="`/image/${sns.icon}`"
@@ -859,49 +628,10 @@ onMounted(() => {
     </div>
   </div>
   <!-- TODO: FOOTER -->
-  <footer
-    class="w-full px-2 py-[6px] bg-[#4d6085]"
-    style="border-top: 2px solid tomato"
-  >
-    <div
-      class="mx-auto container md:max-w-[1000px] flex items-center justify-between"
-    >
-      <div class="flex">
-        <a
-          v-for="link in socialLinks"
-          :key="link.name"
-          :href="link.href"
-          target="_blank"
-          class="top-0 relative hover:top-[5px] hover:invert mr-6"
-          style="transition: all 0.5s cubic-bezier(0.36, 0.87, 0.63, -0.07)"
-          event=""
-          @click.prevent="redirectPage(link.href, link.name)"
-        >
-          <img :src="link.img" alt="github" />
-        </a>
-      </div>
-      <p class="text-[#eae1d3] inline-block tracking-wide">
-        © Copy right Feb 14,2024
-      </p>
-    </div>
-  </footer>
+  <Footer @redirectPage="redirectPage" />
 </template>
 
 <style scoped>
-.gradient-text {
-  position: relative;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: bold;
-}
-.gradient-text::after {
-  content: attr(data-attr);
-  position: absolute;
-  z-index: -1;
-  left: 0px;
-  top: 0px;
-}
 .accumulate-lottery {
   font-size: 0;
   position: relative;
@@ -989,73 +719,6 @@ onMounted(() => {
   background-color: #4d6085;
 }
 
-.marqueeArea {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-.marqueeArea::after {
-  position: absolute;
-  content: "";
-  width: 1000%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  background-image: linear-gradient(
-    135deg,
-    rgb(248, 198, 70) 0%,
-    rgb(248, 198, 70) 20%,
-    rgb(253, 140, 41) 40%,
-    rgb(253, 140, 41) 60%,
-    rgb(248, 198, 70) 80%,
-    rgb(248, 198, 70) 100%
-  );
-}
-.marqueeArea::before {
-  content: "";
-  position: absolute;
-  z-index: 5;
-  width: 100%;
-  height: 100%;
-  left: 0.17rem;
-  top: 0.28rem;
-  pointer-events: none;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-position: center;
-  background-image: url("./assets/marquee-decorate.png");
-  filter: invert(100);
-  opacity: 0.5;
-}
-.marqueeBox {
-  display: inline-block;
-  white-space: nowrap;
-  position: relative;
-  z-index: 5;
-}
-.marqueeBox:hover {
-  animation-play-state: paused;
-}
-.marqueeItem {
-  display: inline-block;
-  margin-right: 2rem;
-  color: tomato;
-  font-weight: 700;
-  font-size: 3rem;
-  opacity: 0.7;
-}
-
-.menu li:not(:first-child)::before {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 1px;
-  height: 18px;
-  left: 0;
-  top: 20px;
-  background-color: #b8b8b8;
-}
 .title-border-bottom::after {
   content: "";
   position: absolute;
@@ -1067,6 +730,7 @@ onMounted(() => {
   border: solid #fbb034;
   border-width: 0.25rem 0 0 0;
 }
+
 .arrow-black {
   border-top: 20px solid #4d6085;
   border-right: 13px solid transparent;
@@ -1149,58 +813,7 @@ onMounted(() => {
   border-radius: 0.25rem;
   background-image: linear-gradient(to top, #4d6085 0%, transparent 100%);
 }
-.project-info {
-  flex-grow: 0;
-  flex-shrink: 0;
-  width: 50vw;
-  overflow: hidden;
-  padding-right: 10px;
-}
-.project-info h2 {
-  font-size: 6vw;
-  background-image: linear-gradient(
-    135deg,
-    rgb(248, 198, 70) 0%,
-    rgb(253, 140, 41) 20%,
-    rgb(248, 198, 70) 40%,
-    rgb(253, 140, 41) 60%,
-    rgb(248, 198, 70) 80%,
-    rgb(253, 140, 41) 100%
-  );
-}
-.project-info h2::after {
-  text-shadow: 1px 1px 1px rgb(253, 140, 41), 1px 2px 1px rgb(253, 140, 41),
-    1px 3px 1px rgb(253, 140, 41), 1px 4px 1px rgb(253, 140, 41),
-    1px 5px 1px rgb(253, 140, 41), 1px 6px 1px rgb(253, 140, 41),
-    1px 22px 10px rgba(248, 198, 70, 0.2);
-}
-.project-info p {
-  font-size: 3vw;
-  font-weight: bold;
-  color: #f5f5f5;
-  text-shadow: 1px 1px 1px #919191, 1px 2px 1px #919191, 1px 3px 1px #919191,
-    1px 25px 35px rgba(16, 16, 16, 0.2);
-}
-.carousel {
-  position: relative;
-  z-index: 10;
-  flex: 1;
-  overflow-x: visible;
-}
-.carousel .project {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 5;
-  width: 474px;
-  height: 216px;
-  padding: 0;
-  transition: all 0.2s ease-in-out;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-}
+
 .contact-box {
   transform-origin: bottom center;
   position: relative;
