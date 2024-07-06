@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
 type social = { name: string; href: string; img: string };
 
 const socialLinks: social[] = [

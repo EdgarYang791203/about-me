@@ -26,10 +26,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 /** 依字串長度調整相應的速度 */
-const marqueeTexts: string[] = ref([
-  "Welcome to my website!",
-  "Test marquees ~~~",
-]);
+const marqueeTexts: string[] = ["Welcome to my website!", "Test marquees ~~~"];
 const marqueeTime: string | number = 6;
 const marqueeArea: any = ref(null);
 const marqueeBox: any = ref(null);

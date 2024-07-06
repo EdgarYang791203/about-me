@@ -33,7 +33,7 @@ interface Project {
   intro: string;
   href: string | null;
 }
-const props = defineProps<{
+defineProps<{
   carouselSliding: Boolean;
   projectActiveData: Project | null;
 }>();
