@@ -57,8 +57,8 @@ const experienceList = [
   },
 ];
 
-// TODO: 控制 Experience 區塊內卡片位置
-const handleCardsPosition = () => {};
+// TODO: 區塊內卡片離左方距離
+const cardLeftDistance = computed(() => {});
 
 const showSection = computed(() => {
   const currentTop = windowScrollY.value;
@@ -391,7 +391,8 @@ onMounted(() => {
       </h2>
       <div
         id="timeLine"
-        class="h-[354px] overflow-y-scroll overflow-x-hidden pt-0 pb-[10px] pl-8 md:pl-0"
+        class="h-[354px] overflow-y-scroll overflow-x-hidden pt-0 pb-[10px] pl-3 sm:pl-8 md:pl-0"
+        :class="{ 'scrollbar-w-0': isScreenSM }"
         @scroll="blockScrollHandler"
       >
         <div
@@ -412,19 +413,22 @@ onMounted(() => {
             }"
           >
             <div
-              class="w-[50px] h-[50px] leading-[50px] text-center rounded-[50%] text-white relative"
+              class="w-0 h-0 sm:w-[50px] sm:h-[50px] leading-[50px] text-center rounded-[50%] text-white relative"
               :style="{
                 backgroundColor: item.bg,
               }"
             >
-              <span>{{ item.year }}</span>
+              <span class="hidden sm:block">{{ item.year }}</span>
             </div>
             <div
-              class="xl:w-[31vw] md:w-[40vw] w-[75vw] h-[30vh] max-h-[190px] md:max-h-[230px] md:max-w-[540px] border-5 border-[#4d6085] absolute"
+              class="xl:w-[31vw] md:w-[40vw] sm:w-[75vw] w-[85vw] h-[30vh] max-h-[190px] md:max-h-[230px] md:max-w-[540px] border-5 border-[#4d6085] absolute"
+              :class="`${
+                item.dataNum % 2 || isScreenSM
+                  ? 'left-[38px] sm:left-[60px]'
+                  : 'right-[38px] sm:right-[60px]'
+              }`"
               :style="{
                 top: 'calc(-15vh + 25px)',
-                left: item.dataNum % 2 || isScreenSM ? '60px' : 'unset',
-                right: item.dataNum % 2 || isScreenSM ? 'unset' : '60px',
               }"
             >
               <div
@@ -449,7 +453,7 @@ onMounted(() => {
                 <p
                   v-for="(content, index) in item.contents"
                   :key="`text${index}`"
-                  class="py-1 pl-2 pr-[36px] tracking-tighter"
+                  class="py-1 pl-2 pr-[36px] tracking-tighter text-sm sm:text-base"
                 >
                   {{ item.contents.length > 1 ? `${index + 1}.` : ""
                   }}{{ content }}

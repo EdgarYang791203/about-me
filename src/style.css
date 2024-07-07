@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  .scrollbar-w-0::-webkit-scrollbar {
+    width: 0;
+  }
 }
 
 @layer components {
