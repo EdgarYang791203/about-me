@@ -382,7 +382,7 @@ onMounted(() => {
     >
       <h2 class="w-full font-bold text-4xl py-2 border-bottom text-center pb-6">
         <span
-          class="inline-block relative title-border-bottom font-cabin text-f9efe1"
+          class="inline-block relative title-border-bottom font-cabin text-[#222222]"
           >Experience</span
         >
       </h2>
@@ -450,7 +450,7 @@ onMounted(() => {
                 <p
                   v-for="(content, index) in item.contents"
                   :key="`text${index}`"
-                  class="py-1 pl-2 pr-[36px] tracking-tighter text-sm sm:text-base"
+                  class="py-1 pl-2 pr-[36px] tracking-tighter text-[#222222] text-sm sm:text-base"
                 >
                   {{ item.contents.length > 1 ? `${index + 1}.` : ""
                   }}{{ content }}
