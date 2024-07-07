@@ -57,9 +57,6 @@ const experienceList = [
   },
 ];
 
-// TODO: 區塊內卡片離左方距離
-const cardLeftDistance = computed(() => {});
-
 const showSection = computed(() => {
   const currentTop = windowScrollY.value;
   switch (true) {
