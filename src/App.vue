@@ -57,6 +57,9 @@ const experienceList = [
   },
 ];
 
+// TODO: 控制 Experience 區塊內卡片位置
+const handleCardsPosition = () => {};
+
 const showSection = computed(() => {
   const currentTop = windowScrollY.value;
   switch (true) {
@@ -300,10 +303,11 @@ onMounted(() => {
 
 <template>
   <header
-    class="w-full border-2 h-auto fixed z-50"
-    :class="`${
-      scrollOver || isScreenSM ? 'header-scrolled' : 'header-default'
-    } ${scrollOver && !isScreenSM ? 'animate-[slide-in-top_1s_ease]' : ''}`"
+    class="w-full h-auto fixed z-50 text-white"
+    :class="{
+      'animate-[slide-in-top_1s_ease]': scrollOver && !isScreenSM,
+      'header-scrolled': scrollOver || isScreenSM,
+    }"
     :style="{
       borderRadius: '25px 25px 55px 5px/5px 55px 25px 25px',
       backgroundColor:
@@ -312,7 +316,7 @@ onMounted(() => {
     }"
   >
     <nav
-      :class="`flex justify-between items-center h-full w-full py-[5px] border-2 pl-3 ${
+      :class="`flex justify-between items-center h-full w-full py-[5px] border-2 md:pl-3 ${
         scrollOver || isScreenSM ? 'border-none' : 'border-white'
       }`"
       :style="{
@@ -343,7 +347,7 @@ onMounted(() => {
         </div>
       </div>
       <!-- TODO: navbar -->
-      <div class="flex-1 flex justify-end">
+      <div class="flex-1 flex justify-center md:justify-end">
         <Navbar :scrollOver="scrollOver" :isScreenSM="isScreenSM" />
       </div>
     </nav>
@@ -352,11 +356,11 @@ onMounted(() => {
     <!-- TODO: BANNER -->
     <div
       id="BANNER"
-      class="w-full min-h-screen h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative parallelogram after:huge:rotate-[0.5deg] after:border-[#FF6347] after:border-b-0"
+      class="w-full pt-[55px] pb-8 md:py-0 md:min-h-screen md:h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative parallelogram after:huge:rotate-[0.5deg] after:border-[#FF6347] after:border-b-0"
       style="background-color: rgba(216, 216, 216, 1)"
     >
       <div
-        class="w-full max-w-[1200px] max-h-[876px] h-[30vw] mx-auto border-2 border-[#222] relative overflow-hidden bg-[url('/image/banner.jpg')] bg-[length:100%_auto] hover:bg-[length:125%_auto] bg-center bg-no-repeat transition-all"
+        class="w-full max-w-[1200px] max-h-[876px] h-[30vw] mx-auto border-2 border-[#222] relative overflow-hidden bg-[url('/image/banner.jpg')] bg-[length:100%_auto] md:hover:bg-[length:125%_auto] bg-center bg-no-repeat transition-all"
         style="border-radius: 55px 225px 15px 25px/25px 25px 35px 355px"
       ></div>
       <!-- TODO: 跑馬燈 -->
@@ -367,7 +371,7 @@ onMounted(() => {
   <div
     ref="INTRO"
     id="INTRO"
-    class="py-12 w-full bg-[#f9efe1] border-2 border-[#FF6347] border-t-0 border-b-0 relative"
+    class="py-4 md:py-12 w-full bg-[#f9efe1] border-2 border-[#FF6347] border-t-0 border-b-0 relative"
   >
     <div
       class="text-center w-full mx-auto container xl:max-w-[1200px] max-w-[96%] bg-[#f9efe1] border-2 border-[#4d6085] rounded-[10px] transition-all duration-700"
@@ -387,11 +391,11 @@ onMounted(() => {
       </h2>
       <div
         id="timeLine"
-        class="h-[354px] overflow-y-scroll overflow-x-hidden pb-[10px]"
+        class="h-[354px] overflow-y-scroll overflow-x-hidden pt-0 pb-[10px] pl-8 md:pl-0"
         @scroll="blockScrollHandler"
       >
         <div
-          class="relative w-[0.5rem] mx-auto h-[708px] bg-[#4d6085]"
+          class="relative w-[0.5rem] ml-0 mr-auto md:mx-auto h-[800px] md:h-[708px] bg-[#4d6085]"
           :class="
             showSection > 0
               ? 'animate-[arrow-stretch_1.5s_ease-in-out]'
@@ -416,11 +420,11 @@ onMounted(() => {
               <span>{{ item.year }}</span>
             </div>
             <div
-              class="xl:w-[31vw] w-[40vw] h-[30vh] max-h-[230px] max-w-[540px] border-5 border-[#4d6085] absolute"
+              class="xl:w-[31vw] md:w-[40vw] w-[75vw] h-[30vh] max-h-[190px] md:max-h-[230px] md:max-w-[540px] border-5 border-[#4d6085] absolute"
               :style="{
                 top: 'calc(-15vh + 25px)',
-                left: item.dataNum % 2 ? '60px' : 'unset',
-                right: item.dataNum % 2 ? 'unset' : '60px',
+                left: item.dataNum % 2 || isScreenSM ? '60px' : 'unset',
+                right: item.dataNum % 2 || isScreenSM ? 'unset' : '60px',
               }"
             >
               <div
@@ -428,7 +432,7 @@ onMounted(() => {
                 :class="[
                   {
                     right: item.dataNum % 2,
-                    left: !(item.dataNum % 2),
+                    left: !(item.dataNum % 2) && !isScreenSM,
                     visibility: blockScrollProgress > item.show,
                   },
                 ]"
@@ -454,7 +458,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="w-0 h-0 mx-auto arrow-black"></div>
+        <div class="w-0 h-0 ml-[-10px] mr-auto md:mx-auto arrow-black"></div>
       </div>
     </div>
   </div>
@@ -763,15 +767,6 @@ onMounted(() => {
   height: 20px;
   display: inline-block;
   vertical-align: middle;
-}
-.information::after {
-  content: "";
-  position: absolute;
-  display: inline-block;
-  border: solid 10px;
-  border-color: transparent #4d6085 transparent transparent;
-  top: 45%;
-  left: -24px;
 }
 .information::before {
   content: attr(data-attr);

@@ -10,14 +10,37 @@
     @apply after:content-[''] after:absolute after:z-10 after:left-0 after:w-full after:h-[35px] after:bg-[#f9efe1] after:border-2 after:bottom-[-14px] after:rotate-[1deg] after:border-[#FF6347];
   }
   .header-scrolled {
-    @apply left-0 right-0 top-0 border-black text-black;
+    @apply left-0 top-0 border-2 border-black text-black;
   }
-  .header-default {
-    @apply border-none text-white;
+  .marqueeItem {
+    display: inline-block;
+    margin-right: 1rem;
+    font-size: 18px;
+    color: tomato;
+    font-weight: 700;
+    opacity: 0.7;
+  }
+  .information::after {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    border: solid 10px;
+    border-color: transparent #4d6085 transparent transparent;
+    top: 50%;
+    left: -24px;
   }
   @media screen(huge) {
     .parallelogram {
       @apply after:rotate-[0.5deg];
+    }
+  }
+  @media screen(md) {
+    .marqueeItem {
+      margin-right: 2rem;
+      font-size: 3rem;
+    }
+    .information::after {
+      top: 45%;
     }
   }
 }

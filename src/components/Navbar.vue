@@ -1,9 +1,13 @@
 <template>
   <ul class="flex menu">
-    <li v-for="link in navLinks" :key="link.name" class="px-8 py-2">
+    <li
+      v-for="link in navLinks"
+      :key="link.name"
+      class="px-4 text-xs sm:text-base sm:px-8 py-2"
+    >
       <a
         :href="`#${link.name}`"
-        :class="`flex flex-col items-center transition-all hover:text-white hover:animate-[menu-hover_1s_infinite]`"
+        :class="`flex flex-col items-center transition-all md:hover:animate-[menu-hover_1s_infinite]`"
         @click.prevent="showScrollInto"
       >
         <span

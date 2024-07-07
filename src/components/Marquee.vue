@@ -105,12 +105,4 @@ const states = reactive({
 .marqueeBox:hover {
   animation-play-state: paused;
 }
-.marqueeItem {
-  display: inline-block;
-  margin-right: 2rem;
-  color: tomato;
-  font-weight: 700;
-  font-size: 3rem;
-  opacity: 0.7;
-}
 </style>
