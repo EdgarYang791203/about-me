@@ -18,6 +18,7 @@ export default {
       animation: {
         "slide-in-top": "1s ease 0s 1 normal none running slide-in",
         "slide-in-left": "",
+        "slide-in-right": "",
         "slide-in-bottom": "",
         "slide-out": "",
         "menu-hover": "1s infinite",
@@ -79,6 +80,16 @@ export default {
           "0%": {
             opacity: 0,
             transform: "translate3d(-100%, 0, 0)",
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translate3d(0, 0, 0)",
+          },
+        },
+        "slide-in-right": {
+          "0%": {
+            opacity: 0,
+            transform: "translate3d(50%, 0, 0)",
           },
           "100%": {
             opacity: 1,

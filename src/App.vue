@@ -5,6 +5,7 @@ import getTimeNumbers from "./util/getTimestamp";
 import Navbar from "./components/Navbar.vue";
 import Marquee from "./components/Marquee.vue";
 import Carousel from "./components/Carousel.vue";
+import MobileCarousel from "./components/MobileCarousel.vue";
 import ProjectInfo from "./components/ProjectInfo.vue";
 import Footer from "./components/Footer.vue";
 
@@ -476,6 +477,7 @@ onMounted(() => {
         'opacity-100': showSection > 1,
         'animate-[fade-in_700ms_ease]': carouselSliding,
       }"
+      v-if="!isScreenSM"
     >
       <img
         class="w-full opacity-[0.9]"
@@ -495,24 +497,34 @@ onMounted(() => {
       class="w-full flex duration-1000 select-none relative z-10"
       :class="`${showSection > 1 ? 'opacity-100' : 'opacity-0'}`"
       :style="{
-        height: 'calc(100vh - 6rem - 70px)',
+        height: isScreenSM ? '60vh' : 'calc(100vh - 6rem - 70px)',
         transform:
           showSection > 1
             ? 'translateX(0) scale(1)'
             : 'translateX(30%) scale(0.95)',
       }"
     >
+      <!-- TODO: PC 輪播 -->
       <Carousel
         :sideProjects="sideProjects"
         :projectActive="projectActive"
-        :carouselSliding="carouselSliding"
         @selectProject="selectProject"
         @redirectPage="redirectPage"
         @handleSliding="handleSliding"
+        v-if="!isScreenSM"
       />
       <ProjectInfo
         :carouselSliding="carouselSliding"
         :projectActiveData="projectActiveData"
+      />
+      <!-- TODO:  手機輪播 -->
+      <MobileCarousel
+        :sideProjects="sideProjects"
+        :projectActive="projectActive"
+        :carouselSliding="carouselSliding"
+        @selectProject="selectProject"
+        @handleSliding="handleSliding"
+        v-if="isScreenSM"
       />
     </div>
   </div>
