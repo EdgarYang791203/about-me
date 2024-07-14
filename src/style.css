@@ -74,6 +74,7 @@
     .project-info {
       width: 50vw;
       padding-right: 10px;
+      position: relative;
     }
     .project-info h2 {
       font-size: 6vw;

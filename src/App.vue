@@ -516,6 +516,11 @@ onMounted(() => {
       <ProjectInfo
         :carouselSliding="carouselSliding"
         :projectActiveData="projectActiveData"
+        :projectActive="projectActive"
+        :isScreenSM="isScreenSM"
+        @selectProject="selectProject"
+        @redirectPage="redirectPage"
+        @handleSliding="handleSliding"
       />
       <!-- TODO:  手機輪播 -->
       <MobileCarousel

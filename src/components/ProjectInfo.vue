@@ -3,6 +3,18 @@
     class="project-info flex flex-col justify-center pl-4 pr-2 md:pl-0 md:pr-0"
     v-if="projectActiveData"
   >
+    <div
+      v-if="isScreenSM"
+      class="absolute z-10 left-0 top-0 pt-4 pl-4 duration-700"
+      @click="switchProject"
+    >
+      <img
+        class="invert w-[30px] h-[30px]"
+        :class="{ 'animate-spin': carouselSliding }"
+        src="/image/mobile/switch-btn.svg"
+        alt="switch"
+      />
+    </div>
     <div class="overflow-hidden w-full h-[14vw] md:h-[9vw]">
       <h2
         class="gradient-text font-cabin"
@@ -23,6 +35,22 @@
         {{ projectActiveData.intro }}
       </p>
     </div>
+    <a
+      v-if="projectActiveData.href"
+      :href="projectActiveData.href"
+      target="_blank"
+      rel="redirect"
+      class="self-baseline text-white mt-3 py-2 px-7 rounded-[20px] hover:text-[#4d6085]"
+      style="
+        background-image: linear-gradient(
+          280.5deg,
+          #cf9e67 -3.99%,
+          #f6d5a1 98.96%
+        );
+      "
+    >
+      立即進入
+    </a>
   </div>
 </template>
 
@@ -33,10 +61,24 @@ interface Project {
   intro: string;
   href: string | null;
 }
-defineProps<{
-  carouselSliding: Boolean;
+
+const props = defineProps<{
+  isScreenSM: boolean;
+  carouselSliding: boolean;
   projectActiveData: Project | null;
+  projectActive: number;
 }>();
+
+const emit = defineEmits(["redirectPage", "selectProject", "handleSliding"]);
+
+const switchProject = () => {
+  emit("handleSliding", true);
+  setTimeout(() => {
+    emit("handleSliding", false);
+  }, 700);
+  const next = (props.projectActive + 1) % 3;
+  emit("selectProject", next);
+};
 </script>
 
 <style scoped>
