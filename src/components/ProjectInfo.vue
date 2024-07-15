@@ -40,7 +40,7 @@
       :href="projectActiveData.href"
       target="_blank"
       rel="redirect"
-      class="self-baseline text-white mt-3 py-2 px-7 rounded-[20px] hover:text-[#4d6085]"
+      class="self-baseline text-white mt-3 py-2 px-7 rounded-[20px] active:text-[#4d6085] hover:text-white md:hover:text-[#4d6085]"
       style="
         background-image: linear-gradient(
           280.5deg,

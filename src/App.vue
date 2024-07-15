@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, reactive } from "vue";
 import getTimeNumbers from "./util/getTimestamp";
-// import deviceName from "./util/mobileDetective";
+import deviceName from "./util/mobileDetective";
 import Navbar from "./components/Navbar.vue";
 import Marquee from "./components/Marquee.vue";
 import Carousel from "./components/Carousel.vue";
@@ -9,7 +9,7 @@ import MobileCarousel from "./components/MobileCarousel.vue";
 import ProjectInfo from "./components/ProjectInfo.vue";
 import Footer from "./components/Footer.vue";
 
-// const isMobile = deviceName !== "unknown";
+const isMobile = deviceName !== "unknown";
 
 const introTop = ref(0);
 
@@ -175,10 +175,6 @@ const sideProjects = [
   },
 ];
 
-const openSocialList = ref(false);
-
-const showMessage = ref(false);
-
 //TODO: 輪播
 const projectActive = ref(1);
 
@@ -229,7 +225,13 @@ const redirectPage = (linkInfo?: { href: string; name: string }) => {
 //TODO: 輪播
 
 // TODO: 私訊我
-let socialMedia = [
+const openSocialList = ref(false);
+
+const socialListSliding = ref("");
+
+const showMessage = ref(false);
+
+let socialMedia = reactive([
   {
     name: "Email",
     icon: "gmail.svg",
@@ -251,21 +253,29 @@ let socialMedia = [
     content: "EdgarYang791203",
     href: "https://github.com/EdgarYang791203",
   },
-];
+]);
 
-let slideCardNames: string[] = reactive([]);
+// TODO: 卡片往上消失
+// const socialListSlide = () => {
+//   socialListSliding.value = true;
+//   const firstItem = { ...socialMedia[0] };
+//   socialMedia = [...socialMedia, firstItem];
+//   setTimeout(() => {
+//     socialMedia = socialMedia.slice(1);
+//     socialListSliding.value = false;
+//   }, 300);
+// };
 
 const sortCard = (name: string) => {
-  if (!slideCardNames.includes(name)) slideCardNames.push(name);
-  const index = socialMedia.findIndex((item) => item.name === name);
+  socialListSliding.value = name;
   const target = socialMedia.find((item) => item.name === name);
-  setTimeout(() => {
-    slideCardNames = slideCardNames.filter((item) => item !== name);
-  }, 400);
-  setTimeout(() => {
-    socialMedia.splice(index, 1);
-    if (target) socialMedia.push(target);
-  }, 300);
+  if (target) {
+    setTimeout(() => {
+      const newList = socialMedia.filter((item) => item.name !== name);
+      socialMedia = [...newList, target];
+      socialListSliding.value = "";
+    }, 400);
+  }
 };
 // TODO: 私訊我
 
@@ -540,7 +550,7 @@ onMounted(() => {
     class="pt-12 w-full h-[70vh] overflow-hidden bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex flex-col items-center justify-center relative parallelogram after:bg-[#4d6085] after:top-[-14px] after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2"
   >
     <div
-      class="bg-[tomato] rounded-md w-[380px] relative contact-box opacity-0"
+      class="bg-[tomato] rounded-md w-[96vw] max-w-[380px] md:w-[380px] relative contact-box opacity-0"
       :class="{
         'animate-[wobble_700ms] opacity-100': showMessage || showSection > 2,
       }"
@@ -601,61 +611,67 @@ onMounted(() => {
       class="sns-list transition-all duration-1000"
       :class="{ 'fade-in': openSocialList }"
     >
-      <div
-        v-for="(sns, index) in socialMedia"
-        :key="sns.name"
-        href=""
-        class="sns-card h-[86px] mt-[18px]"
-        :style="`transition-delay: ${0.5 + index * 0.2}s`"
-      >
+      <!-- TODO: 卡片往上消失 -->
+      <!-- :class="{ slide: socialListSliding }" -->
+      <div class="sns-block">
         <div
-          class="w-full h-full bg-white p-4 rounded flex justify-between items-center"
-          :class="{
-            'animate-[slide-out-right_400ms_ease]': slideCardNames.includes(
-              sns.name
-            ),
-          }"
-          style="transition-delay: 0ms"
+          v-for="(sns, index) in socialMedia"
+          :key="sns.name"
+          href=""
+          class="sns-card h-[86px] mt-[18px]"
+          :style="`transition-delay: ${0.5 + index * 0.2}s`"
         >
           <div
-            class="cursor-pointer"
-            @click="redirectPage({ name: sns.name, href: sns.href })"
+            class="w-full h-full bg-white p-4 rounded flex justify-between items-center"
+            :class="{
+              'animate-[slide-out-right_400ms_ease]':
+                socialListSliding === sns.name,
+            }"
+            style="transition-delay: 0ms"
           >
-            <img
-              class="w-[50px] h-[50px]"
-              :src="`/image/${sns.icon}`"
-              alt="icon"
-            />
-          </div>
-          <div class="content flex-1 pl-2">
-            <p :style="{ color: sns.color }">{{ sns.name }}</p>
-            <p>{{ sns.content }}</p>
-          </div>
-          <button
-            class="w-[48px] h-[48px] border-0 focus:outline-0 bg-transparent p-0"
-            role="button"
-            @click="sortCard(sns.name)"
-          >
-            <svg
-              class="arrow pointer-events-none"
-              xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              height="48"
-              viewBox="0 0 48 48"
+            <div
+              class="cursor-pointer"
+              @click="redirectPage({ name: sns.name, href: sns.href })"
             >
-              <g class="nc-icon-wrapper" fill="#444444">
-                <path
-                  d="M17.17 32.92l9.17-9.17-9.17-9.17L20 11.75l12 12-12 12z"
-                ></path>
-              </g>
-            </svg>
-          </button>
+              <img
+                class="w-[50px] h-[50px]"
+                :src="`/image/${sns.icon}`"
+                alt="icon"
+              />
+            </div>
+            <div class="content flex-1 pl-2">
+              <p :style="{ color: sns.color }">{{ sns.name }}</p>
+              <p>{{ sns.content }}</p>
+            </div>
+            <!-- TODO: 卡片往上消失 -->
+            <!-- @click="sortCard(sns.name)" -->
+            <!-- @click="socialListSlide" -->
+            <button
+              class="w-[48px] h-[48px] border-0 focus:outline-0 bg-transparent p-0"
+              role="button"
+              @click="sortCard(sns.name)"
+            >
+              <svg
+                class="arrow pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+              >
+                <g class="nc-icon-wrapper" fill="#444444">
+                  <path
+                    d="M17.17 32.92l9.17-9.17-9.17-9.17L20 11.75l12 12-12 12z"
+                  ></path>
+                </g>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <!-- TODO: FOOTER -->
-  <Footer @redirectPage="redirectPage" />
+  <Footer :isMobile="isMobile" @redirectPage="redirectPage" />
 </template>
 
 <style scoped>
@@ -893,11 +909,16 @@ onMounted(() => {
   color: #b3b3b3;
   letter-spacing: 0.4px;
 }
-.sns-list {
-  max-height: 0;
-  overflow: hidden;
-  width: 380px;
+.sns-block {
+  min-height: 473px;
+  max-height: 473px;
+  overflow-y: hidden;
 }
+/* TODO: 卡片往上消失 */
+/* .sns-block.slide {
+  transform: translateY(-114px);
+  transition: all 0.3s ease-out;
+} */
 .sns-list.fade-in {
   max-height: none;
 }

@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 type social = { name: string; href: string; img: string };
+
+const props = defineProps<{ isMobile: boolean }>();
 
 const socialLinks: social[] = [
   {
@@ -18,6 +22,10 @@ const socialLinks: social[] = [
     href: "mailto:edgaryang791203@gmail.com",
   },
 ];
+
+const links = computed(() =>
+  props.isMobile ? socialLinks.slice(0, 2) : socialLinks
+);
 </script>
 
 <template>
@@ -30,18 +38,22 @@ const socialLinks: social[] = [
     >
       <div class="flex">
         <a
-          v-for="link in socialLinks"
+          v-for="link in links"
           :key="link.name"
           :href="link.href"
           target="_blank"
-          class="top-0 relative hover:top-[5px] hover:invert mr-6"
+          class="top-0 relative hover:top-[5px] hover:invert mr-4 md:mr-6"
           style="transition: all 0.5s cubic-bezier(0.36, 0.87, 0.63, -0.07)"
           event=""
           @click.prevent="
             $emit('redirectPage', { href: link.href, name: link.name })
           "
         >
-          <img :src="link.img" alt="github" />
+          <img
+            class="w-[30px] h-[30px] md:w-[48px] md:h-[48px]"
+            :src="link.img"
+            alt="github"
+          />
         </a>
       </div>
       <p class="text-[#eae1d3] inline-block tracking-wide">
