@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+// import { computed } from "vue";
 
 type social = { name: string; href: string; img: string };
 
