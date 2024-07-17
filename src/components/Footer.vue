@@ -3,7 +3,7 @@ import { computed } from "vue";
 
 type social = { name: string; href: string; img: string };
 
-const props = defineProps<{ isMobile: boolean }>();
+// const props = defineProps<{ isMobile: boolean }>();
 
 const socialLinks: social[] = [
   {
@@ -23,9 +23,9 @@ const socialLinks: social[] = [
   },
 ];
 
-const links = computed(() =>
-  props.isMobile ? socialLinks.slice(0, 2) : socialLinks
-);
+// const links = computed(() =>
+//   props.isMobile ? socialLinks.slice(0, 2) : socialLinks
+// );
 </script>
 
 <template>
@@ -38,7 +38,7 @@ const links = computed(() =>
     >
       <div class="flex">
         <a
-          v-for="link in links"
+          v-for="link in socialLinks"
           :key="link.name"
           :href="link.href"
           target="_blank"
