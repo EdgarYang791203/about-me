@@ -8,6 +8,7 @@ import Carousel from "./components/Carousel.vue";
 import MobileCarousel from "./components/MobileCarousel.vue";
 import ProjectInfo from "./components/ProjectInfo.vue";
 import Footer from "./components/Footer.vue";
+import MobileControls from "./components/MobileControls.vue";
 
 const isMobile = deviceName !== "unknown";
 
@@ -245,14 +246,14 @@ let socialMedia = reactive([
     icon: "104_logo.png",
     color: "#ff9100",
     content: "104 履歷",
-    href: "https://pda.104.com.tw/profile/share/a4fiwz5iM3cLR0kEliuWGXKU54Bk4dqL",
+    href: "https://pda.104.com.tw/profile/share/bGzie7RBH47IyOxdkPgT5m6j5RvEjeBG",
   },
   {
     name: "GitHub",
     icon: "github-icon.svg",
     color: "#3e75c3",
     content: "EdgarYang791203",
-    href: "https://github.com/EdgarYang791203",
+    href: "https://github.com/EdgarYang791203/about-me/blob/master/README.md",
   },
 ]);
 
@@ -673,6 +674,8 @@ onMounted(() => {
   </div>
   <!-- TODO: FOOTER -->
   <Footer :isMobile="isMobile" @redirectPage="redirectPage" />
+  <!-- TODO: 手機社群控制按鈕元件 -->
+  <MobileControls v-if="isScreenSM" :socialMedia="socialMedia" />
 </template>
 
 <style scoped>
