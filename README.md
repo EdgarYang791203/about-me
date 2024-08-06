@@ -94,8 +94,8 @@
   </li>
   <li>
     <p>
-        <a href="https://poe-rosy.vercel.app" target="_blank" rel="nofollow">
-          <b>poe 拓荒攻略站</b>
+        <a href="https://exile-engineer.vercel.app" target="_blank" rel="nofollow">
+          <b>Exile Engineer POE 拓荒攻略站</b>
         </a>
         </br>
         ⌞因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。

@@ -170,10 +170,10 @@ const sideProjects = [
     href: "https://memetalk.jystudio.co.uk",
   },
   {
-    name: "POE Guide",
+    name: "Exile Engineer",
     id: 2,
     intro: "因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。",
-    href: "https://poe-rosy.vercel.app",
+    href: "https://exile-engineer.vercel.app",
   },
 ];
 
