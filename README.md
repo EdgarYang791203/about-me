@@ -47,7 +47,7 @@
   <li>
     <a href="https://www.104.com.tw/company/1a2x6bmhup">
       <span>萬通國際資訊有限公司-前端工程師</span>
-      <span>(2023/7~仍在職)</span>
+      <span>(2023/7~2024/7)</span>
     </a>
     <br>
     ⌞與後端工程師、UI設計師和 PM 協同合作，主要進行公司產品 【MGP】系統前後台的開發/改版/維護，產品技術使用 Vue2、Vuex 、Typescript、Scss、Bootstrap、ElementUI、axios。
@@ -85,7 +85,7 @@
   </li>
   <li>
     <p>
-        <a href="https://memetalk.jystudio.co.uk" target="_blank" rel="nofollow">
+        <a href="https://live2d-two.vercel.app/" target="_blank" rel="nofollow">
           <b>memetalk 迷因社群</b>
         </a>
         </br>

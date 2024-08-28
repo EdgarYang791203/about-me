@@ -167,7 +167,7 @@ const sideProjects = [
     name: "MeMetalk",
     id: 1,
     intro: "提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。",
-    href: "https://memetalk.jystudio.co.uk",
+    href: "https://live2d-two.vercel.app/",
   },
   {
     name: "Exile Engineer",
