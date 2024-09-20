@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, reactive } from "vue";
+// import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
 import getTimeNumbers from "./util/getTimestamp";
 import deviceName from "./util/mobileDetective";
 import Navbar from "./components/Navbar.vue";
@@ -9,6 +11,21 @@ import MobileCarousel from "./components/MobileCarousel.vue";
 import ProjectInfo from "./components/ProjectInfo.vue";
 import Footer from "./components/Footer.vue";
 import MobileControls from "./components/MobileControls.vue";
+
+// const firebaseConfig = {
+//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+//   databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+//   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+//   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+//   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+// };
+
+// Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
 
 const isMobile = deviceName !== "unknown";
 
@@ -295,6 +312,54 @@ const isScreenSM = computed(() => {
 const getWidth = () => {
   screen.width = window.innerWidth || document.documentElement.clientWidth;
 };
+
+type commentType = { option: string, nickname: string, comment: string, time?: string | number};
+
+const messageBordForm = ref<commentType>({
+  nickname: "",
+  option: "",
+  comment: "",
+});
+
+const commentSelectChange = ($event: Event) => {
+  const el = $event.target as HTMLInputElement;
+  if (el.value && typeof el.value === "string") {
+    messageBordForm.value.option = el.value;
+  }
+};
+
+const comments = ref<commentType[]>([])
+
+const formVerified = computed(() => {
+  let status = true;
+  for (let index = 0; index < Object.values(messageBordForm.value).length; index++) {
+    const content = Object.values(messageBordForm.value)[index];
+    if (typeof content !== 'string' || content === '') {
+      status = false;
+      break;
+    }
+  }
+  return status
+})
+
+const addComment = () => {
+  if (formVerified.value) {
+    comments.value.unshift({ ...messageBordForm.value });
+    messageBordForm.value = {
+      nickname: messageBordForm.value.nickname,
+      option: "",
+      comment: "",
+    }
+    alert('留言成功')
+  }
+}
+
+// const renderHtml = (msg: string) => {
+//   /** 將html碼格式化 只取得文字 */
+//   const regex = /<(?!br\s*\/?)[^>]*>/g;
+//   if (typeof msg === "string") return msg.replace(regex, " ");
+//   return "";
+// };
 
 onMounted(() => {
   window.addEventListener("scroll", () => {
@@ -672,6 +737,80 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <!-- TODO: 留言板 -->
+  <div
+    class="py-8 bg-black text-white flex h-[55vh]"
+    style="font-family: '細明體, AR PL UMing TW, Inconsolata, LiSongPro, monospace'"
+  >
+    <div class="px-2 flex-auto w-[25vw]">
+      <form class="flex flex-col" action="/" event="" @submit.prevent="() => {}">
+        <div class="mb-4">
+          <label class="block font-bold text-[20px] pb-2" for="nickname">
+            暱稱
+          </label>
+          <input
+            class="text-[#495057] w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
+            name="nickname"
+            id="nickname"
+            type="text"
+            v-model="messageBordForm.nickname"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block font-bold text-[20px] pb-2" for="opveration">
+            你覺得前端就業機會如何？
+          </label>
+          <select
+            name="opveration"
+            id="opveration"
+            class="text-[#495057] w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
+            @change="commentSelectChange($event)"
+            :value="messageBordForm.option"
+          >
+            <option value="" disabled>請選擇</option>
+            <option value="upvote">推</option>
+            <option value="downvote">→</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block font-bold text-[20px] pb-2" for="comment"
+            >留言</label
+          >
+          <input
+            class="text-[#495057] w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
+            name="comment"
+            id="comment"
+            placeholder="發言..."
+            :maxlength="45"
+            v-model="messageBordForm.comment"
+          >
+        </div>
+        <div v-if="formVerified">
+          <button id="addComment" class="text-white bg-[#007bff] border-[#007bff] px-[.75rem] py-[.375rem] rounded-[0.25rem]" type="submit" @click="addComment">送出</button>
+        </div>
+      </form>
+    </div>
+    <div class="px-2 flex-auto w-[75vw] text-[24px]">
+      <h3 class="text-[#090] font-bold font-fa">※ 留言板</h3>
+      <h3 class="text-[#090] font-bold font-fa">
+        <span>※ 頁面網址: </span>
+        <a class="text-[#888]" href="https://my-website-e9b07.web.app"
+          >https://my-website-e9b07.web.app</a
+        >
+      </h3>
+      <div v-if="comments.length" class="overflow-y-auto scrollbar-style" style="height: calc(100% - 72px);">
+        <p v-for="comment, index in comments" :key="`${comment.nickname}-${index}`" class="flex justify-between">
+          <div>
+            <span class="pr-4" :class="comment.option === 'upvote' ? 'text-white' : 'text-[#f66]'">{{ comment.option === 'upvote' ? '推' : '→' }}</span>
+            <span class="text-[#ff6]">{{ comment.nickname }}</span>
+            <span class="text-[#990]">：{{ comment.comment }}</span>
+          </div>
+          <span>{{ comment.time }}</span>
+        </p>
+      </div>
+      <p v-else class="text-center">目前沒有留言</p>
+    </div>
+  </div>
   <!-- TODO: FOOTER -->
   <Footer :isMobile="isMobile" @redirectPage="redirectPage" />
   <!-- TODO: 手機社群控制按鈕元件 -->
@@ -679,6 +818,27 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.scrollbar-style::-webkit-scrollbar {
+  width: 7px;
+}
+.scrollbar-style::-webkit-scrollbar-button {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.scrollbar-style::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+.scrollbar-style::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #eae1d3;
+  border: 1px solid slategrey;
+}
+
+.scrollbar-style::-webkit-scrollbar-track {
+  box-shadow: transparent;
+}
+
 .accumulate-lottery {
   font-size: 0;
   position: relative;
