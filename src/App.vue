@@ -739,17 +739,17 @@ onMounted(() => {
   </div>
   <!-- TODO: 留言板 -->
   <div
-    class="py-8 bg-black text-white flex h-[55vh]"
+    class="py-4 md:py-8 bg-black text-white flex flex-col md:flex-row h-screen md:h-[55vh]"
     style="font-family: '細明體, AR PL UMing TW, Inconsolata, LiSongPro, monospace'"
   >
-    <div class="px-2 flex-auto w-[25vw]">
+    <div class="px-2 flex-1 md:flex-auto w-full md:w-[25vw]">
       <form class="flex flex-col" action="/" event="" @submit.prevent="() => {}">
         <div class="mb-4">
           <label class="block font-bold text-[20px] pb-2" for="nickname">
             暱稱
           </label>
           <input
-            class="text-[#495057] w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
+            class="text-[#495057] bg-white w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
             name="nickname"
             id="nickname"
             type="text"
@@ -763,7 +763,7 @@ onMounted(() => {
           <select
             name="opveration"
             id="opveration"
-            class="text-[#495057] w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
+            class="text-[#495057] bg-white w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
             @change="commentSelectChange($event)"
             :value="messageBordForm.option"
           >
@@ -777,7 +777,7 @@ onMounted(() => {
             >留言</label
           >
           <input
-            class="text-[#495057] w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
+            class="text-[#495057] bg-white w-full py-[0.375rem] px-[0.75rem] leading-normal rounded"
             name="comment"
             id="comment"
             placeholder="發言..."
@@ -790,7 +790,7 @@ onMounted(() => {
         </div>
       </form>
     </div>
-    <div class="px-2 flex-auto w-[75vw] text-[24px]">
+    <div class="px-2 flex-1 md:flex-auto w-full md:w-[75vw] text-[24px]">
       <h3 class="text-[#090] font-bold font-fa">※ 留言板</h3>
       <h3 class="text-[#090] font-bold font-fa">
         <span>※ 頁面網址: </span>
