@@ -3,16 +3,16 @@ import { getApps, initializeApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-interface FirebaseConfig {
-  apiKey: string;
-  authDomain: string;
-  databaseURL?: string;
-  projectId: string;
-  storageBucket: string;
-  messagingSenderId: string;
-  appId: string;
-  measurementId?: string;
-}
+// interface FirebaseConfig {
+//   apiKey: string;
+//   authDomain: string;
+//   databaseURL?: string;
+//   projectId: string;
+//   storageBucket: string;
+//   messagingSenderId: string;
+//   appId: string;
+//   measurementId?: string;
+// }
 
 export const firebasePlugin: Plugin = {
   install: (app: App) => {
