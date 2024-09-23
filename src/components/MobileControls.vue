@@ -23,7 +23,7 @@
       </a>
       <!-- 關閉按鈕 -->
       <button
-        class="btn main p-0 border-0"
+        class="btn main p-0 border-0 bg-transparent"
         type="button"
         @click="socialHandler"
       >

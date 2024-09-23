@@ -10,6 +10,9 @@ COPY package.json package-lock.json ./
 # 安裝依賴
 RUN npm install
 
+# 清除緩存
+RUN npm cache clean --force
+
 # 複製其餘的專案文件
 COPY . .
 

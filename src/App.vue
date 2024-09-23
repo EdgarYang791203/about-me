@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch, reactive } from "vue";
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
+import { ref, onMounted, computed, watch, reactive, inject } from "vue";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  onSnapshot,
+  CollectionReference,
+} from "firebase/firestore";
+import type { Auth } from "firebase/auth";
 import getTimeNumbers from "./util/getTimestamp";
 import deviceName from "./util/mobileDetective";
 import Navbar from "./components/Navbar.vue";
@@ -11,21 +18,6 @@ import MobileCarousel from "./components/MobileCarousel.vue";
 import ProjectInfo from "./components/ProjectInfo.vue";
 import Footer from "./components/Footer.vue";
 import MobileControls from "./components/MobileControls.vue";
-
-// const firebaseConfig = {
-//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-//   databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-//   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-//   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-//   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-// };
-
-// Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 
 const isMobile = deviceName !== "unknown";
 
@@ -37,6 +29,7 @@ const messageTop = ref(0);
 
 const windowScrollY = ref(0);
 
+// TODO: 經歷資料
 const experienceList = [
   {
     year: 2018,
@@ -252,17 +245,17 @@ const showMessage = ref(false);
 
 let socialMedia = reactive([
   {
-    name: "Email",
-    icon: "gmail.svg",
-    color: "#d14836",
-    content: "edgaryang791203@gmail.com",
-    href: "mailto:edgaryang791203@gmail.com",
-  },
-  {
     name: "104",
     icon: "104_logo.png",
     color: "#ff9100",
     content: "104 履歷",
+    href: "https://pda.104.com.tw/profile/share/bGzie7RBH47IyOxdkPgT5m6j5RvEjeBG",
+  },
+  {
+    name: "CakeResume",
+    icon: "cake-resume.svg",
+    color: "#15AA67",
+    content: "CakeResume 履歷",
     href: "https://pda.104.com.tw/profile/share/bGzie7RBH47IyOxdkPgT5m6j5RvEjeBG",
   },
   {
@@ -271,6 +264,13 @@ let socialMedia = reactive([
     color: "#3e75c3",
     content: "EdgarYang791203",
     href: "https://github.com/EdgarYang791203/about-me/blob/master/README.md",
+  },
+  {
+    name: "Email",
+    icon: "gmail.svg",
+    color: "#d14836",
+    content: "edgaryang791203@gmail.com",
+    href: "mailto:edgaryang791203@gmail.com",
   },
 ]);
 
@@ -313,9 +313,15 @@ const getWidth = () => {
   screen.width = window.innerWidth || document.documentElement.clientWidth;
 };
 
-type commentType = { option: string, nickname: string, comment: string, time?: string | number};
+type CommentType = {
+  id?: string;
+  option: string;
+  nickname: string;
+  comment: string;
+  time?: string | number;
+};
 
-const messageBordForm = ref<commentType>({
+const messageBordForm = ref<CommentType>({
   nickname: "",
   option: "",
   comment: "",
@@ -328,31 +334,23 @@ const commentSelectChange = ($event: Event) => {
   }
 };
 
-const comments = ref<commentType[]>([])
+const comments = ref<CommentType[]>([]);
 
 const formVerified = computed(() => {
   let status = true;
-  for (let index = 0; index < Object.values(messageBordForm.value).length; index++) {
+  for (
+    let index = 0;
+    index < Object.values(messageBordForm.value).length;
+    index++
+  ) {
     const content = Object.values(messageBordForm.value)[index];
-    if (typeof content !== 'string' || content === '') {
+    if (typeof content !== "string" || content === "") {
       status = false;
       break;
     }
   }
-  return status
-})
-
-const addComment = () => {
-  if (formVerified.value) {
-    comments.value.unshift({ ...messageBordForm.value });
-    messageBordForm.value = {
-      nickname: messageBordForm.value.nickname,
-      option: "",
-      comment: "",
-    }
-    alert('留言成功')
-  }
-}
+  return status;
+});
 
 // const renderHtml = (msg: string) => {
 //   /** 將html碼格式化 只取得文字 */
@@ -360,6 +358,51 @@ const addComment = () => {
 //   if (typeof msg === "string") return msg.replace(regex, " ");
 //   return "";
 // };
+
+let firebaseAuth = inject<Auth>("$auth");
+
+let commentsRef: CollectionReference<CommentType> | null = null;
+
+const getComments = async () => {
+  const db = getFirestore();
+  commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
+  onSnapshot(commentsRef, (snapshot) => {
+    snapshot.docChanges().forEach(async (change: any) => {
+      if (change.type === "added") {
+        // 新增的留言
+        const { option, time, nickname, comment } = change.doc.data();
+        if (change.doc.id && !comments.value.includes(change.doc.id)) {
+          comments.value.unshift({ option, time, nickname, comment });
+        }
+      }
+    });
+  });
+  // const querySnapshot = await getDocs(commentCollection);
+  // // 初始化留言列表
+  // querySnapshot.forEach((doc) => {
+  //   if (doc.id) {
+  //     const { option, time, nickname, comment } = doc.data();
+  //     comments.value.push({ option, time, nickname, comment, id: doc.id });
+  //   }
+  // });
+};
+
+const addComment = async () => {
+  if (formVerified.value && commentsRef) {
+    try {
+      await setDoc(doc(commentsRef), { ...messageBordForm.value });
+      messageBordForm.value = {
+        nickname: messageBordForm.value.nickname,
+        option: "",
+        comment: "",
+      };
+      alert("留言成功");
+    } catch (error) {
+      console.error("留言失敗：", error);
+      alert("留言失敗，請重試！");
+    }
+  }
+};
 
 onMounted(() => {
   window.addEventListener("scroll", () => {
@@ -373,6 +416,9 @@ onMounted(() => {
   timer.value = setInterval(() => {
     numberAnimation();
   }, 1000);
+  if (firebaseAuth) {
+    getComments();
+  }
 });
 </script>
 
@@ -740,10 +786,17 @@ onMounted(() => {
   <!-- TODO: 留言板 -->
   <div
     class="py-4 md:py-8 bg-black text-white flex flex-col md:flex-row h-screen md:h-[55vh]"
-    style="font-family: '細明體, AR PL UMing TW, Inconsolata, LiSongPro, monospace'"
+    style="
+      font-family: '細明體, AR PL UMing TW, Inconsolata, LiSongPro, monospace';
+    "
   >
     <div class="px-2 flex-1 md:flex-auto w-full md:w-[25vw]">
-      <form class="flex flex-col" action="/" event="" @submit.prevent="() => {}">
+      <form
+        class="flex flex-col"
+        action="/"
+        event=""
+        @submit.prevent="() => {}"
+      >
         <div class="mb-4">
           <label class="block font-bold text-[20px] pb-2" for="nickname">
             暱稱
@@ -753,6 +806,7 @@ onMounted(() => {
             name="nickname"
             id="nickname"
             type="text"
+            maxlength="12"
             v-model="messageBordForm.nickname"
           />
         </div>
@@ -783,30 +837,58 @@ onMounted(() => {
             placeholder="發言..."
             :maxlength="45"
             v-model="messageBordForm.comment"
-          >
+          />
         </div>
         <div v-if="formVerified">
-          <button id="addComment" class="text-white bg-[#007bff] border-[#007bff] px-[.75rem] py-[.375rem] rounded-[0.25rem]" type="submit" @click="addComment">送出</button>
+          <button
+            id="addComment"
+            class="text-white bg-[#007bff] border-[#007bff] px-[.75rem] py-[.375rem] rounded-[0.25rem]"
+            type="submit"
+            @click="addComment"
+          >
+            送出
+          </button>
         </div>
       </form>
     </div>
-    <div class="px-2 flex-1 md:flex-auto w-full md:w-[75vw] text-[24px]">
+    <div
+      class="px-2 flex-1 md:flex-auto w-full md:w-[75vw] text-[16px] md:text-[24px] overflow-hidden"
+    >
       <h3 class="text-[#090] font-bold font-fa">※ 留言板</h3>
       <h3 class="text-[#090] font-bold font-fa">
         <span>※ 頁面網址: </span>
-        <a class="text-[#888]" href="https://my-website-e9b07.web.app"
+        <a
+          class="text-[#888] break-words"
+          href="https://my-website-e9b07.web.app"
           >https://my-website-e9b07.web.app</a
         >
       </h3>
-      <div v-if="comments.length" class="overflow-y-auto scrollbar-style" style="height: calc(100% - 72px);">
-        <p v-for="comment, index in comments" :key="`${comment.nickname}-${index}`" class="flex justify-between">
-          <div>
-            <span class="pr-4" :class="comment.option === 'upvote' ? 'text-white' : 'text-[#f66]'">{{ comment.option === 'upvote' ? '推' : '→' }}</span>
+      <div
+        v-if="comments.length"
+        class="overflow-y-auto scrollbar-style"
+        style="height: calc(100% - 72px)"
+      >
+        <div
+          v-for="(comment, index) in comments"
+          :key="`${comment.nickname}-${index}`"
+          class="flex items-end"
+        >
+          <div class="flex-1">
+            <span
+              class="pr-4"
+              :class="
+                comment.option === 'upvote' ? 'text-white' : 'text-[#f66]'
+              "
+              >{{ comment.option === "upvote" ? "推" : "→" }}</span
+            >
             <span class="text-[#ff6]">{{ comment.nickname }}</span>
-            <span class="text-[#990]">：{{ comment.comment }}</span>
+            <span class="text-[#990] break-all">：{{ comment.comment }}</span>
           </div>
-          <span>{{ comment.time }}</span>
-        </p>
+          <div
+            class="grow-0 shrink-0 basis-[78px] md:basis-[116px]"
+            v-timeformat="comment.time"
+          ></div>
+        </div>
       </div>
       <p v-else class="text-center">目前沒有留言</p>
     </div>
@@ -818,25 +900,27 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.scrollbar-style::-webkit-scrollbar {
-  width: 7px;
-}
-.scrollbar-style::-webkit-scrollbar-button {
-  background: transparent;
-  border-radius: 4px;
-}
+@media screen and (min-width: 576px) {
+  .scrollbar-style::-webkit-scrollbar {
+    width: 7px;
+  }
+  .scrollbar-style::-webkit-scrollbar-button {
+    background: transparent;
+    border-radius: 4px;
+  }
 
-.scrollbar-style::-webkit-scrollbar-track-piece {
-  background: transparent;
-}
-.scrollbar-style::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: #eae1d3;
-  border: 1px solid slategrey;
-}
+  .scrollbar-style::-webkit-scrollbar-track-piece {
+    background: transparent;
+  }
+  .scrollbar-style::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #eae1d3;
+    border: 1px solid slategrey;
+  }
 
-.scrollbar-style::-webkit-scrollbar-track {
-  box-shadow: transparent;
+  .scrollbar-style::-webkit-scrollbar-track {
+    box-shadow: transparent;
+  }
 }
 
 .accumulate-lottery {
