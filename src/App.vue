@@ -906,7 +906,7 @@ onMounted(() => {
             <span class="text-[#990] break-all">：{{ comment.comment }}</span>
           </div>
           <div
-            class="grow-0 shrink-0 basis-[78px] md:basis-[116px]"
+            class="grow-0 shrink-0 tracking-normal basis-[88px] md:basis-[116px] flex"
             v-timeformat="comment.time"
           ></div>
         </div>
