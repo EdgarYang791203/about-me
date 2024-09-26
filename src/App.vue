@@ -5,8 +5,13 @@ import {
   collection,
   doc,
   setDoc,
+  getDocs,
   onSnapshot,
   CollectionReference,
+  QuerySnapshot,
+  DocumentData,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import type { Auth } from "firebase/auth";
 import getTimeNumbers from "./util/getTimestamp";
@@ -313,13 +318,13 @@ const getWidth = () => {
   screen.width = window.innerWidth || document.documentElement.clientWidth;
 };
 
-type CommentType = {
+interface CommentType {
   id?: string;
   option: string;
   nickname: string;
   comment: string;
   time?: string | number;
-};
+}
 
 const messageBordForm = ref<CommentType>({
   nickname: "",
@@ -367,7 +372,9 @@ const getComments = async () => {
   const db = getFirestore();
   commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
   onSnapshot(commentsRef, (snapshot) => {
-    snapshot.docChanges().forEach(async (change: any) => {
+    const newComments = snapshot.docChanges() || [];
+    if (!comments?.value.length) return;
+    newComments.forEach(async (change: any) => {
       if (change.type === "added") {
         // 新增的留言
         const { option, time, nickname, comment } = change.doc.data();
@@ -377,20 +384,34 @@ const getComments = async () => {
       }
     });
   });
-  // const querySnapshot = await getDocs(commentCollection);
-  // // 初始化留言列表
-  // querySnapshot.forEach((doc) => {
-  //   if (doc.id) {
-  //     const { option, time, nickname, comment } = doc.data();
-  //     comments.value.push({ option, time, nickname, comment, id: doc.id });
-  //   }
-  // });
+
+  // 排序
+  const commentsQuery = query(commentsRef, orderBy("time", "desc"));
+
+  const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
+    commentsQuery
+  );
+
+  // 初始化留言列表
+  comments.value = querySnapshot.docs
+    .map((doc) => {
+      if (doc.exists()) {
+        const data = doc.data() as CommentType;
+        const { option, time, nickname, comment } = data;
+        return { option, time, nickname, comment, id: doc.id };
+      }
+      return null;
+    })
+    .filter(Boolean) as CommentType[];
 };
 
 const addComment = async () => {
   if (formVerified.value && commentsRef) {
     try {
-      await setDoc(doc(commentsRef), { ...messageBordForm.value });
+      await setDoc(doc(commentsRef), {
+        ...messageBordForm.value,
+        time: new Date().getTime(),
+      });
       messageBordForm.value = {
         nickname: messageBordForm.value.nickname,
         option: "",
