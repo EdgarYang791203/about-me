@@ -364,6 +364,9 @@ const formVerified = computed(() => {
 //   return "";
 // };
 
+const fetchApi =
+  inject<(url: string, options?: RequestInit) => Promise<any>>("$fetch");
+
 let firebaseAuth = inject<Auth>("$auth");
 
 let commentsRef: CollectionReference<CommentType> | null = null;
@@ -424,6 +427,81 @@ const addComment = async () => {
     }
   }
 };
+
+// TODO: 測試 API
+const testApiRead = async () => {
+  if (fetchApi) {
+    try {
+      const list = await fetchApi("http://localhost:3000/api/comments");
+      console.log(list);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
+};
+
+const testApiCreate = async () => {
+  if (fetchApi) {
+    try {
+      // 使用 fetchApi 發送請求
+      const res = await fetchApi("http://localhost:3000/api/comments", {
+        method: "POST", // 設置為 POST 請求
+        body: JSON.stringify({
+          option: "upvote",
+          nickname: "阿宏",
+          comment: "POST 測試",
+          time: new Date().getTime(),
+        }),
+      });
+      console.log(res);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
+};
+
+const testApiUpdate = async (id?: number) => {
+  if (fetchApi && id) {
+    try {
+      // 使用 fetchApi 發送請求
+      const res = await fetchApi(`http://localhost:3000/api/comments/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          option: "downvote",
+          nickname: "阿宏改",
+          comment: "PUT 測試",
+          time: new Date().getTime(),
+        }),
+      });
+      console.log(res);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
+};
+
+const testApiDelete = async (id?: number) => {
+  if (fetchApi && id) {
+    try {
+      // 使用 fetchApi 發送請求
+      const res = await fetchApi(`http://localhost:3000/api/comments/${id}`, {
+        method: "DELETE",
+      });
+      console.log(res);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
+};
+// TODO: 測試 API
 
 onMounted(() => {
   window.addEventListener("scroll", () => {
@@ -860,6 +938,46 @@ onMounted(() => {
             v-model="messageBordForm.comment"
           />
         </div>
+        <!-- TODO: 測試 API -->
+        <div class="w-full flex flex-wrap justify-around">
+          <div>
+            <button
+              class="text-white bg-[#007bff] border-[#007bff] px-[.75rem] py-[.375rem] rounded-[0.25rem] mb-2"
+              type="button"
+              @click="testApiRead"
+            >
+              取列表
+            </button>
+          </div>
+          <div>
+            <button
+              class="text-white bg-[#007bff] border-[#007bff] px-[.75rem] py-[.375rem] rounded-[0.25rem] mb-2"
+              type="button"
+              @click="testApiCreate"
+            >
+              創留言
+            </button>
+          </div>
+          <div>
+            <button
+              class="text-white bg-[#007bff] border-[#007bff] px-[.75rem] py-[.375rem] rounded-[0.25rem]"
+              type="button"
+              @click="testApiUpdate(1)"
+            >
+              更新留言
+            </button>
+          </div>
+          <div>
+            <button
+              class="text-white bg-[#007bff] border-[#007bff] px-[.75rem] py-[.375rem] rounded-[0.25rem]"
+              type="button"
+              @click="testApiDelete(2)"
+            >
+              刪除留言
+            </button>
+          </div>
+        </div>
+        <!-- TODO: 測試 API -->
         <div v-if="formVerified">
           <button
             id="addComment"
