@@ -92,7 +92,19 @@ const showSection = computed(() => {
 const blockScrollProgress = ref(0);
 
 watch(showSection, async (newValue) => {
-  if (!newValue) blockScrollProgress.value = 0;
+  switch (newValue) {
+    case 0:
+      blockScrollProgress.value = 0;
+      openSocialList.value = false;
+      break;
+    case 1:
+    case 2:
+      openSocialList.value = false;
+      break;
+
+    default:
+      break;
+  }
 });
 
 const blockScrollHandler = ($event: any) => {
