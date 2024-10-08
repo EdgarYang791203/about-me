@@ -92,7 +92,19 @@ const showSection = computed(() => {
 const blockScrollProgress = ref(0);
 
 watch(showSection, async (newValue) => {
-  if (!newValue) blockScrollProgress.value = 0;
+  switch (newValue) {
+    case 0:
+      blockScrollProgress.value = 0;
+      openSocialList.value = false;
+      break;
+    case 1:
+    case 2:
+      openSocialList.value = false;
+      break;
+
+    default:
+      break;
+  }
 });
 
 const blockScrollHandler = ($event: any) => {
@@ -254,14 +266,14 @@ let socialMedia = reactive([
     icon: "104_logo.png",
     color: "#ff9100",
     content: "104 履歷",
-    href: "https://pda.104.com.tw/profile/share/bGzie7RBH47IyOxdkPgT5m6j5RvEjeBG",
+    href: "https://pda.104.com.tw/profile/share/gw6pQPa7hldXxhhCoC6Rz7K0KwEuRcNw",
   },
   {
     name: "CakeResume",
     icon: "cake-resume.svg",
     color: "#15AA67",
     content: "CakeResume 履歷",
-    href: "https://pda.104.com.tw/profile/share/bGzie7RBH47IyOxdkPgT5m6j5RvEjeBG",
+    href: "https://www.cake.me/73307hank",
   },
   {
     name: "GitHub",
