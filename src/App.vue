@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, reactive, inject } from "vue";
 // TODO: Firebase noSQL
-import {
-  getFirestore,
-  collection,
-  doc,
-  setDoc,
-  getDocs,
-  onSnapshot,
-  CollectionReference,
-  QuerySnapshot,
-  DocumentData,
-  query,
-  orderBy,
-} from "firebase/firestore";
-import type { Auth } from "firebase/auth";
+// import {
+//   getFirestore,
+//   collection,
+//   doc,
+//   setDoc,
+//   getDocs,
+//   onSnapshot,
+//   CollectionReference,
+//   QuerySnapshot,
+//   DocumentData,
+//   query,
+//   orderBy,
+// } from "firebase/firestore";
+// import type { Auth } from "firebase/auth";
 import getTimeNumbers from "./util/getTimestamp";
 import deviceName from "./util/mobileDetective";
 import Navbar from "./components/Navbar.vue";
@@ -332,11 +332,11 @@ const getWidth = () => {
 };
 
 interface CommentType {
-  id?: string;
+  xata_id?: string;
   option: string;
   nickname: string;
   comment: string;
-  time?: string | number;
+  xata_createdat?: string;
   created?: string;
 }
 
@@ -379,99 +379,76 @@ const formVerified = computed(() => {
 // };
 
 // TODO: Node API Postgresql
-// const fetchApi =
-//   inject<(url: string, options?: RequestInit) => Promise<any>>("$fetch");
+const fetchApi =
+  inject<(url: string, options?: RequestInit) => Promise<any>>("$fetch");
 
 // TODO: Firebase noSQL
-let firebaseAuth = inject<Auth>("$auth");
-let commentsRef: CollectionReference<CommentType> | null = null;
+// let firebaseAuth = inject<Auth>("$auth");
+// let commentsRef: CollectionReference<CommentType> | null = null;
 
 const getComments = async () => {
   // TODO: Node API Postgresql
-  // if (fetchApi) {
-  //   try {
-  //     const list = await fetchApi("/comments");
-  //     if (list && list.length) comments.value = list;
-  //   } catch (error) {
-  //     console.error("Error loading data:", error);
-  //   }
-  // } else {
-  //   console.error("fetchApi is not provided");
-  // }
+  if (fetchApi) {
+    try {
+      const list = await fetchApi("/comments");
+      if (list && list.length) comments.value = list;
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
   // TODO: Firebase noSQL
-  const db = getFirestore();
-  commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
-  onSnapshot(commentsRef, (snapshot) => {
-    const newComments = snapshot.docChanges() || [];
-    if (!comments?.value.length) return;
-    newComments.forEach(async (change: any) => {
-      if (change.type === "added") {
-        // 新增的留言
-        const { option, time, nickname, comment } = change.doc.data();
-        if (change.doc.id && !comments.value.includes(change.doc.id)) {
-          comments.value.unshift({
-            option,
-            time,
-            nickname,
-            comment,
-            id: change.doc.id,
-          });
-        }
-      }
-    });
-  });
-
+  // const db = getFirestore();
+  // commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
+  // onSnapshot(commentsRef, (snapshot) => {
+  //   const newComments = snapshot.docChanges() || [];
+  //   if (!comments?.value.length) return;
+  //   newComments.forEach(async (change: any) => {
+  //     if (change.type === "added") {
+  //       // 新增的留言
+  //       const { option, time, nickname, comment } = change.doc.data();
+  //       if (change.doc.id && !comments.value.includes(change.doc.id)) {
+  //         comments.value.unshift({
+  //           option,
+  //           time,
+  //           nickname,
+  //           comment,
+  //           id: change.doc.id,
+  //         });
+  //       }
+  //     }
+  //   });
+  // });
   // 排序
-  const commentsQuery = query(commentsRef, orderBy("time", "desc"));
-
-  const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
-    commentsQuery
-  );
+  // const commentsQuery = query(commentsRef, orderBy("time", "desc"));
+  // const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
+  //   commentsQuery
+  // );
 
   // 初始化留言列表
-  comments.value = querySnapshot.docs
-    .map((doc) => {
-      if (doc.exists()) {
-        const data = doc.data() as CommentType;
-        const { option, time, nickname, comment } = data;
-        return { option, time, nickname, comment, id: doc.id };
-      }
-      return null;
-    })
-    .filter(Boolean) as CommentType[];
+  // comments.value = querySnapshot.docs
+  //   .map((doc) => {
+  //     if (doc.exists()) {
+  //       const data = doc.data() as CommentType;
+  //       const { option, time, nickname, comment } = data;
+  //       return { option, time, nickname, comment, id: doc.id };
+  //     }
+  //     return null;
+  //   })
+  //   .filter(Boolean) as CommentType[];
 };
 
 const addComment = async () => {
   // TODO: Node API Postgresql
-  // if (fetchApi) {
-  //   try {
-  //     // 使用 fetchApi 發送請求
-  //     const res = await fetchApi("/comments", {
-  //       method: "POST", // 設置為 POST 請求
-  //       body: JSON.stringify({
-  //         ...messageBordForm.value,
-  //       }),
-  //     });
-  //     messageBordForm.value = {
-  //       nickname: messageBordForm.value.nickname,
-  //       option: "",
-  //       comment: "",
-  //     };
-  //     alert("留言成功");
-  //     if (res) getComments();
-  //   } catch (error) {
-  //     // console.error("留言失敗：", error);
-  //     alert("留言失敗，請重試！");
-  //   }
-  // } else {
-  //   console.error("fetchApi is not provided");
-  // }
-  // TODO: Firebase noSQL
-  if (formVerified.value && commentsRef) {
+  if (fetchApi) {
     try {
-      await setDoc(doc(commentsRef), {
-        ...messageBordForm.value,
-        time: new Date().getTime(),
+      // 使用 fetchApi 發送請求
+      const res = await fetchApi("/comments", {
+        method: "POST", // 設置為 POST 請求
+        body: JSON.stringify({
+          ...messageBordForm.value,
+        }),
       });
       messageBordForm.value = {
         nickname: messageBordForm.value.nickname,
@@ -479,11 +456,32 @@ const addComment = async () => {
         comment: "",
       };
       alert("留言成功");
+      if (res) getComments();
     } catch (error) {
-      console.error("留言失敗：", error);
+      // console.error("留言失敗：", error);
       alert("留言失敗，請重試！");
     }
+  } else {
+    console.error("fetchApi is not provided");
   }
+  // TODO: Firebase noSQL
+  // if (formVerified.value && commentsRef) {
+  //   try {
+  //     await setDoc(doc(commentsRef), {
+  //       ...messageBordForm.value,
+  //       time: new Date().getTime(),
+  //     });
+  //     messageBordForm.value = {
+  //       nickname: messageBordForm.value.nickname,
+  //       option: "",
+  //       comment: "",
+  //     };
+  //     alert("留言成功");
+  //   } catch (error) {
+  //     console.error("留言失敗：", error);
+  //     alert("留言失敗，請重試！");
+  //   }
+  // }
 };
 // TODO: 測試 API
 
@@ -500,11 +498,11 @@ onMounted(() => {
     numberAnimation();
   }, 1000);
   // TODO: Firebase noSQL
-  if (firebaseAuth) {
-    getComments();
-  }
+  // if (firebaseAuth) {
+  //   getComments();
+  // }
   // TODO: Node API Postgresql
-  // getComments();
+  getComments();
 });
 </script>
 
@@ -957,7 +955,7 @@ onMounted(() => {
         <!-- :key="comment.id" -->
         <div
           v-for="comment in comments"
-          :key="comment.id"
+          :key="comment.xata_id"
           class="flex items-end"
         >
           <div class="flex-1">
@@ -974,7 +972,9 @@ onMounted(() => {
           <!-- comment.created -->
           <div
             class="grow-0 shrink-0 tracking-normal basis-[88px] md:basis-[116px] flex"
-            v-timeformat="comment.time ? comment.time : comment.created"
+            v-timeformat="
+              comment.xata_createdat ? comment.xata_createdat : comment.created
+            "
           ></div>
         </div>
       </div>
