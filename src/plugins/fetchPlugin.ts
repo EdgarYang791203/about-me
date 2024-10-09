@@ -2,6 +2,8 @@ import { App, Plugin } from "vue";
 
 type FetchApi = (url: string, options?: RequestInit) => Promise<any>;
 
+const API_DOMAIN = import.meta.env.VITE_API_URL;
+
 export const fetchPlugin: Plugin = {
   install(app: App) {
     // 封裝一個通用的 fetch 請求方法
@@ -14,7 +16,7 @@ export const fetchPlugin: Plugin = {
           ...options, // 合併傳入的 options
         };
 
-        const response = await fetch(url, defaultOptions);
+        const response = await fetch(`${API_DOMAIN}${url}`, defaultOptions);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }

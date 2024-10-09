@@ -5,8 +5,12 @@ export default {
   install(app: App) {
     app.directive("timeformat", {
       mounted(el, binding) {
-        const time = dayjs(binding.value).format("MM/DD HH:MM");
-        el.innerText = time;
+        try {
+          const time = dayjs(binding.value).format("MM/DD HH:mm");
+          el.innerText = time;
+        } catch (error) {
+          el.innerText = "";
+        }
       },
     });
   },
