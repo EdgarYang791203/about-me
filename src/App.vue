@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, reactive, inject } from "vue";
-import {
-  getFirestore,
-  collection,
-  doc,
-  setDoc,
-  getDocs,
-  onSnapshot,
-  CollectionReference,
-  QuerySnapshot,
-  DocumentData,
-  query,
-  orderBy,
-} from "firebase/firestore";
+// TODO: Firebase noSQL
+// import {
+//   getFirestore,
+//   collection,
+//   doc,
+//   setDoc,
+//   getDocs,
+//   onSnapshot,
+//   CollectionReference,
+//   QuerySnapshot,
+//   DocumentData,
+//   query,
+//   orderBy,
+// } from "firebase/firestore";
 import type { Auth } from "firebase/auth";
 import getTimeNumbers from "./util/getTimestamp";
 import deviceName from "./util/mobileDetective";
@@ -336,6 +337,7 @@ interface CommentType {
   nickname: string;
   comment: string;
   time?: string | number;
+  created?: string;
 }
 
 const messageBordForm = ref<CommentType>({
@@ -376,53 +378,71 @@ const formVerified = computed(() => {
 //   return "";
 // };
 
-let firebaseAuth = inject<Auth>("$auth");
+const fetchApi =
+  inject<(url: string, options?: RequestInit) => Promise<any>>("$fetch");
 
-let commentsRef: CollectionReference<CommentType> | null = null;
+// let firebaseAuth = inject<Auth>("$auth");
+
+// TODO: Firebase noSQL
+// let commentsRef: CollectionReference<CommentType> | null = null;
 
 const getComments = async () => {
-  const db = getFirestore();
-  commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
-  onSnapshot(commentsRef, (snapshot) => {
-    const newComments = snapshot.docChanges() || [];
-    if (!comments?.value.length) return;
-    newComments.forEach(async (change: any) => {
-      if (change.type === "added") {
-        // 新增的留言
-        const { option, time, nickname, comment } = change.doc.data();
-        if (change.doc.id && !comments.value.includes(change.doc.id)) {
-          comments.value.unshift({ option, time, nickname, comment });
-        }
-      }
-    });
-  });
+  if (fetchApi) {
+    try {
+      const list = await fetchApi("/comments");
+      if (list && list.length) comments.value = list;
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
+  // TODO: Firebase noSQL
+  // const db = getFirestore();
+  // commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
+  // onSnapshot(commentsRef, (snapshot) => {
+  //   const newComments = snapshot.docChanges() || [];
+  //   if (!comments?.value.length) return;
+  //   newComments.forEach(async (change: any) => {
+  //     if (change.type === "added") {
+  //       // 新增的留言
+  //       const { option, time, nickname, comment } = change.doc.data();
+  //       if (change.doc.id && !comments.value.includes(change.doc.id)) {
+  //         comments.value.unshift({ option, time, nickname, comment });
+  //       }
+  //     }
+  //   });
+  // });
 
-  // 排序
-  const commentsQuery = query(commentsRef, orderBy("time", "desc"));
+  // // 排序
+  // const commentsQuery = query(commentsRef, orderBy("time", "desc"));
 
-  const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
-    commentsQuery
-  );
+  // const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
+  //   commentsQuery
+  // );
 
-  // 初始化留言列表
-  comments.value = querySnapshot.docs
-    .map((doc) => {
-      if (doc.exists()) {
-        const data = doc.data() as CommentType;
-        const { option, time, nickname, comment } = data;
-        return { option, time, nickname, comment, id: doc.id };
-      }
-      return null;
-    })
-    .filter(Boolean) as CommentType[];
+  // // 初始化留言列表
+  // comments.value = querySnapshot.docs
+  //   .map((doc) => {
+  //     if (doc.exists()) {
+  //       const data = doc.data() as CommentType;
+  //       const { option, time, nickname, comment } = data;
+  //       return { option, time, nickname, comment, id: doc.id };
+  //     }
+  //     return null;
+  //   })
+  //   .filter(Boolean) as CommentType[];
 };
 
 const addComment = async () => {
-  if (formVerified.value && commentsRef) {
+  if (fetchApi) {
     try {
-      await setDoc(doc(commentsRef), {
-        ...messageBordForm.value,
-        time: new Date().getTime(),
+      // 使用 fetchApi 發送請求
+      const res = await fetchApi("/comments", {
+        method: "POST", // 設置為 POST 請求
+        body: JSON.stringify({
+          ...messageBordForm.value,
+        }),
       });
       messageBordForm.value = {
         nickname: messageBordForm.value.nickname,
@@ -430,12 +450,34 @@ const addComment = async () => {
         comment: "",
       };
       alert("留言成功");
+      if (res) getComments();
     } catch (error) {
-      console.error("留言失敗：", error);
+      // console.error("留言失敗：", error);
       alert("留言失敗，請重試！");
     }
+  } else {
+    console.error("fetchApi is not provided");
   }
+  // TODO: Firebase noSQL
+  // if (formVerified.value && commentsRef) {
+  //   try {
+  //     await setDoc(doc(commentsRef), {
+  //       ...messageBordForm.value,
+  //       time: new Date().getTime(),
+  //     });
+  //     messageBordForm.value = {
+  //       nickname: messageBordForm.value.nickname,
+  //       option: "",
+  //       comment: "",
+  //     };
+  //     alert("留言成功");
+  //   } catch (error) {
+  //     console.error("留言失敗：", error);
+  //     alert("留言失敗，請重試！");
+  //   }
+  // }
 };
+// TODO: 測試 API
 
 onMounted(() => {
   window.addEventListener("scroll", () => {
@@ -449,9 +491,10 @@ onMounted(() => {
   timer.value = setInterval(() => {
     numberAnimation();
   }, 1000);
-  if (firebaseAuth) {
-    getComments();
-  }
+  // if (firebaseAuth) {
+  //   getComments();
+  // }
+  getComments();
 });
 </script>
 
@@ -506,8 +549,8 @@ onMounted(() => {
       </div>
     </nav>
   </header>
+  <!-- TODO: BANNER -->
   <div class="relative overflow-hidden w-full">
-    <!-- TODO: BANNER -->
     <div
       id="BANNER"
       class="w-full pt-[55px] pb-8 md:py-0 md:min-h-screen md:h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative parallelogram after:huge:rotate-[0.5deg] after:border-[#FF6347] after:border-b-0"
@@ -902,8 +945,8 @@ onMounted(() => {
         style="height: calc(100% - 72px)"
       >
         <div
-          v-for="(comment, index) in comments"
-          :key="`${comment.nickname}-${index}`"
+          v-for="comment in comments"
+          :key="comment.id"
           class="flex items-end"
         >
           <div class="flex-1">
@@ -919,7 +962,7 @@ onMounted(() => {
           </div>
           <div
             class="grow-0 shrink-0 tracking-normal basis-[88px] md:basis-[116px] flex"
-            v-timeformat="comment.time"
+            v-timeformat="comment.created"
           ></div>
         </div>
       </div>
