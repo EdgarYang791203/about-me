@@ -14,7 +14,7 @@ import { ref, onMounted, computed, watch, reactive, inject } from "vue";
 //   query,
 //   orderBy,
 // } from "firebase/firestore";
-import type { Auth } from "firebase/auth";
+// import type { Auth } from "firebase/auth";
 import getTimeNumbers from "./util/getTimestamp";
 import deviceName from "./util/mobileDetective";
 import Navbar from "./components/Navbar.vue";
