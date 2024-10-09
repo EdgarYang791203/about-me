@@ -21,7 +21,7 @@ export default defineConfig({
     },
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: "http://localhost:3000", // https://website-cms-api-357627052252.asia-east1.run.app
         changeOrigin: true,
       },
     },
