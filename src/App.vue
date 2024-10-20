@@ -1,511 +1,3 @@
-<script setup lang="ts">
-import { ref, onMounted, computed, watch, reactive, inject } from "vue";
-// TODO: Firebase noSQL
-// import {
-//   getFirestore,
-//   collection,
-//   doc,
-//   setDoc,
-//   getDocs,
-//   onSnapshot,
-//   CollectionReference,
-//   QuerySnapshot,
-//   DocumentData,
-//   query,
-//   orderBy,
-// } from "firebase/firestore";
-// import type { Auth } from "firebase/auth";
-import getTimeNumbers from "./util/getTimestamp";
-import deviceName from "./util/mobileDetective";
-import Navbar from "./components/Navbar.vue";
-import Marquee from "./components/Marquee.vue";
-import Carousel from "./components/Carousel.vue";
-import MobileCarousel from "./components/MobileCarousel.vue";
-import ProjectInfo from "./components/ProjectInfo.vue";
-import Footer from "./components/Footer.vue";
-import MobileControls from "./components/MobileControls.vue";
-
-const isMobile = deviceName !== "unknown";
-
-const introTop = ref(0);
-
-const productsTop = ref(0);
-
-const messageTop = ref(0);
-
-const windowScrollY = ref(0);
-
-// TODO: 經歷資料
-const experienceList = [
-  {
-    year: 2018,
-    dataNum: 1,
-    bg: "#ff9500",
-    show: 0,
-    during: "2018(3)-2018(5)",
-    job: "學員",
-    contents: [
-      "HTML、CSS、Bootstrap 基礎班-結業(3月)",
-      "JavaScript 基礎班-結業(4月)",
-      "Firebase、JavaScript 實務班-結業(5月)",
-    ],
-  },
-  {
-    year: 2020,
-    dataNum: 2,
-    bg: "#ffcb00",
-    show: 50,
-    during: "2018(9)-2023(7)",
-    job: "前端工程師",
-    contents: [
-      "VR360 React.js 遊戲專案開啟",
-      "公司接案：夢想菜單 Vue.js 約會交友網站",
-      "2020 年開始協助客戶產品 Vue.js 系統前後台開發及維護",
-    ],
-  },
-  {
-    year: 2022,
-    dataNum: 3,
-    bg: "#00539f",
-    show: 75,
-    during: "2023(7)~2024(7)",
-    job: "前端工程師",
-    contents: [
-      "公司產品： Vue.js 主題集合式遊戲平台，開發及維護系統前後台前端(新增主題、主題改版、對接遊戲商遊戲、建立客製化表單並協助後端對接國外金流、後台各式報表、後台系統前端功能新增.....等等)",
-    ],
-  },
-];
-
-const showSection = computed(() => {
-  const currentTop = windowScrollY.value;
-  switch (true) {
-    case currentTop > messageTop.value - 200:
-      return 3;
-    case currentTop > productsTop.value - 160:
-      return 2;
-    case currentTop > introTop.value - 160:
-      return 1;
-    default:
-      return 0;
-  }
-});
-
-const blockScrollProgress = ref(0);
-
-watch(showSection, async (newValue) => {
-  switch (newValue) {
-    case 0:
-      blockScrollProgress.value = 0;
-      openSocialList.value = false;
-      break;
-    case 1:
-    case 2:
-      openSocialList.value = false;
-      break;
-
-    default:
-      break;
-  }
-});
-
-const blockScrollHandler = ($event: any) => {
-  const scrollTop = Math.floor($event.target.scrollTop);
-  blockScrollProgress.value = Math.floor((scrollTop / 384) * 100);
-};
-
-const scrollOver = computed(() => {
-  return windowScrollY.value > 160;
-});
-
-// TODO: 時間動畫
-const clockReset = [0, 0, 0, 0, 0, 0, 0, 0].map((v, i) => ({
-  index: i,
-  uperNum: v,
-  belowNum: v,
-}));
-
-let accumulateLottery = reactive(clockReset);
-
-const determineDecimal = () => {
-  const timeArr = getTimeNumbers();
-  const newArr = timeArr.map((v, i) =>
-    !v
-      ? {
-          index: i,
-          uperNum: 0,
-          belowNum: 0,
-        }
-      : {
-          index: i,
-          uperNum: v,
-          belowNum: v,
-        }
-  );
-  Object.assign(accumulateLottery, newArr);
-};
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const removeFlipped = async (index: number) => {
-  await sleep(250);
-  document.querySelectorAll(".rotor-leaf")[index].classList.remove("flipped");
-};
-const runFlipped = (index: number) => {
-  document.querySelectorAll(".rotor-leaf")[index].classList.add("flipped");
-  removeFlipped(index);
-};
-const numberAnimation = async () => {
-  if (screen.width < 768) {
-    window.clearInterval(timer.value);
-    return;
-  }
-  const timeArr = getTimeNumbers();
-  for (let index = 0; index < timeArr.length; index++) {
-    const upNum = accumulateLottery[index].uperNum;
-    const newValue = timeArr[index];
-    if (index !== 2 && index !== 5 && newValue !== upNum) {
-      runFlipped(index);
-    }
-  }
-  const newArr = timeArr.map((v, i) =>
-    !v
-      ? {
-          index: i,
-          uperNum: 0,
-          belowNum: 0,
-        }
-      : {
-          index: i,
-          uperNum: v,
-          belowNum: v,
-        }
-  );
-  Object.assign(accumulateLottery, newArr);
-};
-// TODO: 時間動畫
-
-const sideProjects = [
-  {
-    name: "My Website",
-    id: 0,
-    intro: "個人網站，記錄自己作品及經歷。",
-    href: null,
-  },
-  {
-    name: "MeMetalk",
-    id: 1,
-    intro: "提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。",
-    href: "https://live2d-two.vercel.app/",
-  },
-  {
-    name: "Exile Engineer",
-    id: 2,
-    intro: "因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。",
-    href: "https://exile-engineer.vercel.app",
-  },
-];
-
-//TODO: 輪播
-const projectActive = ref(1);
-
-const carouselSliding = ref(false);
-
-const selectProject = (id: number) => {
-  projectActive.value = id;
-};
-
-const handleSliding = (value: boolean) => {
-  carouselSliding.value = value;
-};
-
-const projectActiveData = computed(() => {
-  const target = sideProjects.find((item) => item.id === projectActive.value);
-  if (target) return target;
-  return null;
-});
-
-const redirectPage = (linkInfo?: { href: string; name: string }) => {
-  let name = null;
-  let href = null;
-  if (linkInfo) {
-    name = linkInfo.name;
-    href = linkInfo.href;
-  }
-  if (name === "f-share") {
-    if (
-      typeof showSection.value === "number" &&
-      showSection.value < 3 &&
-      !showMessage.value
-    ) {
-      showMessage.value = true;
-    }
-    openSocialList.value = !openSocialList.value;
-    return;
-  }
-  const project = projectActiveData.value;
-  const windowReference = window.open();
-  let url = "";
-  if (href) url = href;
-  else if (project && project.href) url = project.href;
-  if (windowReference) {
-    if (name) windowReference.name = name;
-    windowReference.location.href = url;
-  }
-};
-//TODO: 輪播
-
-// TODO: 私訊我
-const openSocialList = ref(false);
-
-const socialListSliding = ref("");
-
-const showMessage = ref(false);
-
-let socialMedia = reactive([
-  {
-    name: "104",
-    icon: "104_logo.png",
-    color: "#ff9100",
-    content: "104 履歷",
-    href: "https://pda.104.com.tw/profile/share/gw6pQPa7hldXxhhCoC6Rz7K0KwEuRcNw",
-  },
-  {
-    name: "CakeResume",
-    icon: "cake-resume.svg",
-    color: "#15AA67",
-    content: "CakeResume 履歷",
-    href: "https://www.cake.me/73307hank",
-  },
-  {
-    name: "GitHub",
-    icon: "github-icon.svg",
-    color: "#3e75c3",
-    content: "EdgarYang791203",
-    href: "https://github.com/EdgarYang791203/about-me/blob/master/README.md",
-  },
-  {
-    name: "Email",
-    icon: "gmail.svg",
-    color: "#d14836",
-    content: "edgaryang791203@gmail.com",
-    href: "mailto:edgaryang791203@gmail.com",
-  },
-]);
-
-// TODO: 卡片往上消失
-// const socialListSlide = () => {
-//   socialListSliding.value = true;
-//   const firstItem = { ...socialMedia[0] };
-//   socialMedia = [...socialMedia, firstItem];
-//   setTimeout(() => {
-//     socialMedia = socialMedia.slice(1);
-//     socialListSliding.value = false;
-//   }, 300);
-// };
-
-const sortCard = (name: string) => {
-  socialListSliding.value = name;
-  const target = socialMedia.find((item) => item.name === name);
-  if (target) {
-    setTimeout(() => {
-      const newList = socialMedia.filter((item) => item.name !== name);
-      socialMedia = [...newList, target];
-      socialListSliding.value = "";
-    }, 400);
-  }
-};
-// TODO: 私訊我
-
-let timer: any = ref(null);
-
-let screen = reactive({
-  width: window.innerWidth || document.documentElement.clientWidth,
-});
-
-const isScreenSM = computed(() => {
-  if (screen && screen.width) return screen.width <= 768;
-  return false;
-});
-
-const getWidth = () => {
-  screen.width = window.innerWidth || document.documentElement.clientWidth;
-};
-
-interface CommentType {
-  xata_id?: string;
-  option: string;
-  nickname: string;
-  comment: string;
-  xata_createdat?: string;
-  created?: string;
-}
-
-const messageBordForm = ref<CommentType>({
-  nickname: "",
-  option: "",
-  comment: "",
-});
-
-const commentSelectChange = ($event: Event) => {
-  const el = $event.target as HTMLInputElement;
-  if (el.value && typeof el.value === "string") {
-    messageBordForm.value.option = el.value;
-  }
-};
-
-const comments = ref<CommentType[]>([]);
-
-const formVerified = computed(() => {
-  let status = true;
-  for (
-    let index = 0;
-    index < Object.values(messageBordForm.value).length;
-    index++
-  ) {
-    const content = Object.values(messageBordForm.value)[index];
-    if (typeof content !== "string" || content === "") {
-      status = false;
-      break;
-    }
-  }
-  return status;
-});
-
-// const renderHtml = (msg: string) => {
-//   /** 將html碼格式化 只取得文字 */
-//   const regex = /<(?!br\s*\/?)[^>]*>/g;
-//   if (typeof msg === "string") return msg.replace(regex, " ");
-//   return "";
-// };
-
-// TODO: Node API Postgresql
-const fetchApi =
-  inject<(url: string, options?: RequestInit) => Promise<any>>("$fetch");
-
-// TODO: Firebase noSQL
-// let firebaseAuth = inject<Auth>("$auth");
-// let commentsRef: CollectionReference<CommentType> | null = null;
-
-const getComments = async () => {
-  // TODO: Node API Postgresql
-  if (fetchApi) {
-    try {
-      const list = await fetchApi("/comments");
-      if (list && list.length) comments.value = list;
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
-  } else {
-    console.error("fetchApi is not provided");
-  }
-  // TODO: Firebase noSQL
-  // const db = getFirestore();
-  // commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
-  // onSnapshot(commentsRef, (snapshot) => {
-  //   const newComments = snapshot.docChanges() || [];
-  //   if (!comments?.value.length) return;
-  //   newComments.forEach(async (change: any) => {
-  //     if (change.type === "added") {
-  //       // 新增的留言
-  //       const { option, time, nickname, comment } = change.doc.data();
-  //       if (change.doc.id && !comments.value.includes(change.doc.id)) {
-  //         comments.value.unshift({
-  //           option,
-  //           time,
-  //           nickname,
-  //           comment,
-  //           id: change.doc.id,
-  //         });
-  //       }
-  //     }
-  //   });
-  // });
-  // 排序
-  // const commentsQuery = query(commentsRef, orderBy("time", "desc"));
-  // const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
-  //   commentsQuery
-  // );
-
-  // 初始化留言列表
-  // comments.value = querySnapshot.docs
-  //   .map((doc) => {
-  //     if (doc.exists()) {
-  //       const data = doc.data() as CommentType;
-  //       const { option, time, nickname, comment } = data;
-  //       return { option, time, nickname, comment, id: doc.id };
-  //     }
-  //     return null;
-  //   })
-  //   .filter(Boolean) as CommentType[];
-};
-
-const addComment = async () => {
-  // TODO: Node API Postgresql
-  if (fetchApi) {
-    try {
-      // 使用 fetchApi 發送請求
-      const res = await fetchApi("/comments", {
-        method: "POST", // 設置為 POST 請求
-        body: JSON.stringify({
-          ...messageBordForm.value,
-        }),
-      });
-      messageBordForm.value = {
-        nickname: messageBordForm.value.nickname,
-        option: "",
-        comment: "",
-      };
-      alert("留言成功");
-      if (res) getComments();
-    } catch (error) {
-      // console.error("留言失敗：", error);
-      alert("留言失敗，請重試！");
-    }
-  } else {
-    console.error("fetchApi is not provided");
-  }
-  // TODO: Firebase noSQL
-  // if (formVerified.value && commentsRef) {
-  //   try {
-  //     await setDoc(doc(commentsRef), {
-  //       ...messageBordForm.value,
-  //       time: new Date().getTime(),
-  //     });
-  //     messageBordForm.value = {
-  //       nickname: messageBordForm.value.nickname,
-  //       option: "",
-  //       comment: "",
-  //     };
-  //     alert("留言成功");
-  //   } catch (error) {
-  //     console.error("留言失敗：", error);
-  //     alert("留言失敗，請重試！");
-  //   }
-  // }
-};
-// TODO: 測試 API
-
-onMounted(() => {
-  window.addEventListener("scroll", () => {
-    windowScrollY.value = Math.floor(window.scrollY);
-  });
-  window.addEventListener("resize", getWidth);
-  introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
-  productsTop.value = document.getElementById("PRODUCTS")?.offsetTop || 0;
-  messageTop.value = document.getElementById("MESSAGE")?.offsetTop || 0;
-  determineDecimal();
-  timer.value = setInterval(() => {
-    numberAnimation();
-  }, 1000);
-  // TODO: Firebase noSQL
-  // if (firebaseAuth) {
-  //   getComments();
-  // }
-  // TODO: Node API Postgresql
-  getComments();
-});
-</script>
-
 <template>
   <header
     class="w-full h-auto fixed z-50 text-white"
@@ -986,6 +478,543 @@ onMounted(() => {
   <!-- TODO: 手機社群控制按鈕元件 -->
   <MobileControls v-if="isScreenSM" :socialMedia="socialMedia" />
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted, computed, watch, reactive, inject } from "vue";
+// TODO: Firebase noSQL
+// import {
+//   getFirestore,
+//   collection,
+//   doc,
+//   setDoc,
+//   getDocs,
+//   onSnapshot,
+//   CollectionReference,
+//   QuerySnapshot,
+//   DocumentData,
+//   query,
+//   orderBy,
+// } from "firebase/firestore";
+// import type { Auth } from "firebase/auth";
+import getTimeNumbers from "./util/getTimestamp";
+import deviceName from "./util/mobileDetective";
+import Navbar from "./components/Navbar.vue";
+import Marquee from "./components/Marquee.vue";
+import Carousel from "./components/Carousel.vue";
+import MobileCarousel from "./components/MobileCarousel.vue";
+import ProjectInfo from "./components/ProjectInfo.vue";
+import Footer from "./components/Footer.vue";
+import MobileControls from "./components/MobileControls.vue";
+
+const isMobile = deviceName !== "unknown";
+
+const introTop = ref(0);
+
+const productsTop = ref(0);
+
+const messageTop = ref(0);
+
+const windowScrollY = ref(0);
+
+// TODO: 經歷資料
+const experienceList = [
+  {
+    year: 2018,
+    dataNum: 1,
+    bg: "#ff9500",
+    show: 0,
+    during: "2018(3)-2018(5)",
+    job: "學員",
+    contents: [
+      "HTML、CSS、Bootstrap 基礎班-結業(3月)",
+      "JavaScript 基礎班-結業(4月)",
+      "Firebase、JavaScript 實務班-結業(5月)",
+    ],
+  },
+  {
+    year: 2020,
+    dataNum: 2,
+    bg: "#ffcb00",
+    show: 50,
+    during: "2018(9)-2023(7)",
+    job: "前端工程師",
+    contents: [
+      "VR360 React.js 遊戲專案開啟",
+      "公司接案：夢想菜單 Vue.js 約會交友網站",
+      "2020 年開始協助客戶產品 Vue.js 系統前後台開發及維護",
+    ],
+  },
+  {
+    year: 2022,
+    dataNum: 3,
+    bg: "#00539f",
+    show: 75,
+    during: "2023(7)~2024(7)",
+    job: "前端工程師",
+    contents: [
+      "公司產品： Vue.js 主題集合式遊戲平台，開發及維護系統前後台前端(新增主題、主題改版、對接遊戲商遊戲、建立客製化表單並協助後端對接國外金流、後台各式報表、後台系統前端功能新增.....等等)",
+    ],
+  },
+];
+
+const showSection = computed(() => {
+  const currentTop = windowScrollY.value;
+  switch (true) {
+    case currentTop > messageTop.value - 200:
+      return 3;
+    case currentTop > productsTop.value - 160:
+      return 2;
+    case currentTop > introTop.value - 160:
+      return 1;
+    default:
+      return 0;
+  }
+});
+
+const blockScrollProgress = ref(0);
+
+watch(showSection, async (newValue) => {
+  switch (newValue) {
+    case 0:
+      blockScrollProgress.value = 0;
+      openSocialList.value = false;
+      break;
+    case 1:
+    case 2:
+      openSocialList.value = false;
+      break;
+
+    default:
+      break;
+  }
+});
+
+const blockScrollHandler = ($event: any) => {
+  const scrollTop = Math.floor($event.target.scrollTop);
+  blockScrollProgress.value = Math.floor((scrollTop / 384) * 100);
+};
+
+const scrollOver = computed(() => {
+  return windowScrollY.value > 160;
+});
+
+// TODO: 時間動畫
+const clockReset = [0, 0, 0, 0, 0, 0, 0, 0].map((v, i) => ({
+  index: i,
+  uperNum: v,
+  belowNum: v,
+}));
+
+let accumulateLottery = reactive(clockReset);
+
+const determineDecimal = () => {
+  const timeArr = getTimeNumbers();
+  const newArr = timeArr.map((v, i) =>
+    !v
+      ? {
+          index: i,
+          uperNum: 0,
+          belowNum: 0,
+        }
+      : {
+          index: i,
+          uperNum: v,
+          belowNum: v,
+        }
+  );
+  Object.assign(accumulateLottery, newArr);
+};
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+const removeFlipped = async (index: number) => {
+  await sleep(250);
+  document.querySelectorAll(".rotor-leaf")[index].classList.remove("flipped");
+};
+const runFlipped = (index: number) => {
+  document.querySelectorAll(".rotor-leaf")[index].classList.add("flipped");
+  removeFlipped(index);
+};
+const numberAnimation = async () => {
+  if (screen.width < 768) {
+    window.clearInterval(timerNumnerAnimation.value);
+    return;
+  }
+  const timeArr = getTimeNumbers();
+  for (let index = 0; index < timeArr.length; index++) {
+    const upNum = accumulateLottery[index].uperNum;
+    const newValue = timeArr[index];
+    if (index !== 2 && index !== 5 && newValue !== upNum) {
+      runFlipped(index);
+    }
+  }
+  const newArr = timeArr.map((v, i) =>
+    !v
+      ? {
+          index: i,
+          uperNum: 0,
+          belowNum: 0,
+        }
+      : {
+          index: i,
+          uperNum: v,
+          belowNum: v,
+        }
+  );
+  Object.assign(accumulateLottery, newArr);
+};
+// TODO: 時間動畫
+
+const sideProjects = [
+  {
+    name: "My Website",
+    id: 0,
+    intro: "個人網站，記錄自己作品及經歷。",
+    href: null,
+  },
+  {
+    name: "MeMetalk",
+    id: 1,
+    intro: "提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。",
+    href: "https://live2d-two.vercel.app/",
+  },
+  {
+    name: "Exile Engineer",
+    id: 2,
+    intro: "因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。",
+    href: "https://exile-engineer.vercel.app",
+  },
+];
+
+//TODO: 輪播
+const projectActive = ref(1);
+
+const carouselSliding = ref(false);
+
+const selectProject = (id: number) => {
+  projectActive.value = id;
+};
+
+const handleSliding = (value: boolean) => {
+  carouselSliding.value = value;
+};
+
+const projectActiveData = computed(() => {
+  const target = sideProjects.find((item) => item.id === projectActive.value);
+  if (target) return target;
+  return null;
+});
+
+const redirectPage = (linkInfo?: { href: string; name: string }) => {
+  let name = null;
+  let href = null;
+  if (linkInfo) {
+    name = linkInfo.name;
+    href = linkInfo.href;
+  }
+  if (name === "f-share") {
+    if (
+      typeof showSection.value === "number" &&
+      showSection.value < 3 &&
+      !showMessage.value
+    ) {
+      showMessage.value = true;
+    }
+    openSocialList.value = !openSocialList.value;
+    return;
+  }
+  const project = projectActiveData.value;
+  const windowReference = window.open();
+  let url = "";
+  if (href) url = href;
+  else if (project && project.href) url = project.href;
+  if (windowReference) {
+    if (name) windowReference.name = name;
+    windowReference.location.href = url;
+  }
+};
+//TODO: 輪播
+
+// TODO: 私訊我
+const openSocialList = ref(false);
+
+const socialListSliding = ref("");
+
+const showMessage = ref(false);
+
+let socialMedia = reactive([
+  {
+    name: "104",
+    icon: "104_logo.png",
+    color: "#ff9100",
+    content: "104 履歷",
+    href: "https://pda.104.com.tw/profile/share/gw6pQPa7hldXxhhCoC6Rz7K0KwEuRcNw",
+  },
+  {
+    name: "CakeResume",
+    icon: "cake-resume.svg",
+    color: "#15AA67",
+    content: "CakeResume 履歷",
+    href: "https://www.cake.me/73307hank",
+  },
+  {
+    name: "GitHub",
+    icon: "github-icon.svg",
+    color: "#3e75c3",
+    content: "EdgarYang791203",
+    href: "https://github.com/EdgarYang791203/about-me/blob/master/README.md",
+  },
+  {
+    name: "Email",
+    icon: "gmail.svg",
+    color: "#d14836",
+    content: "edgaryang791203@gmail.com",
+    href: "mailto:edgaryang791203@gmail.com",
+  },
+]);
+
+// TODO: 卡片往上消失
+// const socialListSlide = () => {
+//   socialListSliding.value = true;
+//   const firstItem = { ...socialMedia[0] };
+//   socialMedia = [...socialMedia, firstItem];
+//   setTimeout(() => {
+//     socialMedia = socialMedia.slice(1);
+//     socialListSliding.value = false;
+//   }, 300);
+// };
+
+const sortCard = (name: string) => {
+  socialListSliding.value = name;
+  const target = socialMedia.find((item) => item.name === name);
+  if (target) {
+    setTimeout(() => {
+      const newList = socialMedia.filter((item) => item.name !== name);
+      socialMedia = [...newList, target];
+      socialListSliding.value = "";
+    }, 400);
+  }
+};
+// TODO: 私訊我
+
+let timerNumnerAnimation: any = ref(null);
+
+let screen = reactive({
+  width: window.innerWidth || document.documentElement.clientWidth,
+});
+
+const isScreenSM = computed(() => {
+  if (screen && screen.width) return screen.width <= 768;
+  return false;
+});
+
+const getWidth = () => {
+  screen.width = window.innerWidth || document.documentElement.clientWidth;
+};
+
+// TODO: debounce(防抖動)
+const debounce = (fn: Function, delay: number = 500) => {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+
+  return (...args: any[]): void => {
+    if (timer !== null) {
+      clearTimeout(timer); // 使用類型斷言
+    }
+    timer = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+};
+
+interface CommentType {
+  xata_id?: string;
+  option: string;
+  nickname: string;
+  comment: string;
+  xata_createdat?: string;
+  created?: string;
+}
+
+const messageBordForm = ref<CommentType>({
+  nickname: "",
+  option: "",
+  comment: "",
+});
+
+const commentSelectChange = ($event: Event) => {
+  const el = $event.target as HTMLInputElement;
+  if (el.value && typeof el.value === "string") {
+    messageBordForm.value.option = el.value;
+  }
+};
+
+const comments = ref<CommentType[]>([]);
+
+const formVerified = computed(() => {
+  let status = true;
+  for (
+    let index = 0;
+    index < Object.values(messageBordForm.value).length;
+    index++
+  ) {
+    const content = Object.values(messageBordForm.value)[index];
+    if (typeof content !== "string" || content === "") {
+      status = false;
+      break;
+    }
+  }
+  return status;
+});
+
+// const renderHtml = (msg: string) => {
+//   /** 將html碼格式化 只取得文字 */
+//   const regex = /<(?!br\s*\/?)[^>]*>/g;
+//   if (typeof msg === "string") return msg.replace(regex, " ");
+//   return "";
+// };
+
+// TODO: Node API Postgresql
+const fetchApi =
+  inject<(url: string, options?: RequestInit) => Promise<any>>("$fetch");
+
+// TODO: Firebase noSQL
+// let firebaseAuth = inject<Auth>("$auth");
+// let commentsRef: CollectionReference<CommentType> | null = null;
+
+const getComments = async () => {
+  // TODO: Node API Postgresql
+  if (fetchApi) {
+    try {
+      const list = await fetchApi("/comments");
+      if (list && list.length) comments.value = list;
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
+  // TODO: Firebase noSQL
+  // const db = getFirestore();
+  // commentsRef = collection(db, "comments") as CollectionReference<CommentType>;
+  // onSnapshot(commentsRef, (snapshot) => {
+  //   const newComments = snapshot.docChanges() || [];
+  //   if (!comments?.value.length) return;
+  //   newComments.forEach(async (change: any) => {
+  //     if (change.type === "added") {
+  //       // 新增的留言
+  //       const { option, time, nickname, comment } = change.doc.data();
+  //       if (change.doc.id && !comments.value.includes(change.doc.id)) {
+  //         comments.value.unshift({
+  //           option,
+  //           time,
+  //           nickname,
+  //           comment,
+  //           id: change.doc.id,
+  //         });
+  //       }
+  //     }
+  //   });
+  // });
+  // 排序
+  // const commentsQuery = query(commentsRef, orderBy("time", "desc"));
+  // const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(
+  //   commentsQuery
+  // );
+
+  // 初始化留言列表
+  // comments.value = querySnapshot.docs
+  //   .map((doc) => {
+  //     if (doc.exists()) {
+  //       const data = doc.data() as CommentType;
+  //       const { option, time, nickname, comment } = data;
+  //       return { option, time, nickname, comment, id: doc.id };
+  //     }
+  //     return null;
+  //   })
+  //   .filter(Boolean) as CommentType[];
+};
+
+const addComment = async () => {
+  // TODO: Node API Postgresql
+  if (fetchApi) {
+    try {
+      // 使用 fetchApi 發送請求
+      const res = await fetchApi("/comments", {
+        method: "POST", // 設置為 POST 請求
+        body: JSON.stringify({
+          ...messageBordForm.value,
+        }),
+      });
+      messageBordForm.value = {
+        nickname: messageBordForm.value.nickname,
+        option: "",
+        comment: "",
+      };
+      alert("留言成功");
+      if (res) getComments();
+    } catch (error) {
+      // console.error("留言失敗：", error);
+      alert("留言失敗，請重試！");
+    }
+  } else {
+    console.error("fetchApi is not provided");
+  }
+  // TODO: Firebase noSQL
+  // if (formVerified.value && commentsRef) {
+  //   try {
+  //     await setDoc(doc(commentsRef), {
+  //       ...messageBordForm.value,
+  //       time: new Date().getTime(),
+  //     });
+  //     messageBordForm.value = {
+  //       nickname: messageBordForm.value.nickname,
+  //       option: "",
+  //       comment: "",
+  //     };
+  //     alert("留言成功");
+  //   } catch (error) {
+  //     console.error("留言失敗：", error);
+  //     alert("留言失敗，請重試！");
+  //   }
+  // }
+};
+
+const setScrollTop = () => {
+  windowScrollY.value = Math.floor(window.scrollY);
+};
+
+const throttle = (fn: Function, delay = 500) => {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+
+  return (...args: any[]): void => {
+    if (timer !== null) return;
+
+    timer = setTimeout(() => {
+      timer = null;
+    }, delay);
+
+    fn.apply(this, args);
+  };
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", throttle(setScrollTop));
+  window.addEventListener("resize", debounce(getWidth));
+  introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
+  productsTop.value = document.getElementById("PRODUCTS")?.offsetTop || 0;
+  messageTop.value = document.getElementById("MESSAGE")?.offsetTop || 0;
+  determineDecimal();
+  timerNumnerAnimation.value = setInterval(() => {
+    numberAnimation();
+  }, 1000);
+  // TODO: Firebase noSQL
+  // if (firebaseAuth) {
+  //   getComments();
+  // }
+  // TODO: Node API Postgresql
+  getComments();
+});
+</script>
 
 <style scoped>
 @media screen and (min-width: 576px) {
