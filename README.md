@@ -101,14 +101,5 @@
         ⌞因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。
     </p>
   </li>
-  <li>
-    <p>
-        <a href="https://edgaryang791203.github.io/chatroomDemo/" target="_blank" rel="nofollow">
-          <b>聊天室</b>
-        </a>
-        </br>
-        ⌞Firebase Google Login + 存取對話資料 + 拖曳上傳 /輸入圖片
-    </p>
-  </li>
 </ul>
 <hr>
