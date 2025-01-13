@@ -66,124 +66,21 @@
   </div>
   <!-- TODO: Experience -->
   <div
-    ref="INTRO"
     id="INTRO"
     class="py-4 md:py-12 w-full bg-[#f9efe1] border-2 border-[#FF6347] border-t-0 border-b-0 relative"
   >
-    <div
-      class="text-center w-full mx-auto container xl:max-w-[1200px] max-w-[96%] bg-[#f9efe1] border-2 border-[#4d6085] rounded-[10px] transition-all duration-700"
-      :class="`${showSection > 0 ? 'opacity-100' : 'opacity-0'}`"
-      :style="{
-        transform:
-          showSection > 0
-            ? 'translateX(0) scale(1)'
-            : 'translateX(-30%) scale(0.95)',
-      }"
-    >
-      <h2 class="w-full font-bold text-4xl py-2 border-bottom text-center pb-6">
-        <span
-          class="inline-block relative title-border-bottom font-cabin text-[#222222]"
-          >Experience</span
-        >
-      </h2>
-      <div
-        id="timeLine"
-        class="h-[354px] overflow-y-scroll overflow-x-hidden pt-0 pb-[10px] pl-3 sm:pl-8 md:pl-0"
-        :class="{ 'scrollbar-w-0': isScreenSM }"
-        @scroll="blockScrollHandler"
-      >
-        <div
-          class="relative w-[0.5rem] ml-0 mr-auto md:mx-auto h-[800px] md:h-[708px] bg-[#4d6085]"
-          :class="
-            showSection > 0
-              ? 'animate-[arrow-stretch_1.5s_ease-in-out]'
-              : 'animate-none'
-          "
-        >
-          <div
-            v-for="item in experienceList"
-            :key="item.dataNum"
-            class="absolute left-[-21px]"
-            :style="{
-              zIndex: Math.floor(3 / item.dataNum),
-              top: item.dataNum * 25 + '%',
-            }"
-          >
-            <div
-              class="w-0 h-0 sm:w-[50px] sm:h-[50px] leading-[50px] text-center rounded-[50%] text-white relative"
-              :style="{
-                backgroundColor: item.bg,
-              }"
-            >
-              <span class="hidden sm:block">{{ item.year }}</span>
-            </div>
-            <div
-              class="xl:w-[31vw] md:w-[40vw] sm:w-[75vw] w-[85vw] h-[30vh] max-h-[190px] md:max-h-[230px] md:max-w-[540px] border-5 border-[#4d6085] absolute"
-              :class="`${
-                item.dataNum % 2 || isScreenSM
-                  ? 'left-[38px] sm:left-[60px]'
-                  : 'right-[38px] sm:right-[60px]'
-              }`"
-              :style="{
-                top: 'calc(-15vh + 25px)',
-              }"
-            >
-              <div
-                class="relative information before:transition-all before:duration-700"
-                :class="[
-                  {
-                    right: item.dataNum % 2,
-                    left: !(item.dataNum % 2) && !isScreenSM,
-                    visibility: blockScrollProgress > item.show,
-                  },
-                ]"
-                :data-attr="item.job"
-              >
-                <h3>
-                  <img
-                    class="invert"
-                    src="./assets/laptop-icon.svg"
-                    alt="icon"
-                  />
-                  <span class="font-cabin">{{ item.during }}</span>
-                </h3>
-                <p
-                  v-for="(content, index) in item.contents"
-                  :key="`text${index}`"
-                  class="py-1 pl-2 pr-[36px] tracking-tighter text-[#222222] text-sm sm:text-base"
-                >
-                  {{ item.contents.length > 1 ? `${index + 1}.` : ""
-                  }}{{ content }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="w-0 h-0 ml-[-10px] mr-auto md:mx-auto arrow-black"></div>
-      </div>
-    </div>
+    <Info :scrollOver="scrollOver" :isScreenSM="isScreenSM" />
   </div>
   <!-- TODO: PRODUCT -->
   <div
-    ref="PRODUCTS"
     id="PRODUCTS"
     class="overflow-hidden pt-12 w-full relative z-10 bg-[#4d6085] parallelogram after:bg-[#f9efe1] after:rotate-[-1deg] after:huge:rotate-[-0.5deg] after:top-[-14px] after:border-t-0"
   >
-    <div
-      class="opacity-0 transition-all fuzzy-before absolute w-[80vw] left-[10vw] top-[110px] overflow-hidden rounded-[5px]"
-      :class="{
-        hidden: showSection <= 1,
-        'opacity-100': showSection > 1,
-        'animate-[fade-in_700ms_ease]': carouselSliding,
-      }"
+    <ProductBg
       v-if="!isScreenSM"
-    >
-      <img
-        class="w-full opacity-[0.9]"
-        :src="`/image/production${projectActive}.png`"
-        alt="fuzzy-bg"
-      />
-    </div>
+      :carouselSliding="carouselSliding"
+      :projectActive="projectActive"
+    />
     <h2
       class="w-full font-bold text-4xl border-bottom text-center relative z-10"
     >
@@ -192,110 +89,26 @@
         >Products</span
       >
     </h2>
-    <div
-      class="w-full flex duration-1000 select-none relative z-10"
-      :class="`${showSection > 1 ? 'opacity-100' : 'opacity-0'}`"
-      :style="{
-        height: isScreenSM ? '60vh' : 'calc(100vh - 6rem - 70px)',
-        transform:
-          showSection > 1
-            ? 'translateX(0) scale(1)'
-            : 'translateX(30%) scale(0.95)',
-      }"
-    >
-      <!-- TODO: PC 輪播 -->
-      <Carousel
-        :sideProjects="sideProjects"
-        :projectActive="projectActive"
-        @selectProject="selectProject"
-        @redirectPage="redirectPage"
-        @handleSliding="handleSliding"
-        v-if="!isScreenSM"
-      />
-      <ProjectInfo
-        :carouselSliding="carouselSliding"
-        :projectActiveData="projectActiveData"
-        :projectActive="projectActive"
-        :isScreenSM="isScreenSM"
-        @selectProject="selectProject"
-        @redirectPage="redirectPage"
-        @handleSliding="handleSliding"
-      />
-      <!-- TODO:  手機輪播 -->
-      <MobileCarousel
-        :sideProjects="sideProjects"
-        :projectActive="projectActive"
-        :carouselSliding="carouselSliding"
-        @selectProject="selectProject"
-        @handleSliding="handleSliding"
-        v-if="isScreenSM"
-      />
-    </div>
+    <Products
+      :sideProjects="sideProjects"
+      :projectActive="projectActive"
+      :projectActiveData="projectActiveData"
+      :carouselSliding="carouselSliding"
+      :isScreenSM="isScreenSM"
+      @selectProject="selectProject"
+      @redirectPage="redirectPage"
+      @handleSliding="handleSliding"
+    />
   </div>
   <!-- TODO: MESSAGE -->
   <div
-    ref="MESSAGE"
     id="MESSAGE"
     class="pt-12 w-full h-[70vh] overflow-hidden bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-bottom bg-fixed bg-[#eae1d3] flex flex-col items-center justify-center relative parallelogram after:bg-[#4d6085] after:top-[-14px] after:rotate-[1deg] after:huge:rotate-[0.5deg] after:border-0 after:border-b-2"
   >
-    <div
-      class="bg-[tomato] rounded-md w-[96vw] max-w-[380px] md:w-[380px] relative contact-box opacity-0"
-      :class="{
-        'animate-[wobble_700ms] opacity-100': showMessage || showSection > 2,
-      }"
-    >
-      <div class="flex px-[30px] pt-[20px] pb-[50px]">
-        <img
-          class="w-[96px] rounded-[50%]"
-          src="/image/head-shot.jpeg"
-          alt="head-shot"
-        />
-        <div class="pl-8 text-white flex flex-col justify-center">
-          <p class="text-[22px] mb-[10px]">Hank Yang</p>
-          <p class="text-sm">Hi, I'm Hank and I'm a web front-end developer.</p>
-        </div>
-        <div
-          class="contact-btn transition-all cursor-pointer bg-[#eae1d3] text-[#4d6085] flex justify-center items-center border-b-2 border-[#4d6085]"
-          :class="{ active: openSocialList }"
-          @click="openSocialList = !openSocialList"
-        >
-          <p
-            class="transition-all"
-            :class="{
-              'opacity-0 absolute z-[-1]': openSocialList,
-              'opacity-100': !openSocialList,
-            }"
-          >
-            contact me
-          </p>
-          <svg
-            class="transition-all"
-            :class="{
-              'opacity-0 absolute z-[-1]': !openSocialList,
-              'opacity-100': openSocialList,
-            }"
-            style="transition-delay: 0.5s"
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
-            viewBox="0 0 48 48"
-          >
-            <g class="nc-icon-wrapper" fill="#4d6085">
-              <path
-                d="M14.83 30.83L24 21.66l9.17 9.17L36 28 24 16 12 28z"
-              ></path>
-            </g>
-          </svg>
-        </div>
-      </div>
-      <div
-        class="bg-[#4d6085] transition-all duration-700 max-h-0 overflow-hidden"
-        :class="{ 'max-h-[100px]': openSocialList }"
-        style="border-radius: 0 0 0.375rem 0.375rem"
-      >
-        <p class="py-4 px-8 text-[#eae1d3]">contact me</p>
-      </div>
-    </div>
+    <SocialMedia
+      :openSocialList="openSocialList"
+      @handleSocialList="handleSocialList"
+    />
     <div
       class="sns-list transition-all duration-1000"
       :class="{ 'fade-in': openSocialList }"
@@ -480,7 +293,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch, reactive, inject } from "vue";
+import { ref, onMounted, computed, reactive, inject, onUnmounted } from "vue";
 // TODO: Firebase noSQL
 // import {
 //   getFirestore,
@@ -500,99 +313,16 @@ import getTimeNumbers from "./util/getTimestamp";
 import deviceName from "./util/mobileDetective";
 import Navbar from "./components/Navbar.vue";
 import Marquee from "./components/Marquee.vue";
-import Carousel from "./components/Carousel.vue";
-import MobileCarousel from "./components/MobileCarousel.vue";
-import ProjectInfo from "./components/ProjectInfo.vue";
 import Footer from "./components/Footer.vue";
 import MobileControls from "./components/MobileControls.vue";
+import Info from "./components/Info.vue";
+import ProductBg from "./components/ProductBg.vue";
+import Products from "./components/Products.vue";
+import SocialMedia from "./components/SocialMedia.vue";
 
 const isMobile = deviceName !== "unknown";
 
-const introTop = ref(0);
-
-const productsTop = ref(0);
-
-const messageTop = ref(0);
-
 const windowScrollY = ref(0);
-
-// TODO: 經歷資料
-const experienceList = [
-  {
-    year: 2018,
-    dataNum: 1,
-    bg: "#ff9500",
-    show: 0,
-    during: "2018(3)-2018(5)",
-    job: "學員",
-    contents: [
-      "HTML、CSS、Bootstrap 基礎班-結業(3月)",
-      "JavaScript 基礎班-結業(4月)",
-      "Firebase、JavaScript 實務班-結業(5月)",
-    ],
-  },
-  {
-    year: 2020,
-    dataNum: 2,
-    bg: "#ffcb00",
-    show: 50,
-    during: "2018(9)-2023(7)",
-    job: "前端工程師",
-    contents: [
-      "VR360 React.js 遊戲專案開啟",
-      "公司接案：夢想菜單 Vue.js 約會交友網站",
-      "2020 年開始協助客戶產品 Vue.js 系統前後台開發及維護",
-    ],
-  },
-  {
-    year: 2022,
-    dataNum: 3,
-    bg: "#00539f",
-    show: 75,
-    during: "2023(7)~2024(7)",
-    job: "前端工程師",
-    contents: [
-      "公司產品： Vue.js 主題集合式遊戲平台，開發及維護系統前後台前端(新增主題、主題改版、對接遊戲商遊戲、建立客製化表單並協助後端對接國外金流、後台各式報表、後台系統前端功能新增.....等等)",
-    ],
-  },
-];
-
-const showSection = computed(() => {
-  const currentTop = windowScrollY.value;
-  switch (true) {
-    case currentTop > messageTop.value - 200:
-      return 3;
-    case currentTop > productsTop.value - 160:
-      return 2;
-    case currentTop > introTop.value - 160:
-      return 1;
-    default:
-      return 0;
-  }
-});
-
-const blockScrollProgress = ref(0);
-
-watch(showSection, async (newValue) => {
-  switch (newValue) {
-    case 0:
-      blockScrollProgress.value = 0;
-      openSocialList.value = false;
-      break;
-    case 1:
-    case 2:
-      openSocialList.value = false;
-      break;
-
-    default:
-      break;
-  }
-});
-
-const blockScrollHandler = ($event: any) => {
-  const scrollTop = Math.floor($event.target.scrollTop);
-  blockScrollProgress.value = Math.floor((scrollTop / 384) * 100);
-};
 
 const scrollOver = computed(() => {
   return windowScrollY.value > 160;
@@ -713,21 +443,23 @@ const redirectPage = (linkInfo?: { href: string; name: string }) => {
     href = linkInfo.href;
   }
   if (name === "f-share") {
-    if (
-      typeof showSection.value === "number" &&
-      showSection.value < 3 &&
-      !showMessage.value
-    ) {
-      showMessage.value = true;
-    }
     openSocialList.value = !openSocialList.value;
     return;
   }
+  if (name === "Email") {
+    const mailtoLink = `${href}`;
+    console.log(mailtoLink);
+    window.location.href = mailtoLink;
+    return;
+  }
+
   const project = projectActiveData.value;
   const windowReference = window.open();
   let url = "";
+
   if (href) url = href;
   else if (project && project.href) url = project.href;
+
   if (windowReference) {
     if (name) windowReference.name = name;
     windowReference.location.href = url;
@@ -738,17 +470,19 @@ const redirectPage = (linkInfo?: { href: string; name: string }) => {
 // TODO: 私訊我
 const openSocialList = ref(false);
 
-const socialListSliding = ref("");
+const handleSocialList = (value: boolean) => {
+  openSocialList.value = value;
+};
 
-const showMessage = ref(false);
+const socialListSliding = ref("");
 
 let socialMedia = reactive([
   {
-    name: "104",
-    icon: "104_logo.png",
-    color: "#ff9100",
-    content: "104 履歷",
-    href: "https://pda.104.com.tw/profile/share/gw6pQPa7hldXxhhCoC6Rz7K0KwEuRcNw",
+    name: "Medium",
+    icon: "medium-icon.svg",
+    color: "#000",
+    content: "Medium 文章",
+    href: "https://medium.com/@73307hank",
   },
   {
     name: "CakeResume",
@@ -979,30 +713,27 @@ const addComment = async () => {
   // }
 };
 
+// const throttle = (fn: Function, delay = 500) => {
+//   let timer: ReturnType<typeof setTimeout> | null = null;
+
+//   return (...args: any[]): void => {
+//     if (timer !== null) return;
+
+//     timer = setTimeout(() => {
+//       timer = null;
+//     }, delay);
+
+//     fn.apply(this, args);
+//   };
+// };
+
 const setScrollTop = () => {
   windowScrollY.value = Math.floor(window.scrollY);
 };
 
-const throttle = (fn: Function, delay = 500) => {
-  let timer: ReturnType<typeof setTimeout> | null = null;
-
-  return (...args: any[]): void => {
-    if (timer !== null) return;
-
-    timer = setTimeout(() => {
-      timer = null;
-    }, delay);
-
-    fn.apply(this, args);
-  };
-};
-
 onMounted(() => {
-  window.addEventListener("scroll", throttle(setScrollTop));
+  window.addEventListener("scroll", setScrollTop);
   window.addEventListener("resize", debounce(getWidth));
-  introTop.value = document.getElementById("INTRO")?.offsetTop || 0;
-  productsTop.value = document.getElementById("PRODUCTS")?.offsetTop || 0;
-  messageTop.value = document.getElementById("MESSAGE")?.offsetTop || 0;
   determineDecimal();
   timerNumnerAnimation.value = setInterval(() => {
     numberAnimation();
@@ -1013,6 +744,12 @@ onMounted(() => {
   // }
   // TODO: Node API Postgresql
   getComments();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", setScrollTop);
+  window.removeEventListener("resize", debounce(getWidth));
+  window.clearInterval(timerNumnerAnimation.value);
 });
 </script>
 
@@ -1139,123 +876,6 @@ onMounted(() => {
   border-width: 0.25rem 0 0 0;
 }
 
-.arrow-black {
-  border-top: 20px solid #4d6085;
-  border-right: 13px solid transparent;
-  border-left: 13px solid transparent;
-}
-
-.information {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  border: 5px solid #4d6085;
-  transform: rotateX(90deg);
-  transition: all cubic-bezier(0.68, 0.55, 0.265, 1.55) 0.5s;
-  text-align: left;
-}
-.information h3 {
-  text-align: left;
-  display: inline-block;
-  background-color: #4d6085;
-  padding: 0.5rem 3px;
-}
-.information h3 img {
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  vertical-align: middle;
-}
-.information::before {
-  content: attr(data-attr);
-  position: absolute;
-  z-index: 5;
-  display: inline-block;
-  right: -40px;
-  top: 50px;
-  opacity: 0;
-  writing-mode: vertical-lr;
-  font-weight: 700;
-  font-size: 24px;
-  color: #4d6085;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  text-shadow: 0px -1px 0px #3e4d6b, 2px -4px #d9d1c5, 4px -6px #eae1d3;
-}
-.information h3 span {
-  display: inline-block;
-  vertical-align: middle;
-  color: #eae1d3;
-  padding-left: 5px;
-}
-.information.left::after {
-  border-color: transparent transparent transparent #4d6085;
-  left: unset;
-  right: -24px;
-}
-.information.visibility {
-  transform: rotateX(0deg) perspective(360px);
-}
-.information.visibility::before {
-  right: 4px;
-  opacity: 1;
-}
-.fuzzy-before::before {
-  content: "";
-  position: absolute;
-  z-index: 5;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  backdrop-filter: blur(4px);
-  border-radius: 0.25rem;
-  background-image: linear-gradient(to top, #4d6085 0%, transparent 100%);
-}
-
-.contact-box {
-  transform-origin: bottom center;
-  position: relative;
-  z-index: 5;
-}
-.contact-btn {
-  box-shadow: 0 8px 13px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(0, 0, 0, 0.06);
-  transition-delay: 0.1s;
-  border-radius: 30px;
-  position: absolute;
-  right: 90px;
-  bottom: -24px;
-  width: 200px;
-  height: 48px;
-}
-.contact-btn p {
-  transition: opacity 0.2s;
-  transition-delay: 0.4s;
-  width: 100%;
-  text-align: center;
-}
-.contact-btn p::after {
-  content: "";
-  display: block;
-  width: 0;
-  height: 0;
-  position: absolute;
-  left: 50%;
-  bottom: -28px;
-  z-index: 3;
-  border: solid 15px transparent;
-  border-top-color: #eae1d3;
-}
-.contact-btn.active {
-  right: 20px;
-  bottom: 22px;
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-}
-.contact-btn.active p::after {
-  display: none;
-}
 .sns-card {
   opacity: 0;
   text-decoration: none;

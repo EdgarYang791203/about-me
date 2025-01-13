@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, nextTick } from "vue";
 
 interface Project {
   name: string;
@@ -31,7 +31,7 @@ const props = defineProps<{ sideProjects: Project[]; projectActive: number }>();
 
 const emit = defineEmits(["redirectPage", "selectProject", "handleSliding"]);
 
-let styleList: any[] = reactive([]);
+const styleList = ref<any[]>([]);
 
 const setStyle = (values: any) => {
   if (values) {
@@ -48,7 +48,7 @@ const setStyle = (values: any) => {
     const transform = `translate(${xtrans - 50}%, ${
       0 - 50
     }%) scale(${scale}) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
-    const newStyleList = [...styleList];
+    const newStyleList = [...styleList.value];
     newStyleList[pIndex] = {
       zIndex,
       transform,
@@ -56,7 +56,7 @@ const setStyle = (values: any) => {
       transition: "transform 0.5s",
       transformOrigin,
     };
-    Object.assign(styleList, newStyleList);
+    Object.assign(styleList.value, newStyleList);
   }
 };
 
@@ -67,7 +67,7 @@ const carouselRef = ref(null);
 const arrange = (centerIndex: number) => {
   const catesReference: any = carouselRef.value;
   if (catesReference.children) {
-    styleList = [];
+    styleList.value = [];
     const half = (props.sideProjects.length - 1) / 2;
     const before = [];
     for (let i = centerIndex - 1; before.length < half; i--) {
@@ -160,7 +160,9 @@ const arrangeHandler = (id: number) => {
 };
 
 onMounted(() => {
-  arrange(1);
+  nextTick(() => {
+    arrange(props.projectActive);
+  });
 });
 </script>
 
