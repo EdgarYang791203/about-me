@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import { useIntersectionObserver } from "../composables/useIntersectionObserver";
 
 const props = defineProps<{
@@ -76,6 +76,12 @@ const handleSocialList = () => {
 const { isIntersection, intersectionObserver } = useIntersectionObserver();
 
 const sectionsRef = ref(null);
+
+watchEffect(() => {
+  if (isIntersection.value === false) {
+    emit("handleSocialList", false);
+  }
+});
 
 onMounted(() => {
   if (sectionsRef.value) {

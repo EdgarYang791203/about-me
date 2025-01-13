@@ -149,23 +149,11 @@
             <!-- @click="sortCard(sns.name)" -->
             <!-- @click="socialListSlide" -->
             <button
-              class="w-[48px] h-[48px] border-0 focus:outline-0 bg-transparent p-0"
+              class="w-[30px] h-[30px] border-0 focus:outline-0 bg-transparent p-0"
               role="button"
               @click="sortCard(sns.name)"
             >
-              <svg
-                class="arrow pointer-events-none"
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-              >
-                <g class="nc-icon-wrapper" fill="#444444">
-                  <path
-                    d="M17.17 32.92l9.17-9.17-9.17-9.17L20 11.75l12 12-12 12z"
-                  ></path>
-                </g>
-              </svg>
+              <img src="/image/delete-icon.svg" alt="delete" />
             </button>
           </div>
         </div>
@@ -448,7 +436,6 @@ const redirectPage = (linkInfo?: { href: string; name: string }) => {
   }
   if (name === "Email") {
     const mailtoLink = `${href}`;
-    console.log(mailtoLink);
     window.location.href = mailtoLink;
     return;
   }
