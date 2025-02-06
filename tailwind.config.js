@@ -24,6 +24,10 @@ export default {
         "menu-hover": "1s infinite",
         "arrow-stretch": "1s ease-in-out",
         "fade-in": "",
+        "slide-left-fade":
+          "slide-in-left 700ms ease, fade-out 300ms ease 700ms",
+        "slide-right-fade":
+          "slide-in-right 700ms ease, fade-out 300ms ease 700ms",
         wobble: "700ms",
       },
       keyframes: {
@@ -67,6 +71,10 @@ export default {
         "fade-in": {
           "0%": { opacity: "0", display: "none" },
           "100%": { opacity: "1", display: "block" },
+        },
+        "fade-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
         },
         "slide-in-top": {
           "0%": { top: "-100%" },
@@ -115,6 +123,17 @@ export default {
           },
           "100%": {
             transform: "scale(1)",
+          },
+        },
+        shake: {
+          "0%, 100%": {
+            transform: "translateZ(0)",
+          },
+          "10%, 30%, 50%, 70%, 90%": {
+            transform: "translate3d(-10px, 0, 0)",
+          },
+          "20%, 40%, 60%, 80%": {
+            transform: "translate3d(10px, 0, 0)",
           },
         },
       },

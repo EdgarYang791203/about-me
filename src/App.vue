@@ -51,18 +51,7 @@
   </header>
   <!-- TODO: BANNER -->
   <div class="relative overflow-hidden w-full">
-    <div
-      id="BANNER"
-      class="w-full pt-[55px] pb-8 md:py-0 md:min-h-screen md:h-screen bg-[url('/image/laptop.jpg')] bg-blend-multiply bg-cover bg-top bg-fixed flex flex-col justify-center px-1 relative parallelogram after:huge:rotate-[0.5deg] after:border-[#FF6347] after:border-b-0"
-      style="background-color: rgba(216, 216, 216, 1)"
-    >
-      <div
-        class="w-full max-w-[1200px] max-h-[876px] h-[30vw] mx-auto border-2 border-[#222] relative overflow-hidden bg-[url('/image/banner.jpg')] bg-[length:100%_auto] md:hover:bg-[length:125%_auto] bg-center bg-no-repeat transition-all"
-        style="border-radius: 55px 225px 15px 25px/25px 25px 35px 355px"
-      ></div>
-      <!-- TODO: 跑馬燈 -->
-      <Marquee />
-    </div>
+    <Banner />
   </div>
   <!-- TODO: Experience -->
   <div
@@ -300,7 +289,7 @@ import { ref, onMounted, computed, reactive, inject, onUnmounted } from "vue";
 import getTimeNumbers from "./util/getTimestamp";
 import deviceName from "./util/mobileDetective";
 import Navbar from "./components/Navbar.vue";
-import Marquee from "./components/Marquee.vue";
+import Banner from "./components/Banner.vue";
 import Footer from "./components/Footer.vue";
 import MobileControls from "./components/MobileControls.vue";
 import Info from "./components/Info.vue";
