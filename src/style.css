@@ -9,6 +9,9 @@
 }
 
 @layer components {
+  .btn-reset {
+    @apply appearance-none bg-transparent border-none cursor-pointer p-0 outline-none focus:outline-none;
+  }
   .parallelogram {
     @apply after:content-[''] after:absolute after:z-10 after:left-0 after:w-full after:h-[35px] after:bg-[#f9efe1] after:border-2 after:bottom-[-14px] after:rotate-[1deg] after:border-[#FF6347];
   }
@@ -144,9 +147,6 @@ button:focus-visible {
 
 .card {
   padding: 2em;
-}
-
-#app {
 }
 
 @media (prefers-color-scheme: light) {
