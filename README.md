@@ -56,7 +56,7 @@
   </li>
   <li>
     <a href="https://www.twincn.com/item.aspx?no=85131432">
-      <span>鑫城軟件開發有限公司-前端工程師</span>
+      <span>翼游數位有限公司-前端工程師</span>
       <span>(2018/9~2023/7)</span>
     </a>
     <br>
@@ -85,8 +85,13 @@
   </li>
   <li>
     <p>
-        <a href="https://live2d-two.vercel.app/" target="_blank" rel="nofollow">
+        <a href="https://memetalk.jystudio.co.uk" target="_blank" rel="nofollow">
           <b>memetalk 迷因社群</b>
+        </a>
+    </p>
+    <p>
+      <a href="https://live2d-two.vercel.app/" target="_blank" rel="nofollow">
+          <b>(Nuxt3 demo 版本)</b>
         </a>
         </br>
         ⌞提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。
@@ -102,4 +107,11 @@
     </p>
   </li>
 </ul>
+<hr>
+<h2>技術分享</h2>
+<p>
+  <a href="https://medium.com/@73307hank" target="_blank" rel="nofollow">
+    <b>Medium 部落格</b>
+  </a>
+</p>
 <hr>
