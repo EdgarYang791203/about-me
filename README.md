@@ -45,30 +45,28 @@
 <h2>經歷</h2>
 <ul>
   <li>
-    <a href="https://www.104.com.tw/company/1a2x6bmhup">
-      <span>萬通國際資訊有限公司-前端工程師</span>
+    <p>
+      <span style="font-weight: bold">萬通國際資訊有限公司-前端工程師</span>
       <span>(2023/7~2024/7)</span>
-    </a>
-    <br>
+    </p>
     ⌞與後端工程師、UI設計師和 PM 協同合作，主要進行公司產品 【MGP】系統前後台的開發/改版/維護，產品技術使用 Vue2、Vuex 、Typescript、Scss、Bootstrap、ElementUI、axios。
     </br>
     ⌞開發系統前端客戶需求(新增主題、主題改版、對接遊戲商遊戲、建立客製化表單並協助後端對接國外金流、後台各式報表、後台系統前端功能新增.....等等)
   </li>
   <li>
-    <a href="https://www.twincn.com/item.aspx?no=85131432">
-      <span>翼游數位有限公司-前端工程師</span>
+    <p>
+      <span style="font-weight: bold">翼游數位有限公司-前端工程師</span>
       <span>(2018/9~2023/7)</span>
-    </a>
-    <br>
+    </p>
     ⌞負責公司前端接案開發或維護之需求
-    <br>
+    <br />
     ⌞產品技術使用 Vue.js(Vue2)、React.js
   </li>
   <li>
-    <a href="https://train.csie.ntu.edu.tw/train/">
-      <span>台大資訊系統訓練班-學員</span>
+    <p>
+      <span style="font-weight: bold">台大資訊系統訓練班-學員</span>
       <span>(2018/3~2018/5)</span>
-    </a>
+    </p>
   </li>
 </ul>
 <hr>
@@ -76,28 +74,27 @@
 <ul>
   <li>
     <div>
-        <a href="https://my-website-e9b07.web.app" target="_blank" rel="nofollow">
-          <b>我的網站首頁請參閱</b>
-        </a>
-        <a href="https://github.com/EdgarYang791203/about-me" target="_blank" rel="nofollow">
-          <b>(Github 連結)</b>
-        </a>
-        </br>
-        <p>
-          ⌞Vue3 搭配 TailwindCSS 切版，全站動態回饋及動畫皆以原生 JS 呈現，後端開發使用 Docker 部署 Cloud Run 及使用 node express 實作簡單 CRUD 搭配 Prisma 操作 PostgreSQL 實作留言板功能。
-        </p>
+      <a href="https://my-website-e9b07.web.app" target="_blank" rel="nofollow">
+        <b>我的網站首頁請參閱</b>
+      </a>
+      </br>
+      <a href="https://github.com/EdgarYang791203/about-me" target="_blank" rel="nofollow">
+        <b>Github 連結</b>
+      </a>
+      <p>
+        ⌞Vue3 搭配 TailwindCSS 切版，全站動態回饋及動畫皆以原生 JS 呈現，後端開發使用 Docker 部署 Cloud Run 及使用 node express 實作簡單 CRUD 搭配 Prisma 操作 PostgreSQL 實作留言板功能。
+      </p>
     </div>
   </li>
   <li>
-    <p>
-        <a href="https://memetalk.jystudio.co.uk" target="_blank" rel="nofollow">
-          <b>memetalk 迷因社群</b>
-        </a>
-        <a href="https://github.com/stu640978/memetalk-frontend" target="_blank" rel="nofollow">
-          <b>(Github 連結)</b>
-        </a>
-    </p>
     <div>
+      <a href="https://memetalk.jystudio.co.uk" target="_blank" rel="nofollow">
+        <b>memetalk 迷因社群</b>
+      </a>
+      </br>
+      <a href="https://github.com/stu640978/memetalk-frontend" target="_blank" rel="nofollow">
+        <b>Github 連結</b>
+      </a>
       <p>
         ⌞與後端合作對接 RESTful API 登入、上傳、按讚、留言
       </p>
@@ -105,14 +102,13 @@
         ⌞簡介：提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。
         負責前端部分與後端合作開發 sideproject，為 Vue3 、TailwindCSS 搭配 ElementPlus UI framework 元件之應用，社群功能(會員、上傳、發文、留言按讚等互動功能) API 對接及排版呈現。
       </p>
-        <p>
-          <a href="https://live2d-two.vercel.app/" target="_blank" rel="nofollow">
-            <b>Nuxt3 demo 版本</b>
-          </a>
-          <a href="https://github.com/s6091214/live2d" target="_blank" rel="nofollow">
-          <b>(Github 連結)</b>
+      <a href="https://live2d-two.vercel.app/" target="_blank" rel="nofollow">
+        <b>Nuxt3 demo 版本</b>
       </a>
-      </p>
+      </br>
+      <a href="https://github.com/s6091214/live2d" target="_blank" rel="nofollow">
+        <b>Github 連結</b>
+      </a>
       <p>
         ⌞登入使用遊客 or Google 驗證兩種，使用者透過 Google 驗證後再透過 firebase 建立權限，資料儲存使用 nodejs API + PostgreSQL(Prisma)。
       </p>
@@ -120,16 +116,16 @@
   </li>
   <li>
     <div>
-        <a href="https://exile-engineer.vercel.app" target="_blank" rel="nofollow">
-          <b>Exile Engineer POE 拓荒攻略站</b>
-        </a>
-        <a href="https://github.com/EdgarYang791203/exile-engineer" target="_blank" rel="nofollow">
-          <b>(Github 連結)</b>
-        </a>
-        </br>
-        <p>
-          ⌞因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。
-          使用 Nuxt3 搭配 TailwindCSS 切版應用並使用 vercel 服務部署，參考資料如下。
+      <a href="https://exile-engineer.vercel.app" target="_blank" rel="nofollow">
+        <b>Exile Engineer POE 拓荒攻略站</b>
+      </a>
+      </br>
+      <a href="https://github.com/EdgarYang791203/exile-engineer" target="_blank" rel="nofollow">
+        <b>Github 連結</b>
+      </a>
+      <p>
+        ⌞因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。
+        使用 Nuxt3 搭配 TailwindCSS 切版應用並使用 vercel 服務部署，參考資料如下。
       </p>
     </div>
   </li>
