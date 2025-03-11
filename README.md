@@ -75,36 +75,63 @@
 <h2>作品集</h2>
 <ul>
   <li>
-    <p>
+    <div>
         <a href="https://my-website-e9b07.web.app" target="_blank" rel="nofollow">
           <b>我的網站首頁請參閱</b>
         </a>
+        <a href="https://github.com/EdgarYang791203/about-me" target="_blank" rel="nofollow">
+          <b>(Github 連結)</b>
+        </a>
         </br>
-        ⌞個人網站，記錄自己作品及經歷。
-    </p>
+        <p>
+          ⌞Vue3 搭配 TailwindCSS 切版，全站動態回饋及動畫皆以原生 JS 呈現，後端開發使用 Docker 部署 Cloud Run 及使用 node express 實作簡單 CRUD 搭配 Prisma 操作 PostgreSQL 實作留言板功能。
+        </p>
+    </div>
   </li>
   <li>
     <p>
         <a href="https://memetalk.jystudio.co.uk" target="_blank" rel="nofollow">
           <b>memetalk 迷因社群</b>
         </a>
-    </p>
-    <p>
-      <a href="https://live2d-two.vercel.app/" target="_blank" rel="nofollow">
-          <b>(Nuxt3 demo 版本)</b>
+        <a href="https://github.com/stu640978/memetalk-frontend" target="_blank" rel="nofollow">
+          <b>(Github 連結)</b>
         </a>
-        </br>
-        ⌞提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。
     </p>
+    <div>
+      <p>
+        ⌞與後端合作對接 RESTful API 登入、上傳、按讚、留言
+      </p>
+      <p>
+        ⌞簡介：提供分享迷因的社群空間，按讚、留言，預計還有梗圖排名系統製作中。
+        負責前端部分與後端合作開發 sideproject，為 Vue3 、TailwindCSS 搭配 ElementPlus UI framework 元件之應用，社群功能(會員、上傳、發文、留言按讚等互動功能) API 對接及排版呈現。
+      </p>
+        <p>
+          <a href="https://live2d-two.vercel.app/" target="_blank" rel="nofollow">
+            <b>Nuxt3 demo 版本</b>
+          </a>
+          <a href="https://github.com/s6091214/live2d" target="_blank" rel="nofollow">
+          <b>(Github 連結)</b>
+      </a>
+      </p>
+      <p>
+        ⌞登入使用遊客 or Google 驗證兩種，使用者透過 Google 驗證後再透過 firebase 建立權限，資料儲存使用 nodejs API + PostgreSQL(Prisma)。
+      </p>
+    </div>
   </li>
   <li>
-    <p>
+    <div>
         <a href="https://exile-engineer.vercel.app" target="_blank" rel="nofollow">
           <b>Exile Engineer POE 拓荒攻略站</b>
         </a>
+        <a href="https://github.com/EdgarYang791203/exile-engineer" target="_blank" rel="nofollow">
+          <b>(Github 連結)</b>
+        </a>
         </br>
-        ⌞因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。
-    </p>
+        <p>
+          ⌞因為自己熱愛這款線上遊戲，所以將攻略呈現前端供自用及分享。
+          使用 Nuxt3 搭配 TailwindCSS 切版應用並使用 vercel 服務部署，參考資料如下。
+      </p>
+    </div>
   </li>
 </ul>
 <hr>
